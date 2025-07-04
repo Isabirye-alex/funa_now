@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key});
+  const CustomAppBar({super.key, this.hint, required this.icon, this.icon2, this.iconText, this.iconText2});
+  final String? hint;
+  final IconData icon;
+  final IconData? icon2;
+  final String? iconText;
+  final String? iconText2;
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +25,11 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(Iconsax.notification),
+                      Icon(icon2),
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
-                          'Notifications',
+                          iconText2 ?? '',
                           style: TextStyle(fontSize: 12, color: Colors.white),
                         ),
                       ),
@@ -49,7 +53,7 @@ class CustomAppBar extends StatelessWidget {
                   onSubmitted: (value) {},
                   onTap: () {},
                   onTapOutside: (event) {},
-                  hintText: 'Search product....',
+                  hintText: hint,
                   hintStyle: WidgetStateTextStyle.resolveWith(
                     (states) => TextStyle(
                       color: Colors.black,
@@ -72,9 +76,9 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(Iconsax.shopping_bag4),
+                      Icon(icon),
                       Text(
-                        'Cart',
+                        iconText ?? '',
                         style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ],

@@ -3,6 +3,7 @@ import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/summer_products.dart';
+import 'package:iconsax/iconsax.dart';
 
 //Landing where app users are directed on opening the application
 class LandingPage extends StatelessWidget {
@@ -11,7 +12,7 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 75, title: CustomAppBar()),
+      appBar: AppBar(toolbarHeight: 75, title: CustomAppBar(icon: Iconsax.shopping_bag4, hint: 'Search Product...',icon2: Iconsax.notification,iconText2: 'Notifications',iconText: 'Cart',)),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
