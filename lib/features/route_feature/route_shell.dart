@@ -19,7 +19,6 @@ class RouteShell extends StatelessWidget {
       'route': '/accountpage',
     },
 
-    // Add more destinations as needed
   ];
 
   int _getIndex(BuildContext context) {
