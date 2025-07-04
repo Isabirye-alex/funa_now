@@ -1,0 +1,17 @@
+flutter_native_splash:
+  color: "#ffffff" # Background color (hex or color name)
+  image: assets/images/icon.png # Your splash image
+  # branding: assets/images/branding.png # Optional: branding image at the bottom
+  color_dark: "#121212" # Dark theme background
+  # image_dark: assets/images/splash_icon_dark.png # Optional dark theme image
+  # branding_dark: assets/images/branding_dark.png # Optional dark branding
+
+  android_12:
+    image: assets/images/icon.png
+    # icon_background_color: "#ffffff"
+    image_dark: assets/images/icon.png
+    # icon_background_color_dark: "#121212"
+
+  android: true
+  ios: true
+  web: false
