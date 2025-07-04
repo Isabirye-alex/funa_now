@@ -6,7 +6,19 @@ class RouteShell extends StatelessWidget {
   const RouteShell({super.key, required this.child});
 
   static const destinations = [
-    {'label': 'Landing Page', 'icon': Icons.home, 'route': '/landingpage'},
+    {'label': 'Shop', 'icon': Icons.home, 'route': '/landingpage'},
+    {'label': 'Category', 'icon': Icons.category, 'route': '/category'},
+    {
+      'label': 'Hot Sales',
+      'icon': Icons.trending_up_sharp,
+      'route': '/featuredproducts',
+    },
+    {
+      'label': 'Account',
+      'icon': Icons.account_circle_sharp,
+      'route': '/accountpage',
+    },
+
     // Add more destinations as needed
   ];
 
@@ -22,14 +34,9 @@ class RouteShell extends StatelessWidget {
     final selectedIndex = _getIndex(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Easy Mall DashBoard"),
-        backgroundColor: Colors.black45,
-        centerTitle: true,
-        actions: const [Icon(Icons.account_circle)],
-      ),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
         currentIndex: selectedIndex < 0 ? 0 : selectedIndex,
         onTap: (index) {
           final route = destinations[index]['route'] as String;
