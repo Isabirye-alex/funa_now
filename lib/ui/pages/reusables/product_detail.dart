@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({
     super.key,
     required this.description,
     required this.price,
-    required this.image, required this.name,
+    required this.image,
+    required this.name,
   });
+
   final String description;
   final String price;
   final String image;
@@ -14,6 +17,9 @@ class ProductDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double rating = 4.5;
+    final int totalReviews = 32;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Detail'),
@@ -46,7 +52,7 @@ class ProductDetail extends StatelessWidget {
 
             // Price
             Text(
-              price,
+              'UGX $price',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -56,9 +62,27 @@ class ProductDetail extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // Rating bar
+            Row(
+              children: [
+                RatingBarIndicator(
+                  rating: rating,
+                  itemBuilder: (context, index) =>
+                      const Icon(Icons.star, color: Colors.amber),
+                  itemCount: 5,
+                  itemSize: 24.0,
+                  direction: Axis.horizontal,
+                ),
+                const SizedBox(width: 10),
+                Text('($totalReviews reviews)'),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
             // Description
-             Text(
-              description,
+            const Text(
+              'Description',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
@@ -69,11 +93,12 @@ class ProductDetail extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // Buy/Add to Cart button
+            // Add to Cart button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
+                  // Add to cart logic
                 },
                 icon: const Icon(Icons.shopping_cart),
                 label: const Text('Add to Cart'),
@@ -87,6 +112,36 @@ class ProductDetail extends StatelessWidget {
                 ),
               ),
             ),
+
+            const SizedBox(height: 30),
+
+            // Reviews Section
+            // Reviews Section Title
+            const Text(
+              'Reviews',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+
+            // Example Reviews List
+            ...List.generate(3, (index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.deepPurple,
+                  child: Icon(Icons.person),
+                ),
+                title: Text(
+                  'User ${index + 1}',
+                  style: TextStyle(color: Colors.black),
+                ),
+                subtitle: const Text(
+                  'This product exceeded my expectations! The quality is excellent and it arrived very quickly. I would definitely recommend it to anyone looking for a reliable product. Will buy again for sure.',
+                  style: TextStyle(color: Colors.white),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+              );
+            }),
           ],
         ),
       ),
