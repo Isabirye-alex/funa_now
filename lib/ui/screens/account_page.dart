@@ -12,7 +12,6 @@ class AccountPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // Header with user avatar and info
             Shape(
               height: 150,
               child: Column(
@@ -24,11 +23,11 @@ class AccountPage extends StatelessWidget {
                       backgroundColor: Colors.amber,
                     ),
                     title: Text(
-                      'John Doe',
+                      'Name:John Doe',
                       style: TextStyle(color: Colors.white),
                     ),
                     subtitle: Text(
-                      'johndoe@gmail.com',
+                      'Email:johndoe@gmail.com',
                       style: TextStyle(color: Colors.white),
                     ),
                     trailing: Icon(Iconsax.edit, color: Colors.white),
@@ -36,73 +35,56 @@ class AccountPage extends StatelessWidget {
                 ],
               ),
             ),
-
             Column(
               children: [
-                // My Orders
                 _accountTile(
                   icon: Icons.shopping_bag,
                   label: "My Orders",
                   color: Colors.blue[700],
                   onTap: () {},
                 ),
-
                 _accountTile(
                   icon: Iconsax.shopping_bag4,
                   label: "My Cart",
                   color: Colors.amber,
                   onTap: () {},
                 ),
-
-                // Wishlist
                 _accountTile(
                   icon: Icons.favorite,
                   label: "Wishlist",
                   color: Colors.pink,
                   onTap: () {},
                 ),
-
-                // Addresses
                 _accountTile(
                   icon: Icons.location_on,
                   label: "My Addresses",
                   color: Colors.green[600],
                   onTap: () {},
                 ),
-
-                // Payment Methods
                 _accountTile(
                   icon: Icons.credit_card,
                   label: "Payment Methods",
                   color: Colors.indigo,
                   onTap: () {},
                 ),
-
-                // Notifications
                 _accountTile(
                   icon: Icons.notifications,
                   label: "Notifications",
                   color: Colors.deepOrange,
                   onTap: () {},
                 ),
-
-                // Settings
                 _accountTile(
                   icon: Icons.settings,
                   label: "Settings",
                   color: Colors.grey[700],
                   onTap: () {},
                 ),
-
-                // Help Center
                 _accountTile(
                   icon: Icons.help_outline,
                   label: "Help Center",
                   color: Colors.teal,
                   onTap: () {},
                 ),
-
-                // Logout
                 _accountTile(
                   icon: Icons.logout,
                   label: "Logout",
@@ -111,7 +93,6 @@ class AccountPage extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 32),
           ],
         ),
@@ -119,7 +100,7 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  // Reusable ListTile for account items
+  //ListTile for account items
   Widget _accountTile({
     required IconData icon,
     required String label,

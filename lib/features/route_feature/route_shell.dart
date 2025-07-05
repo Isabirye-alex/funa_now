@@ -18,7 +18,6 @@ class RouteShell extends StatelessWidget {
       'icon': Icons.account_circle_sharp,
       'route': '/accountpage',
     },
-
   ];
 
   int _getIndex(BuildContext context) {

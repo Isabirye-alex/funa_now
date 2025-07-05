@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 
-class SummerProducts extends StatelessWidget {
+class SummerProducts extends StatefulWidget {
   const SummerProducts({super.key});
+
+  @override
+  State<SummerProducts> createState() => _SummerProductsState();
+}
+
+class _SummerProductsState extends State<SummerProducts> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +51,7 @@ class SummerProducts extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
-      
+
                   shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
                 ),
               ),

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key, this.hint, required this.icon, this.icon2, this.iconText, this.iconText2});
+  const CustomAppBar({
+    super.key,
+    this.hint,
+    required this.icon,
+    this.icon2,
+    this.iconText,
+    this.iconText2, this.color,
+  });
   final String? hint;
   final IconData icon;
   final IconData? icon2;
   final String? iconText;
   final String? iconText2;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +33,7 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(icon2),
+                      Icon(icon2, color: color,),
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
