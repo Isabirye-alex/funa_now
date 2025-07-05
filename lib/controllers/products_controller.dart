@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -9,26 +11,16 @@ class ProductsController extends GetxController {
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
   final RxBool isLoading = true.obs;
 
-
   Future<void> fetchProducts(BuildContext context) async {
     try {
       isLoading.value = true;
       final uri = Uri.parse('http://192.168.1.7:3000/products');
       final response = await http.get(uri);
-      print('API Response Status: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> result = jsonDecode(response.body);
-        print('Parsed JSON: $result');
 
         if (result['data'] == null || result['data'] is! List) {
-          showFlushbar(
-            context,
-            'Error',
-            'Invalid response: missing "data" array',
-            Icons.error,
-          );
+          debugPrint('Unkown error occured');
           return;
         }
 
@@ -38,12 +30,7 @@ class ProductsController extends GetxController {
             .toList();
 
         products.assignAll(loadedProducts);
-        showFlushbar(
-          context,
-          'Success',
-          'Products successfully fetched',
-          Icons.check_circle,
-        );
+        debugPrint('Products fetched successfully');
       } else {
         showFlushbar(
           context,
@@ -53,7 +40,7 @@ class ProductsController extends GetxController {
         );
       }
     } catch (e) {
-      print('Fetch error: $e');
+      debugPrint('Fetch error: $e');
       showFlushbar(
         context,
         'Error',

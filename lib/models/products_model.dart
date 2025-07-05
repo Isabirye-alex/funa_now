@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class ProductsModel {
   int id;
   String name;
@@ -13,7 +15,14 @@ class ProductsModel {
   String categoryName;
   int subcategoryId;
   String subcategoryName;
-
+  // int get priceInt => double.tryParse(price)?.toInt() ?? 0;
+  
+  String get formattedPrice {
+    final double? parsed = double.tryParse(price);
+    if (parsed == null) return '0';
+    final int rounded = parsed.toInt(); // remove decimal part
+    return NumberFormat('#,###').format(rounded); // format with commas
+  }
   ProductsModel({
     required this.id,
     required this.name,
@@ -57,7 +66,8 @@ class ProductsModel {
     subcategoryName: subcategoryName ?? this.subcategoryName,
   );
 
-  factory ProductsModel.fromRawJson(String str) => ProductsModel.fromJson(json.decode(str));
+  factory ProductsModel.fromRawJson(String str) =>
+      ProductsModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -80,7 +90,7 @@ class ProductsModel {
     "id": id,
     "name": name,
     "description": description,
-    "price": price,
+    "price": price as int,
     "stock": stock,
     "imageUrl": imageUrl,
     "is_featured": isFeatured,

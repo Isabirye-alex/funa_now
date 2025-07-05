@@ -1,5 +1,8 @@
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/features/route_feature/route_shell.dart';
+import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
@@ -7,6 +10,7 @@ import 'package:go_shop/ui/screens/landing_page.dart';
 
 // AppRouter handles all app navigation using GoRouter
 class AppRouter {
+    final controller = Get.put(ProductsController());
   static final router = GoRouter(
     initialLocation: '/landingpage', // Default route on app start
     routes: [
@@ -41,6 +45,7 @@ class AppRouter {
             path: '/accountpage',
             builder: (context, state) => AccountPage(),
           ),
+         
         ],
       ),
     ],
