@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/features/route_feature/route_shell.dart';
-import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';

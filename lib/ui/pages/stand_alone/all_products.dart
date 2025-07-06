@@ -40,6 +40,7 @@ class AllProducts extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductDetail(
+                    productId: product.id,
                     description: product.description,
                     price: product.formattedPrice,
                     image: product.imageUrl,

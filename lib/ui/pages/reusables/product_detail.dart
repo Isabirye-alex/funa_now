@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({
@@ -8,15 +10,18 @@ class ProductDetail extends StatelessWidget {
     required this.price,
     required this.image,
     required this.name,
+    required this.productId,
   });
 
   final String description;
   final String price;
   final String image;
   final String name;
+  final int productId;
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(CartController());
     final double rating = 4.5;
     final int totalReviews = 32;
 
@@ -98,7 +103,7 @@ class ProductDetail extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // Add to cart logic
+                  controller.addToCart(productId, 1);
                 },
                 icon: const Icon(Icons.shopping_cart),
                 label: const Text('Add to Cart'),
