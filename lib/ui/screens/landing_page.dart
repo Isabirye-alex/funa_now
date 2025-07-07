@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
@@ -26,23 +27,27 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CartController());
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
-        title: CustomAppBar(
-          icon: Iconsax.shopping_bag4,
-          color: Colors.amber,
-          hint: 'Search Product...',
-          icon2: Iconsax.lovely,
-          iconText2: 'WishList',
-          iconText: 'Cart',
-          onTap1: () {},
-          onTap2: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Cart()),
-            );
-          },
+        title: Obx(
+          () => CustomAppBar(
+            icon: Iconsax.shopping_bag4,
+            color: Colors.amber,
+            hint: 'Search Product...',
+            icon2: Iconsax.lovely,
+            iconText2: 'WishList',
+            iconText: 'Cart',
+            items: cartController.cartItem.length,
+            onTap1: () {},
+            onTap2: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Cart()),
+              );
+            },
+          ),
         ),
       ),
       body: SingleChildScrollView(

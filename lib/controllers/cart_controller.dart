@@ -24,7 +24,7 @@ class CartController extends GetxController {
         Uri.parse('http://192.168.100.57:3000/cart-items/addtocart'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'user_id': 2,
+          'user_id': 7,
           'productId': product.id,
           'quantity': quantity.value,
         }),
@@ -106,7 +106,8 @@ class CartController extends GetxController {
             ),
           ),
         ).show(context);
-
+        noOfItems--;
+        update();
         debugPrint('Quantity decreased');
         await fetchCartItems();
       } else {

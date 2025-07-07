@@ -21,7 +21,7 @@ class _CartState extends State<Cart> {
   @override
   void initState() {
     super.initState();
-    cartController.loadCartOnAppStart(2);
+    cartController.loadCartOnAppStart(7);
   }
 
   @override
@@ -170,7 +170,7 @@ class _CartState extends State<Cart> {
                                               product,
                                               context,
                                             );
-                                                    Flushbar(
+                                            Flushbar(
                                               shouldIconPulse: false,
                                               borderRadius:
                                                   BorderRadius.circular(8),

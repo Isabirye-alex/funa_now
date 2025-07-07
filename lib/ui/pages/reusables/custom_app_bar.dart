@@ -10,7 +10,8 @@ class CustomAppBar extends StatelessWidget {
     this.iconText2,
     this.color,
     this.onTap1,
-    this.onTap2
+    this.onTap2,
+    this.items,
   });
   final String? hint;
   final IconData icon;
@@ -20,6 +21,7 @@ class CustomAppBar extends StatelessWidget {
   final Color? color;
   final VoidCallback? onTap1;
   final VoidCallback? onTap2;
+  final int? items;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,25 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(icon),
+                      Stack(
+                        children: [
+                          Icon(icon, color: Colors.amber),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Center(
+                              child: Text(
+                                '$items',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       Text(
                         iconText ?? '',
                         style: TextStyle(color: Colors.white, fontSize: 12),
