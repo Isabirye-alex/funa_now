@@ -20,13 +20,11 @@ class ProductDetail extends StatelessWidget {
   final String name;
   final int productId;
 
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     final double rating = 4.5;
     final int totalReviews = 32;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -105,15 +103,18 @@ class ProductDetail extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-               onPressed: () {
+                onPressed: () {
                   final product = ProductsModel(
                     id: productId,
                     name: name,
                     description: description,
                     price: price,
                     imageUrl: image,
+                    
                   );
+
                   controller.addToCart(product);
+                  debugPrint('Success');
                 },
 
                 icon: const Icon(Icons.shopping_cart),
