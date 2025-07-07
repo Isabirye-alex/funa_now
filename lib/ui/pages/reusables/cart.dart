@@ -1,6 +1,9 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/features/helper_function/number_formatter.dart';
 import 'package:go_shop/models/products_model.dart';
 
 class Cart extends StatefulWidget {
@@ -44,7 +47,6 @@ class _CartState extends State<Cart> {
                 itemBuilder: (context, index) {
                   final item = cartController.cartItem[index];
                   final total = item.price * item.quantity;
-                  final totalText = 'UGX ${total.toStringAsFixed(0)}';
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -96,7 +98,7 @@ class _CartState extends State<Cart> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    totalText,
+                                    'UGX ${NumberFormatter.formatPrice(total)}',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -207,7 +209,7 @@ class _CartState extends State<Cart> {
                           style: TextStyle(fontSize: 20, color: Colors.black),
                         ),
                         Text(
-                          total,
+                          '${NumberFormatter.formatPrice(total)}',
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
