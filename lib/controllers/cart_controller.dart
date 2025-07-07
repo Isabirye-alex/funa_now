@@ -17,10 +17,10 @@ class CartController extends GetxController {
   RxInt cart_id = 0.obs;
   void addToCart(ProductsModel product) async {
     try {
-      quantity.value = 1; 
+      quantity.value = 1;
 
       final response = await http.post(
-        Uri.parse('http://192.168.100.57:3000/addtocart'),
+        Uri.parse('http://192.168.100.57:3000/cart/addtocart'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'user_id': 2,
@@ -51,16 +51,19 @@ class CartController extends GetxController {
   Future<void> fetchCartItems() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.57:3000/addtocart/${cart_id.value}'),
+        Uri.parse(
+          'http://192.168.100.57:3000/cart-items/getcartitems/${cart_id.value}',
+        ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
 
         if (data['success'] == true) {
           final items = data['data'] as List;
           cartItem.value = items.map((e) => CartItemModel.fromMap(e)).toList();
           debugPrint('Cart items fetched: ${cartItem.length}');
+          update();
         } else {
           debugPrint('Backend error: ${data['message']}');
           cartItem.clear();
@@ -74,7 +77,60 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> removeItemFromCart()async {
-    
+  Future<void> decreaseItemQuantity(int itemId) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('http://192.168.100.57:3000/cart-items/decrease/$itemId'),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success']) {
+        debugPrint('Quantity decreased');
+        await fetchCartItems();
+      } else {
+        debugPrint('Failed to decrease quantity: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error decreasing quantity: $e');
+    }
+  }
+
+  Future<void> loadCartOnAppStart(int userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.100.57:3000/cart-items/activecart/$userId'),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        cart_id.value = data['cart_id'];
+        await fetchCartItems();
+      } else {
+        debugPrint('No active cart found: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error loading cart: $e');
+    }
+  }
+
+  Future<void> removeItemFromCart(int itemId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://192.168.100.57:3000/cart-items/deleteitem/$itemId'),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 && data['success']) {
+        debugPrint('Item removed successfully');
+        await fetchCartItems();
+      } else {
+        debugPrint('Failed to remove item: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error removing item: $e');
+    }
   }
 }

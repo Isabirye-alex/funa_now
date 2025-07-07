@@ -19,7 +19,7 @@ class _CartState extends State<Cart> {
   @override
   void initState() {
     super.initState();
-    cartController.fetchCartItems();
+    cartController.loadCartOnAppStart(2);
   }
 
   @override
@@ -109,17 +109,23 @@ class _CartState extends State<Cart> {
                                     decoration: BoxDecoration(),
                                     child: Row(
                                       children: [
-                                        Container(
-                                          margin: EdgeInsets.only(right: 6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius: BorderRadius.circular(
-                                              4,
+                                        InkWell(
+                                          onTap: () {
+                                            cartController.decreaseItemQuantity(
+                                              item.id,
+                                            );
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(right: 6),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
-                                          ),
-                                          child: Icon(
-                                            Icons.remove,
-                                            color: Colors.red,
+                                            child: Icon(
+                                              Icons.remove,
+                                              color: Colors.red,
+                                            ),
                                           ),
                                         ),
                                         Text(
