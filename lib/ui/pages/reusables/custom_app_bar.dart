@@ -7,7 +7,10 @@ class CustomAppBar extends StatelessWidget {
     required this.icon,
     this.icon2,
     this.iconText,
-    this.iconText2, this.color,
+    this.iconText2,
+    this.color,
+    this.onTap1,
+    this.onTap2
   });
   final String? hint;
   final IconData icon;
@@ -15,6 +18,8 @@ class CustomAppBar extends StatelessWidget {
   final String? iconText;
   final String? iconText2;
   final Color? color;
+  final VoidCallback? onTap1;
+  final VoidCallback? onTap2;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +31,14 @@ class CustomAppBar extends StatelessWidget {
           children: [
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: onTap1,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
                     children: [
-                      Icon(icon2, color: color,),
+                      Icon(icon2, color: color),
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(
@@ -77,7 +82,7 @@ class CustomAppBar extends StatelessWidget {
             ),
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: onTap2,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),

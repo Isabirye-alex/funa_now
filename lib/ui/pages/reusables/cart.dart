@@ -15,7 +15,7 @@ class Cart extends StatelessWidget {
         backgroundColor: Colors.deepPurple,
       ),
       body: Obx(() {
-        if (cartController.items.isEmpty) {
+        if (cartController.cartItem.isEmpty) {
           return const Center(
             child: Text('Your cart is empty!', style: TextStyle(fontSize: 18)),
           );
@@ -26,10 +26,10 @@ class Cart extends StatelessWidget {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
-                itemCount: cartController.items.length,
+                itemCount: cartController.cartItem.length,
                 separatorBuilder: (_, __) => const Divider(),
                 itemBuilder: (context, index) {
-                  final item = cartController.items[index];
+                  final item = cartController.cartItem[index];
 
                   return ListTile(
                     leading: CircleAvatar(
@@ -43,7 +43,8 @@ class Cart extends StatelessWidget {
                     subtitle: Text('Cart ID: ${item.cartId}'),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => cartController.removeItem(item.id),
+                      onPressed: () {},
+                      // onPressed: () => cartController.removeItem(item.id),
                     ),
                   );
                 },
@@ -63,12 +64,9 @@ class Cart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Obx(() {
-                    final total = cartController.items.fold<double>(
+                    final total = cartController.cartItem.fold<double>(
                       0.0,
-                      (sum, item) =>
-                          sum +
-                          (item.quantity *
-                              10000), // You can replace 10000 with actual product price
+                      (sum, item) => sum + (item.quantity * item.price!),
                     );
                     return Text(
                       'Total: UGX ${total.toStringAsFixed(0)}',
@@ -81,7 +79,6 @@ class Cart extends StatelessWidget {
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      
                       Get.snackbar('Checkout', 'Proceeding to checkout...');
                     },
                     style: ElevatedButton.styleFrom(

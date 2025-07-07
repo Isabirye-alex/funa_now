@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/models/products_model.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({
@@ -19,11 +20,13 @@ class ProductDetail extends StatelessWidget {
   final String name;
   final int productId;
 
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     final double rating = 4.5;
     final int totalReviews = 32;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -102,9 +105,17 @@ class ProductDetail extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  controller.addToCart(productId, 1);
+               onPressed: () {
+                  final product = ProductsModel(
+                    id: productId,
+                    name: name,
+                    description: description,
+                    price: price,
+                    imageUrl: image,
+                  );
+                  controller.addToCart(product);
                 },
+
                 icon: const Icon(Icons.shopping_cart),
                 label: const Text('Add to Cart'),
                 style: ElevatedButton.styleFrom(

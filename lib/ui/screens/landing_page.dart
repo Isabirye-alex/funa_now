@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
@@ -35,6 +36,13 @@ class _LandingPageState extends State<LandingPage> {
           icon2: Iconsax.lovely,
           iconText2: 'WishList',
           iconText: 'Cart',
+          onTap1: () {},
+          onTap2: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Cart()),
+            );
+          },
         ),
       ),
       body: SingleChildScrollView(

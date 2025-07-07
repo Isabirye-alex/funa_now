@@ -8,6 +8,7 @@ class CartItemModel {
   final int quantity;
   final String imageUrl;
   final String title;
+  final double? price;
 
   CartItemModel({
     required this.id,
@@ -16,6 +17,7 @@ class CartItemModel {
     required this.quantity,
     required this.imageUrl,
     required this.title,
+    this.price,
   });
 
   CartItemModel copyWith({
@@ -25,6 +27,7 @@ class CartItemModel {
     int? quantity,
     String? imageUrl,
     String? title,
+    double? price,
   }) {
     return CartItemModel(
       id: id ?? this.id,
@@ -33,6 +36,7 @@ class CartItemModel {
       quantity: quantity ?? this.quantity,
       imageUrl: imageUrl ?? this.imageUrl,
       title: title ?? this.title,
+      price: price ?? this.price,
     );
   }
 
@@ -44,6 +48,7 @@ class CartItemModel {
       'quantity': quantity,
       'imageUrl': imageUrl,
       'title': title,
+      'price': price,
     };
   }
 
@@ -55,6 +60,7 @@ class CartItemModel {
       quantity: map['quantity'] as int,
       imageUrl: map['imageUrl'] as String,
       title: map['title'] as String,
+      price: map['price'] as double,
     );
   }
 
@@ -65,6 +71,6 @@ class CartItemModel {
 
   @override
   String toString() {
-    return 'CartItemModel(id: $id, productId: $productId, cartId: $cartId, quantity: $quantity, imageUrl: $imageUrl, title: $title)';
+    return 'CartItemModel(id: $id, productId: $productId, cartId: $cartId, quantity: $quantity, imageUrl: $imageUrl, title: $title, price: $price)';
   }
 }
