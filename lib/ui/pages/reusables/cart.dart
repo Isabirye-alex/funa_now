@@ -1,10 +1,12 @@
 // ignore_for_file: unnecessary_string_interpolations
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/features/helper_function/number_formatter.dart';
 import 'package:go_shop/models/products_model.dart';
+import 'package:go_shop/ui/pages/reusables/pop_up_dialog.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -111,9 +113,28 @@ class _CartState extends State<Cart> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            cartController.decreaseItemQuantity(
-                                              item.id,
-                                            );
+                                            if (item.quantity <= 1) {
+                                              showCustomDialog(
+                                                context: context,
+                                                title: 'Remove Item',
+                                                content:
+                                                    'Are you sure you want to remove this item from your cart?',
+                                                onCancel: () {},
+                                                onConfirm: () {
+                                                  cartController
+                                                      .decreaseItemQuantity(
+                                                        item.id,
+                                                        context,
+                                                      );
+                                                },
+                                              );
+                                            } else {
+                                              cartController
+                                                  .decreaseItemQuantity(
+                                                    item.id,
+                                                    context,
+                                                  );
+                                            }
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(right: 6),
@@ -145,7 +166,49 @@ class _CartState extends State<Cart> {
                                               imageUrl: item.imageUrl,
                                             );
 
-                                            cartController.addToCart(product);
+                                            cartController.addToCart(
+                                              product,
+                                              context,
+                                            );
+                                                    Flushbar(
+                                              shouldIconPulse: false,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              margin: EdgeInsets.all(24),
+                                              flushbarPosition:
+                                                  FlushbarPosition.TOP,
+                                              animationDuration: const Duration(
+                                                milliseconds: 300,
+                                              ),
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                    255,
+                                                    29,
+                                                    204,
+                                                    40,
+                                                  ),
+                                              messageText: Text(
+                                                'Success',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              duration: const Duration(
+                                                seconds: 4,
+                                              ),
+                                              icon: Icon(
+                                                Icons.check_circle,
+                                                color: Colors.white,
+                                              ),
+                                              titleText: Text(
+                                                'Cart updated successfully',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ).show(context);
+
                                             debugPrint('Success');
                                           },
                                           child: Container(

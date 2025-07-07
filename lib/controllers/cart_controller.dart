@@ -1,6 +1,7 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/models/cart_item_model.dart';
@@ -15,12 +16,12 @@ class CartController extends GetxController {
   RxList<CartItemModel> cartItem = <CartItemModel>[].obs;
   RxList<CartModel> cart = <CartModel>[].obs;
   RxInt cart_id = 0.obs;
-  void addToCart(ProductsModel product) async {
+  void addToCart(ProductsModel product, BuildContext context) async {
     try {
       quantity.value = 1;
 
       final response = await http.post(
-        Uri.parse('http://192.168.100.57:3000/cart/addtocart'),
+        Uri.parse('http://192.168.100.57:3000/cart-items/addtocart'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'user_id': 2,
@@ -32,12 +33,10 @@ class CartController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
         debugPrint('Item added: $data');
-
         cart_id.value = data['data']['cart_id'];
         debugPrint('Cart id = ${cart_id.value}');
 
         await fetchCartItems();
-
         noOfItems++;
         update();
       } else {
@@ -77,7 +76,7 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> decreaseItemQuantity(int itemId) async {
+  Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
       final response = await http.patch(
         Uri.parse('http://192.168.100.57:3000/cart-items/decrease/$itemId'),
@@ -86,6 +85,28 @@ class CartController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success']) {
+        Flushbar(
+          shouldIconPulse: false,
+          borderRadius: BorderRadius.circular(8),
+          margin: EdgeInsets.all(24),
+          flushbarPosition: FlushbarPosition.TOP,
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: const Color.fromARGB(255, 78, 9, 239),
+          messageText: Text(
+            'Success',
+            style: const TextStyle(color: Colors.white),
+          ),
+          duration: const Duration(seconds: 4),
+          icon: Icon(Icons.check_circle, color: Colors.white),
+          titleText: Text(
+            'Item removed from cart',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ).show(context);
+
         debugPrint('Quantity decreased');
         await fetchCartItems();
       } else {
