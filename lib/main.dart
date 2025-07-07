@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_shop/features/route_feature/app_router.dart';
+import 'package:go_shop/features/helper_function/internet_helper.dart';
 
 void main() {
-  runApp(FunaNow());
+  runApp(const FunaNow());
 }
 
 class FunaNow extends StatelessWidget {
@@ -10,20 +10,6 @@ class FunaNow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      themeAnimationCurve: Curves.decelerate,
-      title: 'Admin Dashboard',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Color(0xFF1976D2),
-        cardColor: Color(0xFF2A2D3E),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF1C1C2D),
-          elevation: 10,
-        ),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      routerConfig: AppRouter.router,
-    );
+    return const ConnectionChecker(); // handles both online/offline scenarios
   }
 }
