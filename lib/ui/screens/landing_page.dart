@@ -22,6 +22,8 @@ class _LandingPageState extends State<LandingPage> {
     super.initState();
     // Initialize ProductsController and fetch products
     final controller = Get.put(ProductsController());
+    final cartController = Get.put(CartController());
+    cartController.loadCartOnAppStart(7);
     controller.fetchProducts(context);
   }
 
@@ -34,11 +36,11 @@ class _LandingPageState extends State<LandingPage> {
         title: Obx(
           () => CustomAppBar(
             icon: Iconsax.shopping_bag4,
-            color: Colors.amber,
+            color: Colors.purpleAccent,
             hint: 'Search Product...',
             icon2: Iconsax.lovely,
             iconText2: 'WishList',
-            iconText: 'Cart',
+            iconText: 'View Cart',
             items: cartController.cartItem.length,
             onTap1: () {},
             onTap2: () {

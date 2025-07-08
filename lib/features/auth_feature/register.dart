@@ -1,160 +1,165 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:go_shop/controllers/signup_controller.dart';
+import 'package:go_shop/features/helper_function/validator.dart';
+import 'package:go_shop/ui/pages/reusables/custom_text.dart';
+import 'package:go_shop/ui/pages/reusables/custom_text_field.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   const Register({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController();
-    final isPasswordVisible = ValueNotifier<bool>(false);
-    final isConfirmPasswordVisible = ValueNotifier<bool>(false);
+  State<Register> createState() => _RegisterState();
+}
 
+class _RegisterState extends State<Register> {
+  bool isPasswordHidden = true;
+  bool isConfirmPasswordHidden = true;
+
+  File? image;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.put(SignUpController());
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Create Account',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E1E2C),
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Please fill in the details to register',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 32),
-              // Full Name
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Full Name',
-                  prefixIcon: const Icon(Icons.person),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SizedBox(
+          width: 1.sw,
+          child: Center(
+            child: Container(
+              margin: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(8.spMax),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  35.verticalSpace,
+                  CustomText(
+                    fontFamily: 'Poppins',
+                    text: 'Create your account',
+                    fontSize: 34,
+                    fontWeight: FontWeight.w700,
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Email
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: const Icon(Icons.email),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  5.verticalSpace,
+                  CustomText(
+                    textAlign: TextAlign.center,
+                    fontFamily: 'Poppins',
+                    text: 'We\'re happy to see you Join us!',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
                   ),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
-              // Password
-              ValueListenableBuilder(
-                valueListenable: isPasswordVisible,
-                builder: (context, value, child) {
-                  return TextFormField(
-                    controller: passwordController,
-                    obscureText: !value,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          value ? Icons.visibility : Icons.visibility_off,
+                  5.verticalSpace,
+                  Form(
+                    // key: controller.formKey,
+                    child: Column(
+                      children: <Widget>[
+                        GestureDetector(
+                          // onTap: selectImage,
+                          child: CircleAvatar(
+                            foregroundColor: Colors.green,
+                            radius: 50,
+                            backgroundColor: Colors.purple,
+                            backgroundImage: image != null
+                                ? FileImage(image!)
+                                : null,
+                            child: image == null
+                                ? const Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
                         ),
-                        onPressed: () {
-                          isPasswordVisible.value = !value;
-                        },
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              // Confirm Password
-              ValueListenableBuilder(
-                valueListenable: isConfirmPasswordVisible,
-                builder: (context, value, child) {
-                  return TextFormField(
-                    controller: confirmPasswordController,
-                    obscureText: !value,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          value ? Icons.visibility : Icons.visibility_off,
+                        10.verticalSpace,
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: CustomTextField(
+                                controller: controller.firstNameController,
+                                validator: (value) => Validator().validateNotEmpty(value, 'First Name'),
+                                labelText: 'First Name',
+                                prefixIcon: Icons.person,
+                              ),
+                            ),
+                            8.horizontalSpace,
+                            Expanded(
+                              flex: 5,
+                              child: CustomTextField(
+                                controller: controller.lastNameController,
+                                validator: (value) => Validator().validateNotEmpty(value, 'Last Name'),
+                                labelText: 'Last Name',
+                                prefixIcon: Icons.person_outline_outlined,
+                              ),
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          isConfirmPasswordVisible.value = !value;
-                        },
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 28),
-              // Register Button
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle registration via controller
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5566FF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        8.verticalSpace,
+                        CustomTextField(
+                          prefixIcon: Icons.email,
+                          controller: controller.emailController,
+                          validator: (value) =>
+                              Validator().validateNotEmpty(value, 'Email'),
+                          labelText: 'Enter your email',
+                        ),
+                        8.verticalSpace,
+                        CustomTextField(
+                          controller: controller.usernameController,
+                          validator: (value) =>
+                              Validator().validateNotEmpty(value, 'User name'),
+                          labelText: 'Username',
+                          prefixIcon: Icons.person_4_outlined,
+                        ),
+                        8.verticalSpace,
+                        CustomTextField(
+                          iconCallBack: () {
+                            setState(() {
+                              isPasswordHidden = !isPasswordHidden;
+                            });
+                          },
+                          iconData: isPasswordHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          isObscureText: isPasswordHidden,
+                          charcterType: '*',
+                          controller: controller.passwordController,
+                          validator: (value) =>
+                              Validator().validatePassword(value),
+                          labelText: 'Password',
+                          prefixIcon: Icons.password,
+                        ),
+                        8.verticalSpace,
+                        CustomTextField(
+                          iconCallBack: () {
+                            setState(() {
+                              isConfirmPasswordHidden =
+                                  !isConfirmPasswordHidden;
+                            });
+                          },
+                          iconData: isConfirmPasswordHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          charcterType: '*',
+                          isObscureText: isConfirmPasswordHidden,
+                          controller: controller.confirmPasswordController,
+                          validator: (value) =>
+                              Validator().validateConfirmPassword(value),
+                          labelText: 'Confirm your password',
+                          prefixIcon: Icons.password,
+                        ),
+                      ],
                     ),
                   ),
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
+                  20.verticalSpace,
+                  // Obx(
+                  //   () =>;
+                  //   ),
+                  
+                ],
               ),
-              const SizedBox(height: 16),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    // Navigate to Login page
-                  },
-                  child: const Text(
-                    'Already have an account? Login',
-                    style: TextStyle(
-                      color: Color(0xFF5566FF),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/products_controller.dart';
+import 'package:go_shop/features/auth_feature/login.dart';
+import 'package:go_shop/features/auth_feature/register.dart';
 import 'package:go_shop/features/route_feature/route_shell.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
@@ -44,7 +46,8 @@ class AppRouter {
             path: '/accountpage',
             builder: (context, state) => AccountPage(),
           ),
-         
+         GoRoute(path: '/loginpage', builder: (context, state)=>Login()),
+         GoRoute(path: '/registerpage', builder: (context, state) => Register()),
         ],
       ),
     ],

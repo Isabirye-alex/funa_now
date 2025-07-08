@@ -93,7 +93,7 @@ class CustomAppBar extends StatelessWidget {
                     children: [
                       Stack(
                         children: [
-                          Icon(icon, color: Colors.amber),
+                          Icon(icon, color: Colors.purpleAccent),
                           Positioned(
                             right: 0,
                             top: 0,
@@ -102,7 +102,7 @@ class CustomAppBar extends StatelessWidget {
                                 '$items',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 18,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),

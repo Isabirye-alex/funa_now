@@ -1,10 +1,9 @@
-
-
-
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class Validator {
-    String? validateNotEmpty(String? value, String fieldName) {
+  final passwordController = TextEditingController();
+  String? validateNotEmpty(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
@@ -28,11 +27,10 @@ class Validator {
     return null;
   }
 
-  // String? validateConfirmPassword(String? value) {
-  //   if (value != passwordController.text) {
-  //     return 'Passwords do not match';
-  //   }
-  //   return null;
-  // }
-
+  String? validateConfirmPassword(String? value) {
+    if (value != passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
 }

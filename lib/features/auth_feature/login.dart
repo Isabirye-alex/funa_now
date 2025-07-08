@@ -1,115 +1,105 @@
 import 'package:flutter/material.dart';
-
-class Login extends StatelessWidget {
+import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_shop/ui/pages/reusables/custom_text.dart';
+import 'package:go_shop/ui/pages/reusables/custom_text_field.dart';
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final isPasswordVisible = ValueNotifier<bool>(false);
+  State<Login> createState() => _LoginState();
+}
 
+class _LoginState extends State<Login> {
+  bool isPasswordHidden = true;
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Welcome Back',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E1E2C),
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Please login to your account',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 32),
-              // Email Field
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: const Icon(Icons.email),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: 0.85.sh,
+          width: 1.sw,
+          child: Center(
+            child: Container(
+              margin: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(8.spMax),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  35.verticalSpace,
+                  CustomText(
+                    fontFamily: 'Poppins',
+                    text: 'Login to your account',
+                    fontSize: 34,
+                    fontWeight: FontWeight.w700,
                   ),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
-              // Password Field with toggle
-              ValueListenableBuilder(
-                valueListenable: isPasswordVisible,
-                builder: (context, value, child) {
-                  return TextFormField(
-                    controller: passwordController,
-                    obscureText: !value,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          value ? Icons.visibility : Icons.visibility_off,
+                  5.verticalSpace,
+                  CustomText(
+                    textAlign: TextAlign.center,
+                    fontFamily: 'Poppins',
+                    text: 'We\'re happy to see you back!',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  5.verticalSpace,
+                  Form(
+                    key: controller.formKey,
+                    child: Column(
+                      children: <Widget>[
+                        CustomTextField(
+                          controller: controller.usernameController,
+                          validator: (value) =>
+                              controller.validateNotEmpty(value, 'Email'),
+                          labelText: 'Enter your Username',
+                          prefixIcon: Icons.person_4_outlined,
                         ),
-                        onPressed: () {
-                          isPasswordVisible.value = !value;
-                        },
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              // Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Call your controller here
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5566FF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                        8.verticalSpace,
+                        CustomTextField(
+                          iconCallBack: () {
+                            setState(() {
+                              isPasswordHidden = !isPasswordHidden;
+                            });
+                          },
+                          iconData: isPasswordHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          isObscureText: isPasswordHidden,
+                          charcterType: '*',
+                          prefixIcon: Icons.password,
+                          controller: controller.passwordController,
+                          validator: (value) =>
+                              controller.validatePassword(value),
+                          labelText: 'Enter Password',
+                        ),
+                      ],
                     ),
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    // Forgot password action
-                  },
-                  child: const Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      color: Color(0xFF5566FF),
-                      fontWeight: FontWeight.w500,
+                  20.verticalSpace,
+                  Obx(
+                    () => CustomTextButton(
+                      isLoading: controller.isLoading.value,
+                      fontSize: 24,
+                      color: Colors.blue,
+                      text: 'LogIn',
+                      radius: 10.r,
+                      textColor: Colors.white,
+                      callBack: () => controller.validateAndSubmit(),
                     ),
                   ),
-                ),
+                  10.verticalSpace,
+                  CustomTextButton(
+                    isLoading: false,
+                    fontSize: 18,
+                    text: 'Don\'t have an account? Sign Up',
+                    textColor: Colors.blue,
+                    callBack: () {
+                      Get.off(() => SignUpScreen(), binding: LogInBindings());
+                    },
+                  ),
+                  SocialSignInButtons(),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

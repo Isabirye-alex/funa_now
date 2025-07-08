@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/ui/pages/reusables/shape.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -37,6 +38,14 @@ class AccountPage extends StatelessWidget {
             ),
             Column(
               children: [
+                _accountTile(
+                  icon: Icons.account_circle_sharp,
+                  label: "Log in or Register",
+                  color: const Color.fromARGB(255, 13, 171, 15),
+                  onTap: () {
+                    context.go('/loginpage');
+                  },
+                ),
                 _accountTile(
                   icon: Icons.shopping_bag,
                   label: "My Orders",
