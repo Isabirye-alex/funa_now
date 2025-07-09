@@ -93,3 +93,21 @@ class LoginController extends GetxController {
 //   }
 //   ...
 // }
+
+
+// Future<void> checkAuth() async {
+//   final data = await AuthStorage().getAuthData();
+//   if (data != null) {
+//     String token = data['token'];
+//     int userId = data['userId'];
+//     print('Logged in as $userId with token: $token');
+//   } else {
+//     print('Not logged in');
+//   }
+// }
+
+
+// Future<void> logout() async {
+//   await AuthStorage().clearAuthData();
+//   Get.offAllNamed('/login');
+// }

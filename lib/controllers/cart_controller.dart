@@ -22,7 +22,7 @@ class CartController extends GetxController {
       quantity.value = 1;
 
       final response = await http.post(
-        Uri.parse('http://172.24.48.1:3000/cart-items/addtocart'),
+        Uri.parse('http://10.41.3.148:3000/cart-items/addtocart'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'user_id': 7,
@@ -52,7 +52,7 @@ class CartController extends GetxController {
     try {
       final response = await http.get(
         Uri.parse(
-          'http://172.24.48.1:3000/cart-items/getcartitems/${cart_id.value}',
+          'http://10.41.3.148:3000/cart-items/getcartitems/${cart_id.value}',
         ),
       );
 
@@ -80,7 +80,7 @@ class CartController extends GetxController {
   Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
       final response = await http.patch(
-        Uri.parse('172.24.48.1:3000/cart-items/decrease/$itemId'),
+        Uri.parse('10.41.3.148:3000/cart-items/decrease/$itemId'),
       );
 
       final data = jsonDecode(response.body);
@@ -122,7 +122,7 @@ class CartController extends GetxController {
   Future<void> loadCartOnAppStart(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse('http://172.24.48.1:3000/cart-items/activecart/$userId'),
+        Uri.parse('http://10.41.3.148:3000/cart-items/activecart/$userId'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -140,7 +140,7 @@ class CartController extends GetxController {
   Future<void> removeItemFromCart(int itemId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://172.24.48.1:3000/cart-items/deleteitem/$itemId'),
+        Uri.parse('http://10.41.3.148:3000/cart-items/deleteitem/$itemId'),
       );
 
       final data = jsonDecode(response.body);
