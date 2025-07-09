@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_shop/features/route_feature/app_router.dart';
 
 class ConnectionChecker extends StatefulWidget {
@@ -42,29 +43,34 @@ class _ConnectionCheckerState extends State<ConnectionChecker> {
 
   @override
   Widget build(BuildContext context) {
-    return _isConnected
-        ? MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            themeAnimationCurve: Curves.decelerate,
-            title: 'Admin Dashboard',
-            theme: ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: const Color(0xFF1976D2),
-              cardColor: const Color(0xFF2A2D3E),
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Color(0xFF1C1C2D),
-                elevation: 10,
-              ),
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
-            routerConfig: AppRouter.router,
-          )
-        : MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: NoInternetScreen(onRetry: _checkInternet),
-          );
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Use your design's base size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return _isConnected
+            ? MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                title: 'Admin Dashboard',
+                theme: ThemeData.dark().copyWith(
+                  scaffoldBackgroundColor: const Color(0xFF1976D2),
+                  cardColor: const Color(0xFF2A2D3E),
+                  appBarTheme: const AppBarTheme(
+                    backgroundColor: Color(0xFF1C1C2D),
+                    elevation: 10,
+                  ),
+                  iconTheme: const IconThemeData(color: Colors.white),
+                ),
+                routerConfig: AppRouter.router,
+              )
+            : MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: NoInternetScreen(onRetry: _checkInternet),
+              );
+      },
+    );
   }
 }
-
 
 class NoInternetScreen extends StatelessWidget {
   final VoidCallback onRetry;
@@ -102,7 +108,10 @@ class NoInternetScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),

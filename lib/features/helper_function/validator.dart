@@ -1,16 +1,15 @@
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/controllers/signup_controller.dart';
 
-class Validator {
-  final passwordController = TextEditingController();
-  String? validateNotEmpty(String? value, String fieldName) {
+class AValidator {
+  static String? validateNotEmpty(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
     return null;
   }
 
-  String? validateEmail(String? value) {
+  static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
     }
@@ -20,15 +19,15 @@ class Validator {
     return null;
   }
 
-  String? validatePassword(String? value) {
+  static String? validatePassword(String? value) {
     if (value == null || value.length < 6) {
       return 'Password must be at least 6 characters';
     }
     return null;
   }
 
-  String? validateConfirmPassword(String? value) {
-    if (value != passwordController.text) {
+  static String? validateConfirmPassword(String? value) {
+    if (value != SignUpController.instance.confirmPasswordController.text.trim()) {
       return 'Passwords do not match';
     }
     return null;

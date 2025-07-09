@@ -1,167 +1,183 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/signup_controller.dart';
 import 'package:go_shop/features/helper_function/validator.dart';
-import 'package:go_shop/ui/pages/reusables/custom_text.dart';
-import 'package:go_shop/ui/pages/reusables/custom_text_field.dart';
+import 'package:iconsax/iconsax.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterState extends State<Register> {
-  bool isPasswordHidden = true;
-  bool isConfirmPasswordHidden = true;
-
-  File? image;
-
+class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpController());
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SizedBox(
-          width: 1.sw,
-          child: Center(
-            child: Container(
-              margin: EdgeInsets.all(12.w),
-              padding: EdgeInsets.all(8.spMax),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: <Widget>[
+          Text(
+            'Welcome on Board!',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Enter your details to register.',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+              fontWeight: FontWeight.w200,
+            ),
+          ),
+          SizedBox(height: 10),
+          Expanded(
+            child: Form(
+              key: controller.formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  35.verticalSpace,
-                  CustomText(
-                    fontFamily: 'Poppins',
-                    text: 'Create your account',
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  5.verticalSpace,
-                  CustomText(
-                    textAlign: TextAlign.center,
-                    fontFamily: 'Poppins',
-                    text: 'We\'re happy to see you Join us!',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  5.verticalSpace,
-                  Form(
-                    // key: controller.formKey,
-                    child: Column(
-                      children: <Widget>[
-                        GestureDetector(
-                          // onTap: selectImage,
-                          child: CircleAvatar(
-                            foregroundColor: Colors.green,
-                            radius: 50,
-                            backgroundColor: Colors.purple,
-                            backgroundImage: image != null
-                                ? FileImage(image!)
-                                : null,
-                            child: image == null
-                                ? const Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
-                                  )
-                                : null,
-                          ),
-                        ),
-                        10.verticalSpace,
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: CustomTextField(
-                                controller: controller.firstNameController,
-                                validator: (value) => Validator().validateNotEmpty(value, 'First Name'),
-                                labelText: 'First Name',
-                                prefixIcon: Icons.person,
-                              ),
-                            ),
-                            8.horizontalSpace,
-                            Expanded(
-                              flex: 5,
-                              child: CustomTextField(
-                                controller: controller.lastNameController,
-                                validator: (value) => Validator().validateNotEmpty(value, 'Last Name'),
-                                labelText: 'Last Name',
-                                prefixIcon: Icons.person_outline_outlined,
-                              ),
-                            ),
-                          ],
-                        ),
-                        8.verticalSpace,
-                        CustomTextField(
-                          prefixIcon: Icons.email,
-                          controller: controller.emailController,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ATextFormField(
                           validator: (value) =>
-                              Validator().validateNotEmpty(value, 'Email'),
-                          labelText: 'Enter your email',
-                        ),
-                        8.verticalSpace,
-                        CustomTextField(
+                              AValidator.validateNotEmpty(value, 'First Name'),
+                          labelText: 'First Name',
+                          prefixIcon: Iconsax.user,
                           controller: controller.usernameController,
-                          validator: (value) =>
-                              Validator().validateNotEmpty(value, 'User name'),
-                          labelText: 'Username',
-                          prefixIcon: Icons.person_4_outlined,
                         ),
-                        8.verticalSpace,
-                        CustomTextField(
-                          iconCallBack: () {
-                            setState(() {
-                              isPasswordHidden = !isPasswordHidden;
-                            });
-                          },
-                          iconData: isPasswordHidden
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          isObscureText: isPasswordHidden,
-                          charcterType: '*',
-                          controller: controller.passwordController,
+                      ),
+                      Expanded(
+                        child: ATextFormField(
                           validator: (value) =>
-                              Validator().validatePassword(value),
-                          labelText: 'Password',
-                          prefixIcon: Icons.password,
+                              AValidator.validateNotEmpty(value, 'Last Name'),
+                          labelText: 'Last Name',
+                          prefixIcon: Iconsax.user,
+                          controller: controller.usernameController,
                         ),
-                        8.verticalSpace,
-                        CustomTextField(
-                          iconCallBack: () {
-                            setState(() {
-                              isConfirmPasswordHidden =
-                                  !isConfirmPasswordHidden;
-                            });
-                          },
-                          iconData: isConfirmPasswordHidden
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          charcterType: '*',
-                          isObscureText: isConfirmPasswordHidden,
-                          controller: controller.confirmPasswordController,
-                          validator: (value) =>
-                              Validator().validateConfirmPassword(value),
-                          labelText: 'Confirm your password',
-                          prefixIcon: Icons.password,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  ATextFormField(
+                    validator: (value) =>
+                        AValidator.validateEmail(value),
+                    labelText: 'example@gmail.com',
+                    prefixIcon: Iconsax.message,
+                    controller: controller.emailController,
+                  ),
+                  SizedBox(height: 10),
+                  ATextFormField(
+                    validator: (value) => AValidator.validatePassword(value),
+                    labelText: 'Password',
+                    prefixIcon: Iconsax.lock,
+                    controller: controller.passwordController,
+                    isObscureText: controller.isPasswordHidden,
+                    characterType: '*',
+                    iconCallBack: () {
+                      setState(() {
+                        controller.isPasswordHidden =
+                            !controller.isPasswordHidden;
+                      });
+                    },
+                    iconData: controller.isPasswordHidden
+                        ? Iconsax.eye
+                        : Iconsax.eye_slash,
+                  ),
+                  ATextFormField(
+                    validator: (value) => AValidator.validateConfirmPassword(
+                      controller.passwordController.text.trim(),
+                    ),
+                    labelText: 'Confirm Password',
+                    prefixIcon: Iconsax.lock,
+                    controller: controller.confirmPasswordController,
+                    isObscureText: controller.isConfirmPasswordHidden,
+                    characterType: '*',
+                    iconCallBack: () {
+                      setState(() {
+                        controller.isConfirmPasswordHidden =
+                            !controller.isConfirmPasswordHidden;
+                      });
+                    },
+                    iconData: controller.isConfirmPasswordHidden
+                        ? Iconsax.eye
+                        : Iconsax.eye_slash,
+                  ),
+                  SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      controller.register(context);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.blue,
+                      ),
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                  20.verticalSpace,
-                  // Obx(
-                  //   () =>;
-                  //   ),
-                  
                 ],
               ),
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class ATextFormField extends StatelessWidget {
+  const ATextFormField({
+    super.key,
+    this.controller,
+    this.labelText,
+    required this.validator,
+    this.isObscureText = false,
+    this.iconCallBack,
+    this.iconData,
+    this.characterType,
+    this.prefixIcon,
+  });
+
+  final TextEditingController? controller;
+  final String? labelText;
+  final String? Function(String?) validator;
+  final bool? isObscureText;
+  final VoidCallback? iconCallBack;
+  final IconData? iconData;
+  final String? characterType;
+  final IconData? prefixIcon;
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      maxLines: 1,
+      obscuringCharacter: (characterType != null && characterType!.length == 1)
+          ? characterType!
+          : '•',
+      obscureText: isObscureText!,
+      decoration: InputDecoration(
+        prefixIcon: Icon(prefixIcon),
+        suffixIcon: IconButton(onPressed: iconCallBack, icon: Icon(iconData)),
+        labelText: labelText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
