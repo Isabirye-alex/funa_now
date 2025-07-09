@@ -94,6 +94,24 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
+          SizedBox(height: 10),
+          Expanded(
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Forgot Password? Reset here!',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Dont\'t Have account? Sign Up!'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

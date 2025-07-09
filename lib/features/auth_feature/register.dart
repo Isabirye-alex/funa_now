@@ -4,14 +4,14 @@ import 'package:go_shop/controllers/signup_controller.dart';
 import 'package:go_shop/features/helper_function/validator.dart';
 import 'package:iconsax/iconsax.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
+class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpController());
@@ -66,11 +66,18 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 10),
                   ATextFormField(
-                    validator: (value) =>
-                        AValidator.validateEmail(value),
+                    validator: (value) => AValidator.validateEmail(value),
                     labelText: 'example@gmail.com',
                     prefixIcon: Iconsax.message,
                     controller: controller.emailController,
+                  ),
+                  SizedBox(height: 10),
+                  ATextFormField(
+                    validator: (value) =>
+                        AValidator.validateNotEmpty(value, 'Username'),
+                    labelText: 'Username',
+                    prefixIcon: Iconsax.user2,
+                    controller: controller.usernameController,
                   ),
                   SizedBox(height: 10),
                   ATextFormField(
@@ -134,6 +141,19 @@ class _LoginState extends State<Login> {
                   ),
                 ],
               ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Already Have an account? Log in',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
