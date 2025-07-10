@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
@@ -16,28 +18,34 @@ class LandingPage extends StatefulWidget {
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
+
 class _LandingPageState extends State<LandingPage> {
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    // Initialize ProductsController and fetch products
     WidgetsFlutterBinding.ensureInitialized();
+    _initializeApp();
+  }
 
+  Future<void> _initializeApp() async {
     final authStorage = AuthStorage();
     final authData = await authStorage.getAuthData();
 
     if (authData != null) {
       final userId = authData['userId'];
-      final userController = Get.put(SignUpController());
-      // Call your backend to fetch user details using this ID
-      await userController.fetchUserById(userId);
 
-      final controller = Get.put(ProductsController());
-      final cartController = Get.put(CartController());
-      cartController.loadCartOnAppStart(7);
-      controller.fetchProducts(context);
-    }
+    final userController = Get.put(SignUpController());
+    await userController.fetchUserById(userId);
+
+    
+    final cartController = Get.put(CartController());
+
+    await cartController.loadCartOnAppStart(userId);
+   
   }
+  final controller = Get.put(ProductsController());
+   controller.fetchProducts(context);
+}
 
   @override
   Widget build(BuildContext context) {

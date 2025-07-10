@@ -23,7 +23,6 @@ class SignUpController extends GetxController {
   RxList<UserModel> users = RxList<UserModel>();
   var userId = ''.obs;
 
-
   Future<void> register(BuildContext context) async {
     try {
       final uri = Uri.parse('http://10.41.3.148:3000/users/register');
@@ -45,9 +44,9 @@ class SignUpController extends GetxController {
       debugPrint('Response body: ${response.body}');
       if (response.statusCode == 201 || response.statusCode == 200) {
         final result = jsonDecode(response.body);
-         userId.value = result['user']['id'].toString();
-         await authStorage.saveAuthData('', int.parse(userId.value));
-
+        userId.value = result['user']['id'].toString();
+        await authStorage.saveAuthData('', int.parse(userId.value));
+        Navigator.pushNamed(context, '/landingpage');
         final username = result['user']['username'].toString();
         debugPrint(userId.value);
         debugPrint('User registered with username $username');
@@ -81,12 +80,11 @@ class SignUpController extends GetxController {
     final uri = Uri.parse('http://10.41.3.148:3000/users/getuser/$userId');
     final response = await http.get(uri);
 
-    if (response.statusCode == 200|| response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final result = jsonDecode(response.body);
       return UserModel.fromJson(result['user']);
     } else {
       return null;
     }
   }
-
 }
