@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/signup_controller.dart';
+import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/summer_products.dart';
-import 'package:go_shop/controllers/products_controller.dart'; // Import ProductsController
+import 'package:go_shop/controllers/products_controller.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
-
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
-
 class _LandingPageState extends State<LandingPage> {
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     // Initialize ProductsController and fetch products
-    final controller = Get.put(ProductsController());
-    final cartController = Get.put(CartController());
-    cartController.loadCartOnAppStart(7);
-    controller.fetchProducts(context);
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final authStorage = AuthStorage();
+    final authData = await authStorage.getAuthData();
+
+    if (authData != null) {
+      final userId = authData['userId'];
+      final userController = Get.put(SignUpController());
+      // Call your backend to fetch user details using this ID
+      await userController.fetchUserById(userId);
+
+      final controller = Get.put(ProductsController());
+      final cartController = Get.put(CartController());
+      cartController.loadCartOnAppStart(7);
+      controller.fetchProducts(context);
+    }
   }
 
   @override
