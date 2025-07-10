@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
           SizedBox(height: 10),
           Expanded(
             child: Form(
-              key: controller.formKey,
+              key: controller.loginformKey,
               child: Column(
                 children: [
                   ATextFormField(

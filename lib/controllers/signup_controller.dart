@@ -14,7 +14,7 @@ class SignUpController extends GetxController {
   var isLoading = false.obs;
   bool isPasswordHidden = true;
   bool isConfirmPasswordHidden = true;
-  final formKey = GlobalKey<FormState>();
+  final registerformKey = GlobalKey<FormState>();
 
   Future<void> register(BuildContext context) async {
     try {} catch (e) {

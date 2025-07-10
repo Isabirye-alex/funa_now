@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
-  final formKey = GlobalKey<FormState>();
+  final loginformKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();

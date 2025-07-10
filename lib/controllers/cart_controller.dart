@@ -80,7 +80,7 @@ class CartController extends GetxController {
   Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
       final response = await http.patch(
-        Uri.parse('10.41.3.148:3000/cart-items/decrease/$itemId'),
+        Uri.parse('http://10.41.3.148:3000/cart-items/decrease/$itemId'),
       );
 
       final data = jsonDecode(response.body);

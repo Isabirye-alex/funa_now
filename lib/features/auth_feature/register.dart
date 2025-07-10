@@ -39,7 +39,7 @@ class _RegisterState extends State<Register> {
           SizedBox(height: 10),
           Expanded(
             child: Form(
-              key: controller.formKey,
+              key: controller.registerformKey,
               child: Column(
                 children: [
                   Row(
