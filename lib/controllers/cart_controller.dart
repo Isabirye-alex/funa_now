@@ -24,7 +24,7 @@ class CartController extends GetxController {
     try {
       final authData = await authStorage.getAuthData();
       if (authData != null) {
-           quantity.value = 1;
+        quantity.value = 1;
         final userId = authData['userId'];
         final response = await http.post(
           Uri.parse('http://10.41.3.148:3000/cart-items/addtocart'),
@@ -49,7 +49,7 @@ class CartController extends GetxController {
           debugPrint('Failed to add item: ${response.body}');
         }
       } else {
-                 Flushbar(
+        Flushbar(
           shouldIconPulse: false,
           borderRadius: BorderRadius.circular(8),
           margin: EdgeInsets.all(24),
@@ -69,7 +69,7 @@ class CartController extends GetxController {
               fontWeight: FontWeight.bold,
             ),
           ),
-        ).show(context); 
+        ).show(context);
       }
     } catch (e) {
       debugPrint('Error: $e');
@@ -183,5 +183,16 @@ class CartController extends GetxController {
     } catch (e) {
       debugPrint('Error removing item: $e');
     }
+  }
+
+  Future<void> clearCart() async {
+    cartItem.clear();
+    cart.clear();
+    cart_id.value = 0;
+    noOfItems.value = 0;
+    quantity.value = 0;
+    totalPrice.value = 0.0;
+
+    update();
   }
 }

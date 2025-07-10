@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:http/http.dart' as http;
 
 class LoginController extends GetxController {
@@ -15,6 +17,7 @@ class LoginController extends GetxController {
   final usernameController = TextEditingController();
   var isLoading = false.obs;
   bool isPasswordHidden = true;
+  final authService = AuthStorage();
 
   Future<void> login(BuildContext context) async {
     if (!loginformKey.currentState!.validate()) return;
@@ -36,14 +39,9 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = jsonDecode(response.body);
+        Navigator.pushReplacementNamed(context, '/landingpage');
         final token = result['token'];
-
-        // Proceed with navigation or storage
-        print('Token: $token');
-        Navigator.pushReplacementNamed(
-          context,
-          '/home',
-        ); // or use Get.toNamed('/home')
+        debugPrint('Token: $token');
       } else {
         _showError(context, 'Login failed: ${response.body}');
       }
@@ -72,6 +70,11 @@ class LoginController extends GetxController {
         ),
       ),
     ).show(context);
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await authService.clearAuthData();
+    GoRouter.of(context).go('/landingpage');
   }
 }
 
@@ -107,7 +110,3 @@ class LoginController extends GetxController {
 // }
 
 
-// Future<void> logout() async {
-//   await AuthStorage().clearAuthData();
-//   Get.offAllNamed('/login');
-// }

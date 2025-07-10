@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/login_controller.dart';
 import 'package:go_shop/ui/pages/reusables/shape.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -8,6 +11,8 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginController());
+    final cartController = Get.put(CartController());
     return Container(
       decoration: const BoxDecoration(color: Colors.white),
       child: SingleChildScrollView(
@@ -98,7 +103,10 @@ class AccountPage extends StatelessWidget {
                   icon: Icons.logout,
                   label: "Logout",
                   color: Colors.red,
-                  onTap: () {},
+                  onTap: () {
+                    cartController.clearCart();
+                    controller.logout(context);
+                  },
                 ),
               ],
             ),

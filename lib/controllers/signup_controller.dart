@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +49,7 @@ class SignUpController extends GetxController {
         final result = jsonDecode(response.body);
         userId.value = result['user']['id'].toString();
         await authStorage.saveAuthData('', int.parse(userId.value));
-        Navigator.pushNamed(context, '/landingpage');
+        GoRouter.of(context).go('/landingpage');
         final username = result['user']['username'].toString();
         debugPrint(userId.value);
         debugPrint('User registered with username $username');

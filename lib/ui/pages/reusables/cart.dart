@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/features/helper_function/number_formatter.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:go_shop/ui/pages/reusables/pop_up_dialog.dart';
@@ -21,7 +22,19 @@ class _CartState extends State<Cart> {
   @override
   void initState() {
     super.initState();
-    cartController.loadCartOnAppStart(7);
+    WidgetsFlutterBinding.ensureInitialized();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    final authStorage = AuthStorage();
+    final authData = await authStorage.getAuthData();
+
+    if (authData != null) {
+      final userId = authData['userId'];
+      final cartController = Get.put(CartController());
+      await cartController.loadCartOnAppStart(userId);
+    }
   }
 
   @override

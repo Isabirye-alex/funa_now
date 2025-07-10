@@ -24,6 +24,7 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
+    if (!mounted) return;
     _initializeApp();
   }
 
@@ -34,18 +35,16 @@ class _LandingPageState extends State<LandingPage> {
     if (authData != null) {
       final userId = authData['userId'];
 
-    final userController = Get.put(SignUpController());
-    await userController.fetchUserById(userId);
+      final userController = Get.put(SignUpController());
+      await userController.fetchUserById(userId);
 
-    
-    final cartController = Get.put(CartController());
+      final cartController = Get.put(CartController());
 
-    await cartController.loadCartOnAppStart(userId);
-   
+      await cartController.loadCartOnAppStart(userId);
+    }
+    final controller = Get.put(ProductsController());
+    controller.fetchProducts(context);
   }
-  final controller = Get.put(ProductsController());
-   controller.fetchProducts(context);
-}
 
   @override
   Widget build(BuildContext context) {
