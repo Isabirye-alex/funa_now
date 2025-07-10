@@ -1,5 +1,8 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/login_controller.dart';
 import 'package:go_shop/features/helper_function/validator.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,107 +15,145 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(LoginController());
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          Text(
-            'We\'re happy to see you back!',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Log in with your details.',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-              fontWeight: FontWeight.w200,
-            ),
-          ),
-          SizedBox(height: 10),
-          Expanded(
-            child: Form(
-              key: controller.loginformKey,
-              child: Column(
-                children: [
-                  ATextFormField(
-                    validator: (value) =>
-                        AValidator.validateNotEmpty(value, 'Username'),
-                    labelText: 'Username',
-                    prefixIcon: Iconsax.user,
-                    controller: controller.usernameController,
-                  ),
-                  SizedBox(height: 10),
-                  ATextFormField(
-                    validator: (value) => AValidator.validatePassword(value),
-                    labelText: 'Password',
-                    prefixIcon: Iconsax.lock,
-                    controller: controller.passwordController,
-                    isObscureText: controller.isPasswordHidden,
-                    characterType: '*',
-                    iconCallBack: () {
-                      setState(() {
-                        controller.isPasswordHidden =
-                            !controller.isPasswordHidden;
-                      });
-                    },
-                    iconData: controller.isPasswordHidden
-                        ? Iconsax.eye
-                        : Iconsax.eye_slash,
-                  ),
-                  SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      controller.login(context);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.blue,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 500,
+              ), // optional for tablets
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 24.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 80),
+                    Text(
+                      'We\'re happy to see you back!',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Text(
-                        'Log in',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Log in with your details.',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          ATextFormField(
+                            validator: (value) =>
+                                AValidator.validateNotEmpty(value, 'Username'),
+                            labelText: 'Username',
+                            prefixIcon: Iconsax.user,
+                            controller: controller.usernameController,
+                          ),
+                          const SizedBox(height: 10),
+                          ATextFormField(
+                            validator: (value) =>
+                                AValidator.validatePassword(value),
+                            labelText: 'Password',
+                            prefixIcon: Iconsax.lock,
+                            controller: controller.passwordController,
+                            isObscureText: controller.isPasswordHidden,
+                            characterType: '*',
+                            iconCallBack: () {
+                              setState(() {
+                                controller.isPasswordHidden =
+                                    !controller.isPasswordHidden;
+                              });
+                            },
+                            iconData: controller.isPasswordHidden
+                                ? Iconsax.eye
+                                : Iconsax.eye_slash,
+                          ),
+                          const SizedBox(height: 20),
+                          InkWell(
+                            onTap: () {
+                              controller.login(context);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.86,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.blue,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Log in',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 10),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 0),
+                            minimumSize: Size(0, 30),
+                            tapTargetSize: MaterialTapTargetSize
+                                .shrinkWrap, // Shrinks tap area
+                          ),
+                          child: const Text(
+                            'Forgot Password? Reset here!',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.go('/registerpage');
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 0),
+                            minimumSize: Size(0, 30),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'Don\'t have an account? Sign Up!',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          SizedBox(height: 10),
-          Expanded(
-            child: Column(
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Forgot Password? Reset here!',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text('Dont\'t Have account? Sign Up!'),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -141,19 +182,28 @@ class ATextFormField extends StatelessWidget {
   final IconData? prefixIcon;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      maxLines: 1,
-      obscuringCharacter: (characterType != null && characterType!.length == 1)
-          ? characterType!
-          : '•',
-      obscureText: isObscureText!,
-      decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
-        suffixIcon: IconButton(onPressed: iconCallBack, icon: Icon(iconData)),
-        labelText: labelText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      margin: EdgeInsets.all(12),
+      decoration: BoxDecoration(),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        maxLines: 1,
+        obscuringCharacter:
+            (characterType != null && characterType!.length == 1)
+            ? characterType!
+            : '•',
+        obscureText: isObscureText!,
+        decoration: InputDecoration(
+          prefixIcon: Icon(prefixIcon, color: Colors.black),
+          suffixIcon: IconButton(
+            onPressed: iconCallBack,
+            icon: Icon(iconData, color: Colors.black),
+          ),
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.black),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
     );
   }

@@ -17,7 +17,7 @@ class LoginController extends GetxController {
   bool isPasswordHidden = true;
 
   Future<void> login(BuildContext context) async {
-    if (!formKey.currentState!.validate()) return;
+    if (!loginformKey.currentState!.validate()) return;
 
     isLoading.value = true;
 
