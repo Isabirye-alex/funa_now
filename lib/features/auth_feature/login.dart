@@ -70,27 +70,29 @@ class _LoginState extends State<Login> {
                             controller: controller.usernameController,
                           ),
                           const SizedBox(height: 10),
-                          ATextFormField(
-                            validator: (value) =>
-                                AValidator.validatePassword(value),
-                            labelText: 'Password',
-                            prefixIcon: Iconsax.lock,
-                            controller: controller.passwordController,
-                            isObscureText: controller.isPasswordHidden.value,
-                            characterType: '*',
-                            iconCallBack: () {
-                              setState(() {
-                                controller.isPasswordHidden.value =
-                                    !controller.isPasswordHidden.value;
-                              });
-                            },
-                            iconData: controller.isPasswordHidden.value
-                                ? Iconsax.eye
-                                : Iconsax.eye_slash,
+                          Obx(
+                            () => ATextFormField(
+                              validator: (value) =>
+                                  AValidator.validatePassword(value),
+                              labelText: 'Password',
+                              prefixIcon: Iconsax.lock,
+                              controller: controller.passwordController,
+                              isObscureText: controller.isPasswordHidden.value,
+                              characterType: '*',
+                              iconCallBack: () {
+                                setState(() {
+                                  controller.isPasswordHidden.value =
+                                      !controller.isPasswordHidden.value;
+                                });
+                              },
+                              iconData: controller.isPasswordHidden.value
+                                  ? Iconsax.eye
+                                  : Iconsax.eye_slash,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           InkWell(
-                            onTap: () {
+                            onTap:controller.isLoading.value ? null: () {
                               if (_formKey.currentState!.validate()) {
                                 controller.login(context);
                               }
@@ -104,8 +106,10 @@ class _LoginState extends State<Login> {
                               ),
                               child: Obx(
                                 () => controller.isLoading.value
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white,
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
                                       )
                                     : Center(
                                         child: Text(

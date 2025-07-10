@@ -21,7 +21,7 @@ class SignUpController extends GetxController {
   final confirmPasswordController = TextEditingController();
   var isLoading = false.obs;
   var isPasswordHidden = true.obs;
-  bool isConfirmPasswordHidden = true;
+  var isConfirmPasswordHidden = true.obs;
   final registerformKey = GlobalKey<FormState>();
   RxList<UserModel> users = RxList<UserModel>();
   var userId = ''.obs;

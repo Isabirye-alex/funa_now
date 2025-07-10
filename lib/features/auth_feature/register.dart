@@ -102,51 +102,58 @@ class _RegisterState extends State<Register> {
                             controller: controller.usernameController,
                           ),
                           const SizedBox(height: 10),
-                          ATextFormField(
-                            validator: AValidator.validatePassword,
-                            labelText: 'Password',
-                            prefixIcon: Iconsax.lock,
-                            controller: controller.passwordController,
-                            isObscureText: controller.isPasswordHidden.value,
-                            characterType: '*',
-                            iconCallBack: () {
-                              setState(() {
-                                controller.isPasswordHidden.value =
-                                    !controller.isPasswordHidden.value;
-                              });
-                            },
-                            iconData: controller.isPasswordHidden.value
-                                ? Iconsax.eye
-                                : Iconsax.eye_slash,
+                          Obx(
+                            () => ATextFormField(
+                              validator: AValidator.validatePassword,
+                              labelText: 'Password',
+                              prefixIcon: Iconsax.lock,
+                              controller: controller.passwordController,
+                              isObscureText: controller.isPasswordHidden.value,
+                              characterType: '*',
+                              iconCallBack: () {
+                                setState(() {
+                                  controller.isPasswordHidden.value =
+                                      !controller.isPasswordHidden.value;
+                                });
+                              },
+                              iconData: controller.isPasswordHidden.value
+                                  ? Iconsax.eye
+                                  : Iconsax.eye_slash,
+                            ),
                           ),
                           const SizedBox(height: 10),
-                          ATextFormField(
-                            validator: (value) =>
-                                AValidator.validateConfirmPassword(
-                                  controller.passwordController.text.trim(),
-                                ),
-                            labelText: 'Confirm Password',
-                            prefixIcon: Iconsax.lock,
-                            controller: controller.confirmPasswordController,
-                            isObscureText: controller.isConfirmPasswordHidden,
-                            characterType: '*',
-                            iconCallBack: () {
-                              setState(() {
-                                controller.isConfirmPasswordHidden =
-                                    !controller.isConfirmPasswordHidden;
-                              });
-                            },
-                            iconData: controller.isConfirmPasswordHidden
-                                ? Iconsax.eye
-                                : Iconsax.eye_slash,
+                          Obx(
+                            () => ATextFormField(
+                              validator: (value) =>
+                                  AValidator.validateConfirmPassword(
+                                    controller.passwordController.text.trim(),
+                                  ),
+                              labelText: 'Confirm Password',
+                              prefixIcon: Iconsax.lock,
+                              controller: controller.confirmPasswordController,
+                              isObscureText:
+                                  controller.isConfirmPasswordHidden.value,
+                              characterType: '*',
+                              iconCallBack: () {
+                                setState(() {
+                                  controller.isConfirmPasswordHidden.value =
+                                      !controller.isConfirmPasswordHidden.value;
+                                });
+                              },
+                              iconData: controller.isConfirmPasswordHidden.value
+                                  ? Iconsax.eye
+                                  : Iconsax.eye_slash,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           InkWell(
-                            onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                controller.register(context);
-                              }
-                            },
+                            onTap: controller.isLoading.value
+                                ? null
+                                : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      controller.register(context);
+                                    }
+                                  },
                             child: Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -154,15 +161,19 @@ class _RegisterState extends State<Register> {
                                 borderRadius: BorderRadius.circular(16),
                                 color: Colors.blue,
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'Sign Up',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              child: Obx(
+                                () => controller.isLoading.value
+                                    ? Center(child: CircularProgressIndicator())
+                                    : Center(
+                                        child: Text(
+                                          'Sign Up',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

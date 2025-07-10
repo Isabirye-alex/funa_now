@@ -18,6 +18,7 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var isPasswordHidden = true.obs;
   final authService = AuthStorage();
+  var userId = ''.obs;
 
   Future<void> login(BuildContext context) async {
     isLoading.value = true;
@@ -35,6 +36,9 @@ class LoginController extends GetxController {
       isLoading.value = false;
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        userId.value = result['user']['id'].toString();
+        await authService.saveAuthData('', int.parse(userId.value));
         // Show flushbar without await:
         Flushbar(
           shouldIconPulse: false,
@@ -64,8 +68,6 @@ class LoginController extends GetxController {
         Future.delayed(Duration(milliseconds: 300), () {
           GoRouter.of(context).go('/landingpage');
         });
-
-        final result = jsonDecode(response.body);
 
         GoRouter.of(context).go('/landingpage');
         final token = result['token'];
