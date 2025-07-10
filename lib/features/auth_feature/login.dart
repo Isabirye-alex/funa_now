@@ -16,10 +16,10 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  final controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -76,22 +76,24 @@ class _LoginState extends State<Login> {
                             labelText: 'Password',
                             prefixIcon: Iconsax.lock,
                             controller: controller.passwordController,
-                            isObscureText: controller.isPasswordHidden,
+                            isObscureText: controller.isPasswordHidden.value,
                             characterType: '*',
                             iconCallBack: () {
                               setState(() {
-                                controller.isPasswordHidden =
-                                    !controller.isPasswordHidden;
+                                controller.isPasswordHidden.value =
+                                    !controller.isPasswordHidden.value;
                               });
                             },
-                            iconData: controller.isPasswordHidden
+                            iconData: controller.isPasswordHidden.value
                                 ? Iconsax.eye
                                 : Iconsax.eye_slash,
                           ),
                           const SizedBox(height: 20),
                           InkWell(
                             onTap: () {
-                              controller.login(context);
+                              if (_formKey.currentState!.validate()) {
+                                controller.login(context);
+                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.86,
@@ -100,15 +102,21 @@ class _LoginState extends State<Login> {
                                 borderRadius: BorderRadius.circular(8),
                                 color: Colors.blue,
                               ),
-                              child: const Center(
-                                child: Text(
-                                  'Log in',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              child: Obx(
+                                () => controller.isLoading.value
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          'Log in',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
@@ -186,6 +194,7 @@ class ATextFormField extends StatelessWidget {
       margin: EdgeInsets.all(12),
       decoration: BoxDecoration(),
       child: TextFormField(
+        style: TextStyle(color: Colors.black),
         controller: controller,
         validator: validator,
         maxLines: 1,

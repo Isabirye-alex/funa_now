@@ -16,16 +16,13 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
   final usernameController = TextEditingController();
   var isLoading = false.obs;
-  bool isPasswordHidden = true;
+  var isPasswordHidden = true.obs;
   final authService = AuthStorage();
 
   Future<void> login(BuildContext context) async {
-    if (!loginformKey.currentState!.validate()) return;
-
     isLoading.value = true;
-
     try {
-      final uri = Uri.parse('http://192.168.100.57/users/login');
+      final uri = Uri.parse('http://10.41.3.148:3000/users/login');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
@@ -38,8 +35,39 @@ class LoginController extends GetxController {
       isLoading.value = false;
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Show flushbar without await:
+        Flushbar(
+          shouldIconPulse: false,
+          borderRadius: BorderRadius.circular(8),
+          margin: EdgeInsets.all(24),
+          flushbarPosition: FlushbarPosition.TOP,
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: Colors.green,
+          messageText: Text(
+            'Success',
+            style: const TextStyle(color: Colors.white),
+          ),
+          duration: const Duration(seconds: 4),
+          icon: Icon(Icons.check_circle, color: Colors.white),
+          titleText: Text(
+            'Log in successful',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ).show(context);
+        usernameController.clear();
+        passwordController.clear();
+
+        // Small delay before navigating:
+        Future.delayed(Duration(milliseconds: 300), () {
+          GoRouter.of(context).go('/landingpage');
+        });
+
         final result = jsonDecode(response.body);
-        Navigator.pushReplacementNamed(context, '/landingpage');
+
+        GoRouter.of(context).go('/landingpage');
         final token = result['token'];
         debugPrint('Token: $token');
       } else {
@@ -75,6 +103,24 @@ class LoginController extends GetxController {
   Future<void> logout(BuildContext context) async {
     await authService.clearAuthData();
     GoRouter.of(context).go('/landingpage');
+    await Flushbar(
+      shouldIconPulse: false,
+      borderRadius: BorderRadius.circular(8),
+      margin: EdgeInsets.all(24),
+      flushbarPosition: FlushbarPosition.TOP,
+      animationDuration: const Duration(milliseconds: 300),
+      backgroundColor: Colors.green,
+      messageText: Text('Success', style: const TextStyle(color: Colors.white)),
+      duration: const Duration(seconds: 4),
+      icon: Icon(Icons.check_circle, color: Colors.white),
+      titleText: Text(
+        'Log out successful',
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ).show(context);
   }
 }
 

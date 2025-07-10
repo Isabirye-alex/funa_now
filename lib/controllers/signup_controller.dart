@@ -20,7 +20,7 @@ class SignUpController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   var isLoading = false.obs;
-  bool isPasswordHidden = true;
+  var isPasswordHidden = true.obs;
   bool isConfirmPasswordHidden = true;
   final registerformKey = GlobalKey<FormState>();
   RxList<UserModel> users = RxList<UserModel>();
@@ -49,7 +49,36 @@ class SignUpController extends GetxController {
         final result = jsonDecode(response.body);
         userId.value = result['user']['id'].toString();
         await authStorage.saveAuthData('', int.parse(userId.value));
+        //Clear text fields
+        firstNameController.clear();
+        lastNameController.clear();
+        usernameController.clear();
+        passwordController.clear();
+        emailController.clear();
+        //Navigate to landing page
         GoRouter.of(context).go('/landingpage');
+        //Show success message to user
+        await Flushbar(
+          shouldIconPulse: false,
+          borderRadius: BorderRadius.circular(8),
+          margin: EdgeInsets.all(24),
+          flushbarPosition: FlushbarPosition.TOP,
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: Colors.green,
+          messageText: Text(
+            'Success',
+            style: const TextStyle(color: Colors.white),
+          ),
+          duration: const Duration(seconds: 4),
+          icon: Icon(Icons.check_circle, color: Colors.white),
+          titleText: Text(
+            'Account successfully created',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ).show(context);
         final username = result['user']['username'].toString();
         debugPrint(userId.value);
         debugPrint('User registered with username $username');

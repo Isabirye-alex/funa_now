@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/signup_controller.dart';
 import 'package:go_shop/features/helper_function/validator.dart';
 import 'package:iconsax/iconsax.dart';
@@ -106,15 +107,15 @@ class _RegisterState extends State<Register> {
                             labelText: 'Password',
                             prefixIcon: Iconsax.lock,
                             controller: controller.passwordController,
-                            isObscureText: controller.isPasswordHidden,
+                            isObscureText: controller.isPasswordHidden.value,
                             characterType: '*',
                             iconCallBack: () {
                               setState(() {
-                                controller.isPasswordHidden =
-                                    !controller.isPasswordHidden;
+                                controller.isPasswordHidden.value =
+                                    !controller.isPasswordHidden.value;
                               });
                             },
-                            iconData: controller.isPasswordHidden
+                            iconData: controller.isPasswordHidden.value
                                 ? Iconsax.eye
                                 : Iconsax.eye_slash,
                           ),
@@ -168,7 +169,7 @@ class _RegisterState extends State<Register> {
                           const SizedBox(height: 12),
                           TextButton(
                             onPressed: () {
-                              Get.toNamed('/login');
+                              GoRouter.of(context).go('/loginpage');
                             },
                             child: const Text(
                               'Already have an account? Log in',
