@@ -193,7 +193,9 @@ class _AccountPageState extends State<AccountPage> {
                     icon: Icons.location_on,
                     label: "My Addresses",
                     color: Colors.green[600],
-                    onTap: () {},
+                    onTap: () {
+                      context.go('/addresspage');
+                    },
                   ),
                   _accountCard(
                     icon: Icons.credit_card,
