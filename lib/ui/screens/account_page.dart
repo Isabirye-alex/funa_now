@@ -14,6 +14,12 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  @override
+  void initState() {
+    super.initState();
+    final userController = Get.put(UserController());
+    userController.fetchUserId();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,32 +58,87 @@ class _AccountPageState extends State<AccountPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Obx(
-                          () => Text(
-                            userController.firstname.toString(),
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        Obx(() {
+                          final uid = userController.userId.value;
+                          return uid != null
+                              ? Text(
+                                  'Username: ${userController.username.toString()}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              : Text(
+                                  'Create an account to start shopping',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 2,
+                                );
+                        }),
                         SizedBox(height: 4),
-                        Obx(
-                          () => Text(
-                            userController.email.toString(),
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                        ),
+                        Obx(() {
+                          final uid = userController.userId.value;
+                          return uid != null
+                              ? Text(
+                                  'Email: ${userController.email.toString()}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              : Text(
+                                  'Track orders and Save items',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 2,
+                                );
+                        }),
                       ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Iconsax.edit, color: Colors.blueAccent),
-                    onPressed: () {
-                      // Edit profile action
-                    },
-                  ),
+
+                  Obx(() {
+                    final uid = userController.userId.value;
+                    return uid != null
+                        ? InkWell(
+                            onTap: () {
+                              cartController.clearCart();
+                              controller.logout(context);
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Iconsax.logout, color: Colors.blueAccent),
+                                Text(
+                                  'Log out',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              context.go('/loginpage');
+                            },
+                            child: Column(
+                              children: [
+                                Icon(Iconsax.login, color: Colors.blueAccent),
+                                Text(
+                                  'LogIn',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          );
+                  }),
                 ],
               ),
             ),
@@ -89,14 +150,25 @@ class _AccountPageState extends State<AccountPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  _accountCard(
-                    icon: Icons.account_circle_sharp,
-                    label: "Log in or Register",
-                    color: const Color.fromARGB(255, 13, 171, 15),
-                    onTap: () {
-                      context.go('/loginpage');
-                    },
-                  ),
+                  Obx(() {
+                    final uid = userController.userId.value;
+                    return uid != null
+                        ? _accountCard(
+                            icon: Icons.person_3_rounded,
+                            label:
+                                '${userController.firstname.toString()} ${userController.lastname.toString()}',
+                            color: Colors.blue[700],
+                            onTap: () {},
+                          )
+                        : _accountCard(
+                            icon: Icons.account_circle_sharp,
+                            label: "Sign up to personalize",
+                            color: const Color.fromARGB(255, 13, 171, 15),
+                            onTap: () {
+                              context.go('/registerpage');
+                            },
+                          );
+                  }),
                   _accountCard(
                     icon: Icons.shopping_bag,
                     label: "My Orders",
@@ -107,7 +179,9 @@ class _AccountPageState extends State<AccountPage> {
                     icon: Iconsax.shopping_bag4,
                     label: "My Cart",
                     color: Colors.amber,
-                    onTap: () {},
+                    onTap: () {
+                      context.go('/cartpage');
+                    },
                   ),
                   _accountCard(
                     icon: Icons.favorite,
@@ -144,15 +218,6 @@ class _AccountPageState extends State<AccountPage> {
                     label: "Help Center",
                     color: Colors.teal,
                     onTap: () {},
-                  ),
-                  _accountCard(
-                    icon: Icons.logout,
-                    label: "Logout",
-                    color: Colors.red,
-                    onTap: () {
-                      cartController.clearCart();
-                      controller.logout(context);
-                    },
                   ),
                 ],
               ),

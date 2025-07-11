@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/signup_controller.dart';
 import 'package:go_shop/controllers/user_controller.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
-import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
@@ -68,10 +68,7 @@ class _LandingPageState extends State<LandingPage> {
             items: cartController.cartItem.length,
             onTap1: () {},
             onTap2: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Cart()),
-              );
+              context.go('/cartpage');
             },
           ),
         ),

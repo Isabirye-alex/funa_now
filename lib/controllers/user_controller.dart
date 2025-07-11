@@ -15,6 +15,16 @@ class UserController extends GetxController {
   var lastname = ''.obs;
   var email = ''.obs;
   var username = ''.obs;
+  var userId = RxnInt();
+
+  Future<void> fetchUserId() async {
+    final dbquery = await authService.getAuthData();
+    if (dbquery != null && dbquery['userId'] != null) {
+      userId.value = dbquery['userId'];
+    } else {
+      userId.value = null;
+    }
+  }
 
   Future<void> fetchUser() async {
     try {
