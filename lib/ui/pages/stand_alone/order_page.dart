@@ -372,6 +372,7 @@ class _OrderPageState extends State<OrderPage> {
 
                       if (response.statusCode == 200 ||
                           response.statusCode == 201) {
+                        debugPrint('${response.body}');
                         Flushbar(
                           title: "Order Placed",
                           message:
@@ -383,6 +384,7 @@ class _OrderPageState extends State<OrderPage> {
 
                         cartController.clearCart(); // optional
                       } else {
+                        debugPrint('${response.body}');
                         Flushbar(
                           title: "Error",
                           message: "Failed to place order. Please try again.",
