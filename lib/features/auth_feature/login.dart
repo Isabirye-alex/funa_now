@@ -108,7 +108,7 @@ class _LoginState extends State<Login> {
                                     ? null
                                     : [
                                         BoxShadow(
-                                          color: Colors.blue.withOpacity(0.4),
+                                          color: Colors.blue.withAlpha(300),
                                           blurRadius: 6,
                                           offset: const Offset(0, 3),
                                         ),

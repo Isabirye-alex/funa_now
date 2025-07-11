@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 class PaymentController extends GetxController {
   // List of available payment methods
@@ -22,11 +23,12 @@ class PaymentController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.57:3000/paymentmethods'),
+        Uri.parse('http://192.168.100.57:3000/payments/paymentmethods'),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
+        debugPrint('$data');
         paymentMethods.value = List<String>.from(data['paymentMethods']);
         if (paymentMethods.isNotEmpty) {
           selectedMethod.value = paymentMethods.first;

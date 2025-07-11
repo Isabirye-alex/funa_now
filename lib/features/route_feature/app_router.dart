@@ -10,7 +10,6 @@ import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
 import 'package:go_shop/ui/screens/landing_page.dart';
-import 'package:path/path.dart';
 import '../auth_feature/register.dart';
 
 // AppRouter handles all app navigation using GoRouter
@@ -46,7 +45,7 @@ class AppRouter {
             builder: (context, state) => Register(),
           ),
           GoRoute(path: '/cartpage', builder: (context, state) => Cart()),
-          // GoRoute(path: '/orderpage', builder: (context, state) => OrderPage()),
+          GoRoute(path: '/orderpage', builder: (context, state) => OrderPage()),
           GoRoute(path: '/addresspage', builder: (context, state)=>AddAddressPage())
         ],
       ),

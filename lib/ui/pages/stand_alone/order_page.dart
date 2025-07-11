@@ -1,365 +1,425 @@
-// // ignore_for_file: unnecessary_string_interpolations
+// ignore_for_file: unnecessary_string_interpolations
 
-// import 'package:another_flushbar/flushbar.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:go_shop/controllers/cart_controller.dart';
-// import 'package:go_shop/controllers/payment_controller.dart';
-// import 'package:go_shop/features/helper_function/number_formatter.dart';
-// import 'package:go_shop/models/products_model.dart';
-// import 'package:go_shop/ui/pages/reusables/pop_up_dialog.dart';
+import 'dart:convert';
 
-// class OrderPage extends StatefulWidget {
-//   const OrderPage({super.key});
+import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_shop/controllers/address_controller.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/payment_controller.dart';
+import 'package:go_shop/features/helper_function/number_formatter.dart';
+import 'package:go_shop/models/products_model.dart';
+import 'package:go_shop/ui/pages/reusables/pop_up_dialog.dart';
+import 'package:http/http.dart' as http;
 
-//   @override
-//   State<OrderPage> createState() => _OrderPageState();
-// }
+class OrderPage extends StatefulWidget {
+  const OrderPage({super.key});
 
-// class _OrderPageState extends State<OrderPage> {
-//   final cartController = Get.put(CartController());
-//   final paymentController = Get.put(PaymentController());
+  @override
+  State<OrderPage> createState() => _OrderPageState();
+}
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     paymentController.fetchPaymentMethods();
-//   }
+class _OrderPageState extends State<OrderPage> {
+  final cartController = Get.put(CartController());
+  final paymentController = Get.put(PaymentController());
+  final addressController = Get.put(AddressController());
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: const Text('Confirm Order'),
-//         backgroundColor: Colors.deepPurple,
-//       ),
-//       body: Obx(() {
-//         if (cartController.cartItem.isEmpty) {
-//           return const Center(
-//             child: Text('Your cart is empty!', style: TextStyle(fontSize: 18)),
-//           );
-//         }
+  @override
+  void initState() {
+    super.initState();
+    paymentController.fetchPaymentMethods();
+    addressController.fetchUserAddresses(context);
+  }
 
-//         final totalItems = cartController.cartItem.fold<int>(
-//           0,
-//           (sum, item) => sum + item.quantity,
-//         );
-//         final totalAmount = cartController.cartItem.fold<double>(
-//           0.0,
-//           (sum, item) => sum + (item.price * item.quantity),
-//         );
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Confirm Order'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Obx(() {
+        if (cartController.cartItem.isEmpty) {
+          return const Center(
+            child: Text('Your cart is empty!', style: TextStyle(fontSize: 18)),
+          );
+        }
 
-//         return Column(
-//           children: [
-//             Expanded(
-//               child: ListView(
-//                 padding: const EdgeInsets.all(16),
-//                 children: [
-//                   // Cart Items
-//                   ...cartController.cartItem.map((item) {
-//                     final total = item.price * item.quantity;
-//                     return Container(
-//                       margin: const EdgeInsets.only(bottom: 12),
-//                       padding: const EdgeInsets.all(12),
-//                       decoration: BoxDecoration(
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.circular(12),
-//                         boxShadow: [
-//                           BoxShadow(
-//                             color: Colors.black12,
-//                             blurRadius: 6,
-//                             offset: const Offset(0, 2),
-//                           ),
-//                         ],
-//                       ),
-//                       child: Row(
-//                         children: [
-//                           ClipRRect(
-//                             borderRadius: BorderRadius.circular(8),
-//                             child: item.imageUrl.isNotEmpty
-//                                 ? Image.network(
-//                                     item.imageUrl,
-//                                     width: 60,
-//                                     height: 60,
-//                                     fit: BoxFit.cover,
-//                                   )
-//                                 : Image.asset(
-//                                     'assets/images/placeholder.png',
-//                                     width: 60,
-//                                     height: 60,
-//                                   ),
-//                           ),
-//                           const SizedBox(width: 12),
-//                           Expanded(
-//                             child: Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 Text(
-//                                   item.title,
-//                                   style: const TextStyle(
-//                                     fontSize: 16,
-//                                     fontWeight: FontWeight.bold,
-//                                   ),
-//                                 ),
-//                                 const SizedBox(height: 4),
-//                                 Row(
-//                                   mainAxisAlignment:
-//                                       MainAxisAlignment.spaceBetween,
-//                                   children: [
-//                                     Text(
-//                                       'UGX ${NumberFormatter.formatPrice(total)}',
-//                                       style: const TextStyle(
-//                                         fontSize: 14,
-//                                         fontWeight: FontWeight.bold,
-//                                         color: Colors.deepPurple,
-//                                       ),
-//                                     ),
-//                                     Row(
-//                                       children: [
-//                                         InkWell(
-//                                           onTap: () {
-//                                             if (item.quantity <= 1) {
-//                                               showCustomDialog(
-//                                                 context: context,
-//                                                 title: 'Remove Item',
-//                                                 content:
-//                                                     'Are you sure you want to remove this item from your cart?',
-//                                                 onCancel: () {},
-//                                                 onConfirm: () {
-//                                                   cartController
-//                                                       .decreaseItemQuantity(
-//                                                         item.id,
-//                                                         context,
-//                                                       );
-//                                                 },
-//                                               );
-//                                             } else {
-//                                               cartController
-//                                                   .decreaseItemQuantity(
-//                                                     item.id,
-//                                                     context,
-//                                                   );
-//                                             }
-//                                           },
-//                                           child: Container(
-//                                             margin: const EdgeInsets.only(
-//                                               right: 6,
-//                                             ),
-//                                             padding: const EdgeInsets.all(4),
-//                                             decoration: BoxDecoration(
-//                                               color: Colors.green.shade100,
-//                                               borderRadius:
-//                                                   BorderRadius.circular(4),
-//                                             ),
-//                                             child: const Icon(
-//                                               Icons.remove,
-//                                               color: Colors.red,
-//                                             ),
-//                                           ),
-//                                         ),
-//                                         Text(
-//                                           '${item.quantity}',
-//                                           style: const TextStyle(
-//                                             color: Colors.purple,
-//                                           ),
-//                                         ),
-//                                         InkWell(
-//                                           onTap: () {
-//                                             final product = ProductsModel(
-//                                               id: item.productId,
-//                                               name: item.title,
-//                                               price: item.price.toString(),
-//                                               imageUrl: item.imageUrl,
-//                                             );
+        final totalItems = cartController.cartItem.fold<int>(
+          0,
+          (sum, item) => sum + item.quantity,
+        );
+        final totalAmount = cartController.cartItem.fold<double>(
+          0.0,
+          (sum, item) => sum + (item.price * item.quantity),
+        );
 
-//                                             cartController.addToCart(
-//                                               product,
-//                                               context,
-//                                             );
+        return Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  // Cart Items
+                  ...cartController.cartItem.map((item) {
+                    final total = item.price * item.quantity;
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: item.imageUrl.isNotEmpty
+                                ? Image.network(
+                                    item.imageUrl,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/images/placeholder.png',
+                                    width: 60,
+                                    height: 60,
+                                  ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.title,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'UGX ${NumberFormatter.formatPrice(total)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.deepPurple,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            if (item.quantity <= 1) {
+                                              showCustomDialog(
+                                                context: context,
+                                                title: 'Remove Item',
+                                                content:
+                                                    'Are you sure you want to remove this item from your cart?',
+                                                onCancel: () {},
+                                                onConfirm: () {
+                                                  cartController
+                                                      .decreaseItemQuantity(
+                                                        item.id,
+                                                        context,
+                                                      );
+                                                },
+                                              );
+                                            } else {
+                                              cartController
+                                                  .decreaseItemQuantity(
+                                                    item.id,
+                                                    context,
+                                                  );
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              right: 6,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: const Icon(
+                                              Icons.remove,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          '${item.quantity}',
+                                          style: const TextStyle(
+                                            color: Colors.purple,
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            final product = ProductsModel(
+                                              id: item.productId,
+                                              name: item.title,
+                                              price: item.price.toString(),
+                                              imageUrl: item.imageUrl,
+                                            );
 
-//                                             Flushbar(
-//                                               borderRadius:
-//                                                   BorderRadius.circular(8),
-//                                               margin: const EdgeInsets.all(24),
-//                                               flushbarPosition:
-//                                                   FlushbarPosition.TOP,
-//                                               backgroundColor: Colors.green,
-//                                               messageText: const Text(
-//                                                 'Success',
-//                                                 style: TextStyle(
-//                                                   color: Colors.white,
-//                                                 ),
-//                                               ),
-//                                               duration: const Duration(
-//                                                 seconds: 3,
-//                                               ),
-//                                               icon: const Icon(
-//                                                 Icons.check_circle,
-//                                                 color: Colors.white,
-//                                               ),
-//                                               titleText: const Text(
-//                                                 'Cart updated successfully',
-//                                                 style: TextStyle(
-//                                                   color: Colors.white,
-//                                                   fontWeight: FontWeight.bold,
-//                                                 ),
-//                                               ),
-//                                             ).show(context);
-//                                           },
-//                                           child: Container(
-//                                             margin: const EdgeInsets.only(
-//                                               left: 6,
-//                                             ),
-//                                             padding: const EdgeInsets.all(4),
-//                                             decoration: BoxDecoration(
-//                                               color: Colors.blue,
-//                                               borderRadius:
-//                                                   BorderRadius.circular(4),
-//                                             ),
-//                                             child: const Icon(
-//                                               Icons.add,
-//                                               color: Colors.white,
-//                                             ),
-//                                           ),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                           IconButton(
-//                             icon: const Icon(Icons.delete, color: Colors.red),
-//                             onPressed: () {},
-//                           ),
-//                         ],
-//                       ),
-//                     );
-//                   }),
+                                            cartController.addToCart(
+                                              product,
+                                              context,
+                                            );
 
-//                   const SizedBox(height: 20),
+                                            Flushbar(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              margin: const EdgeInsets.all(24),
+                                              flushbarPosition:
+                                                  FlushbarPosition.TOP,
+                                              backgroundColor: Colors.green,
+                                              messageText: const Text(
+                                                'Success',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              duration: const Duration(
+                                                seconds: 3,
+                                              ),
+                                              icon: const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.white,
+                                              ),
+                                              titleText: const Text(
+                                                'Cart updated successfully',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ).show(context);
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              left: 6,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: const Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
 
-//                   // Payment Method Dropdown
-//                   Text(
-//                     "Payment Method",
-//                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                   ),
-//                   const SizedBox(height: 8),
-//                   Obx(() {
-//                       if (paymentController.isLoading.value) {
-//                       return const CircularProgressIndicator();
-//                     }
+                  const SizedBox(height: 20),
 
-//                     if (paymentController.error.isNotEmpty) {
-//                       return Text(paymentController.error.value);
-//                     }
+                  // Payment Method Dropdown
+                  Text(
+                    "Payment Method",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Obx(() {
+                    if (paymentController.isLoading.value) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-//                     return DropdownButtonFormField<String>(
-//                       value: paymentController.selectedMethod.value,
-//                       items: paymentController.paymentMethods
-//                           .map(
-//                             (method) => DropdownMenuItem(
-//                               value: method,
-//                               child: Text(method),
-//                             ),
-//                           )
-//                           .toList(),
-//                       onChanged: (value) {
-//                         setState(() {
-//                           paymentController.selectedMethod.value = value!;
-//                         });
-//                       },
-//                       decoration: const InputDecoration(
-//                         border: OutlineInputBorder(),
-//                       ),
-//                     );
-//                   }),
-//                   const SizedBox(height: 20),
+                    if (paymentController.error.isNotEmpty) {
+                      return Text(paymentController.error.value);
+                    }
 
-//                   // Shipping Address Dropdown
-//                   const Text(
-//                     "Shipping Address",
-//                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                   ),
-//                   const SizedBox(height: 8),
-//                   DropdownButtonFormField<String>(
-//                     value: selectedAddress,
-//                     items: shippingAddresses
-//                         .map(
-//                           (address) => DropdownMenuItem(
-//                             value: address,
-//                             child: Text(address),
-//                           ),
-//                         )
-//                         .toList(),
-//                     onChanged: (value) {
-//                       setState(() {
-//                         selectedAddress = value!;
-//                       });
-//                     },
-//                     decoration: const InputDecoration(
-//                       border: OutlineInputBorder(),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
+                    return DropdownButtonFormField<String>(
+                      value: paymentController.selectedMethod.value,
+                      items: paymentController.paymentMethods
+                          .map(
+                            (method) => DropdownMenuItem(
+                              value: method,
+                              child: Text(method),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          paymentController.selectedMethod.value = value!;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 20),
 
-//             // Bottom Panel
-//             Container(
-//               padding: const EdgeInsets.all(20),
-//               decoration: const BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-//                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-//               ),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.stretch,
-//                 children: [
-//                   Text(
-//                     "Total Items: $totalItems",
-//                     style: const TextStyle(fontSize: 16),
-//                   ),
-//                   const SizedBox(height: 4),
-//                   Text(
-//                     "Total: UGX ${NumberFormatter.formatPrice(totalAmount)}",
-//                     style: const TextStyle(
-//                       fontSize: 18,
-//                       fontWeight: FontWeight.bold,
-//                       color: Colors.blue,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 12),
-//                   ElevatedButton.icon(
-//                     onPressed: () {
-//                       Flushbar(
-//                         title: "Order Summary",
-//                         message:
-//                             "Items: $totalItems\nTotal: UGX ${NumberFormatter.formatPrice(totalAmount)}\nShipping: $selectedAddress\nPayment: $selectedPayment",
-//                         duration: const Duration(seconds: 4),
-//                         backgroundColor: Colors.green,
-//                         icon: const Icon(
-//                           Icons.check_circle,
-//                           color: Colors.white,
-//                         ),
-//                       ).show(context);
-//                     },
-//                     icon: const Icon(Icons.payment),
-//                     label: const Text('Confirm Order'),
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Colors.deepPurple,
-//                       padding: const EdgeInsets.symmetric(vertical: 16),
-//                       textStyle: const TextStyle(fontSize: 16),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         );
-//       }),
-//     );
-//   }
-// }
+                  // Shipping Address Dropdown
+                  const Text(
+                    "Shipping Address",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+
+                  DropdownButtonFormField<String>(
+                    value: addressController.selectedAddess.value.isNotEmpty
+                        ? addressController.selectedAddess.value
+                        : null,
+                    items: addressController.address.map((addr) {
+                      final display =
+                          '${addr.address_line}, ${addr.district}, ${addr.region}, ${addr.country}';
+                      return DropdownMenuItem(
+                        value: display,
+                        child: Text(display),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        addressController.selectedAddess.value = value!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Bottom Panel
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "Total Items: $totalItems",
+                    style: const TextStyle(fontSize: 16, color: Colors.amber),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Total: UGX ${NumberFormatter.formatPrice(totalAmount)}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final userId = addressController.userId.value;
+                      final address = addressController.selectedAddess.value;
+                      final payment = paymentController.selectedMethod.value;
+                      final total = totalAmount;
+
+                      final items = cartController.cartItem.map((item) {
+                        return {
+                          "product_id": item.productId,
+                          "quantity": item.quantity,
+                          "price": item.price,
+                        };
+                      }).toList();
+
+                      final body = {
+                        "user_id": userId,
+                        "shipping_address": address,
+                        "payment_method": payment,
+                        "total_amount": total,
+                        "items": items,
+                      };
+
+                      final response = await http.post(
+                        Uri.parse('http://192.168.100.57:3000/orders'),
+                        headers: {'Content-Type': 'application/json'},
+                        body: jsonEncode(body),
+                      );
+
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
+                        Flushbar(
+                          title: "Order Placed",
+                          message:
+                              "Thank you! Your order has been placed successfully.",
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.green,
+                          icon: Icon(Icons.check_circle, color: Colors.white),
+                        ).show(context);
+
+                        cartController.clearCart(); // optional
+                      } else {
+                        Flushbar(
+                          title: "Error",
+                          message: "Failed to place order. Please try again.",
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.red,
+                          icon: Icon(Icons.error, color: Colors.white),
+                        ).show(context);
+                      }
+                    },
+
+                    // onPressed: () {
+                    //   Flushbar(
+                    //     title: "Order Summary",
+                    //     message:
+                    //         "Items: $totalItems\nTotal: UGX ${NumberFormatter.formatPrice(totalAmount)}\nShipping: ${addressController.selectedAddess.value}\nPayment: ${addressController.selectedAddess.value}",
+                    //     duration: const Duration(seconds: 4),
+                    //     backgroundColor: Colors.green,
+                    //     icon: const Icon(
+                    //       Icons.check_circle,
+                    //       color: Colors.white,
+                    //     ),
+                    //   ).show(context);
+                    // },
+                    icon: const Icon(Icons.payment),
+                    label: const Text('Confirm Order'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+}

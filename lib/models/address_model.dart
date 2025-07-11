@@ -22,7 +22,6 @@ class AddressModel {
     this.country,
   });
 
-
   AddressModel copyWith({
     int? id,
     String? user_id,
@@ -58,16 +57,17 @@ class AddressModel {
   factory AddressModel.fromMap(Map<String, dynamic> map) {
     return AddressModel(
       id: map['id'] != null ? map['id'] as int : null,
-      user_id: map['user_id'] as String,
+      user_id: map['user_id'].toString(),
       address_line: map['address_line'] as String,
       region: map['region'] as String,
       district: map['district'] as String,
-      postal_code: map['postal_code'] as String,
+      postal_code: map['postal_code'].toString(),
       country: map['country'] != null ? map['country'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AddressModel.fromJson(String source) => AddressModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AddressModel.fromJson(String source) =>
+      AddressModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

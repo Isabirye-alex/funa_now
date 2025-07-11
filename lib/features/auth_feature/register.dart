@@ -158,7 +158,7 @@ class _RegisterState extends State<Register> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.blue.withOpacity(0.4),
+                                    color: Colors.blue.withAlpha(300),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
