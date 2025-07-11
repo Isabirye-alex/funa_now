@@ -4,11 +4,11 @@ import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/features/auth_feature/login.dart';
 import 'package:go_shop/features/route_feature/route_shell.dart';
 import 'package:go_shop/ui/pages/reusables/cart.dart';
+import 'package:go_shop/ui/pages/stand_alone/order_page.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
 import 'package:go_shop/ui/screens/landing_page.dart';
-
 import '../auth_feature/register.dart';
 
 // AppRouter handles all app navigation using GoRouter
@@ -25,13 +25,6 @@ class AppRouter {
           GoRoute(
             path: '/landingpage',
             builder: (context, state) => LandingPage(),
-            // Example for nested routes (commented out)
-            // routes: [
-            //   GoRoute(
-            //     path: 'addproduct',
-            //     builder: (contex, state) => ProductUploader(),
-            //   ),
-            // ],
           ),
           // Categories page route
           GoRoute(path: '/category', builder: (context, state) => Categories()),
@@ -51,6 +44,7 @@ class AppRouter {
             builder: (context, state) => Register(),
           ),
           GoRoute(path: '/cartpage', builder: (context, state) => Cart()),
+          GoRoute(path: '/orderpage', builder: (context, state) => OrderPage()),
         ],
       ),
     ],

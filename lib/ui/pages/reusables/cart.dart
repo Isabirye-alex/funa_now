@@ -3,6 +3,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/features/helper_function/number_formatter.dart';
@@ -304,7 +305,7 @@ class _CartState extends State<Cart> {
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // Get.snackbar('Checkout', 'Proceeding to checkout...');
+                      context.go('/orderpage');
                     },
                     icon: const Icon(Icons.payment),
                     label: const Text('Proceed to Checkout'),
