@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/signup_controller.dart';
+import 'package:go_shop/controllers/user_controller.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
@@ -37,6 +38,10 @@ class _LandingPageState extends State<LandingPage> {
 
       final userController = Get.put(SignUpController());
       await userController.fetchUserById(userId);
+
+      final currentUserController = Get.put(UserController());
+
+      await currentUserController.fetchUser();
 
       final cartController = Get.put(CartController());
 

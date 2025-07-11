@@ -3,15 +3,23 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/login_controller.dart';
+import 'package:go_shop/controllers/user_controller.dart';
 import 'package:iconsax/iconsax.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
+
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
     final cartController = Get.put(CartController());
+    final userController = Get.put(UserController());
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -43,18 +51,23 @@ class AccountPage extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'John Doe',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                      children: [
+                        Obx(
+                          () => Text(
+                            userController.firstname.toString(),
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         SizedBox(height: 4),
-                        Text(
-                          'johndoe@gmail.com',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        Obx(
+                          () => Text(
+                            userController.email.toString(),
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
                         ),
                       ],
                     ),

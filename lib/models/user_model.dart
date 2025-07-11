@@ -82,7 +82,7 @@ class UserModel {
       username: map['username'] as String,
       password: map['password'] as String,
       creationDate: map['creationDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['creationDate'] as int)
+          ? DateTime.parse(map['creationDate'])
           : null,
       imageUrl: map['imageUrl'] as dynamic,
     );
