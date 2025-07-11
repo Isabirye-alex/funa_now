@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final controller = Get.put(LoginController());
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Color(0xFF1C1C2D),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
                     const Text(
                       'We\'re happy to see you back!',
                       style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -49,7 +49,7 @@ class _LoginState extends State<Login> {
                     const Text(
                       'Log in with your details.',
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
@@ -155,7 +155,7 @@ class _LoginState extends State<Login> {
                           ),
                           child: const Text(
                             'Forgot Password? Reset here!',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(color: Colors.blue, fontSize: 16),
                           ),
                         ),
                         TextButton(
@@ -169,7 +169,7 @@ class _LoginState extends State<Login> {
                           ),
                           child: const Text(
                             'Don\'t have an account? Sign Up!',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(color: Colors.blue, fontSize: 16),
                           ),
                         ),
                       ],
@@ -226,7 +226,7 @@ class ATextFormField extends StatelessWidget {
         obscureText: isObscureText!,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: const Color.fromARGB(255, 241, 203, 203),
           prefixIcon: prefixIcon != null
               ? Icon(prefixIcon, color: Colors.blueAccent)
               : null,
@@ -237,7 +237,7 @@ class ATextFormField extends StatelessWidget {
                 )
               : null,
           labelText: labelText,
-          labelStyle: const TextStyle(fontSize: 16, color: Colors.black54),
+          labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

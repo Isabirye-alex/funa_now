@@ -1,17 +1,16 @@
 // ignore_for_file: unnecessary_string_interpolations
 
-import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/address_controller.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/order_controller.dart';
 import 'package:go_shop/controllers/payment_controller.dart';
 import 'package:go_shop/features/helper_function/number_formatter.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:go_shop/ui/pages/reusables/pop_up_dialog.dart';
-import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -347,67 +346,15 @@ class _OrderPageState extends State<OrderPage> {
                       final address = addressController.selectedAddess.value;
                       final payment = paymentController.selectedMethod.value;
                       final total = totalAmount;
-
-                      final items = cartController.cartItem.map((item) {
-                        return {
-                          "product_id": item.productId,
-                          "quantity": item.quantity,
-                          "price": item.price,
-                        };
-                      }).toList();
-
-                      final body = {
-                        "user_id": userId,
-                        "shipping_address": address,
-                        "payment_method": payment,
-                        "total_amount": total,
-                        "items": items,
-                      };
-
-                      final response = await http.post(
-                        Uri.parse('http://192.168.100.57:3000/orders'),
-                        headers: {'Content-Type': 'application/json'},
-                        body: jsonEncode(body),
+                      final orderController = Get.put(OrderController());
+                      orderController.placeOrder(
+                        userId.toString(),
+                        address,
+                        payment,
+                        total.toString(),
+                        context,
                       );
-
-                      if (response.statusCode == 200 ||
-                          response.statusCode == 201) {
-                        debugPrint('${response.body}');
-                        Flushbar(
-                          title: "Order Placed",
-                          message:
-                              "Thank you! Your order has been placed successfully.",
-                          duration: Duration(seconds: 3),
-                          backgroundColor: Colors.green,
-                          icon: Icon(Icons.check_circle, color: Colors.white),
-                        ).show(context);
-
-                        cartController.clearCart(); // optional
-                      } else {
-                        debugPrint('${response.body}');
-                        Flushbar(
-                          title: "Error",
-                          message: "Failed to place order. Please try again.",
-                          duration: Duration(seconds: 3),
-                          backgroundColor: Colors.red,
-                          icon: Icon(Icons.error, color: Colors.white),
-                        ).show(context);
-                      }
                     },
-
-                    // onPressed: () {
-                    //   Flushbar(
-                    //     title: "Order Summary",
-                    //     message:
-                    //         "Items: $totalItems\nTotal: UGX ${NumberFormatter.formatPrice(totalAmount)}\nShipping: ${addressController.selectedAddess.value}\nPayment: ${addressController.selectedAddess.value}",
-                    //     duration: const Duration(seconds: 4),
-                    //     backgroundColor: Colors.green,
-                    //     icon: const Icon(
-                    //       Icons.check_circle,
-                    //       color: Colors.white,
-                    //     ),
-                    //   ).show(context);
-                    // },
                     icon: const Icon(Icons.payment),
                     label: const Text('Confirm Order'),
                     style: ElevatedButton.styleFrom(

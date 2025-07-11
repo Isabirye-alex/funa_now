@@ -144,7 +144,6 @@ class _AccountPageState extends State<AccountPage> {
             ),
 
             const SizedBox(height: 16),
-
             // Options section
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),

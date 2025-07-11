@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Color(0xFF1C1C2D),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -36,7 +36,7 @@ class _RegisterState extends State<Register> {
                     const Text(
                       'Welcome on Board!',
                       style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                       ),
@@ -45,7 +45,7 @@ class _RegisterState extends State<Register> {
                     const SizedBox(height: 8),
                     const Text(
                       'Enter your details to register.',
-                      style: TextStyle(color: Colors.black54, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 30),
@@ -255,9 +255,9 @@ class ATextFormField extends StatelessWidget {
       obscureText: isObscureText!,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: const Color.fromARGB(255, 241, 203, 203),
         labelText: labelText,
-        labelStyle: const TextStyle(fontSize: 16, color: Colors.black54),
+        labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
         prefixIcon: prefixIcon != null
             ? Icon(prefixIcon, color: Colors.blueAccent)
             : null,
