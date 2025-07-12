@@ -75,17 +75,32 @@ class OrderController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.39.3.14:3000/order/${userId.value}'),
+        Uri.parse('http://10.39.3.14:3000/orders/user/${userId.value}'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = jsonDecode(response.body);
-        debugPrint('User orders: $result');
+        // debugPrint('User orders: $result');
       } else {
         debugPrint('Error response: ${response.body}');
       }
     } catch (e) {
       debugPrint('Error fetching user orders: $e');
+    }
+  }
+
+  Future<void> getOrderItems(int orderId) async {
+    debugPrint('Entered Get order items function');
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.39.3.14:3000/orders/orderitems/$orderId'),
+      );
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final result = jsonDecode('${response.body}');
+        debugPrint('Order items = $result');
+      }
+    } catch (e) {
+      debugPrint('Error fetching order items : $e');
     }
   }
 

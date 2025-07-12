@@ -50,6 +50,8 @@ class _LandingPageState extends State<LandingPage> {
       final cartController = Get.put(CartController());
 
       await cartController.loadCartOnAppStart(userId);
+
+      await orderController.getOrderItems(44);
     }
     final controller = Get.put(ProductsController());
     controller.fetchProducts(context);

@@ -17,7 +17,7 @@ class CartController extends GetxController {
   RxDouble totalPrice = 0.0.obs;
   RxList<CartItemModel> cartItem = <CartItemModel>[].obs;
   RxList<CartModel> cart = <CartModel>[].obs;
-  RxInt cart_id = 0.obs;
+  var cart_id = RxnInt();
   final authStorage = AuthStorage();
 
   void addToCart(ProductsModel product, BuildContext context) async {
@@ -162,20 +162,27 @@ class CartController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
-        final int? cartId = data['data']?['id'];
+        final body = jsonDecode(response.body);
 
-        if (cartId != null) {
+        final data = body['data'];
+        if (body['success'] == true && data != null && data['id'] != null) {
+          final int cartId = data['id'];
           cart_id.value = cartId;
           await fetchCartItems();
         } else {
-          debugPrint('Cart ID is null in response');
+          debugPrint('No valid cart ID in response: $body');
+          cart_id.value = null;
+          cartItem.clear();
         }
       } else {
-        debugPrint('No active cart found: ${response.body}');
+        debugPrint('Failed response: ${response.body}');
+        cart_id.value = null;
+        cartItem.clear();
       }
     } catch (e) {
       debugPrint('Error loading cart: $e');
+      cart_id.value = null;
+      cartItem.clear();
     }
   }
 
