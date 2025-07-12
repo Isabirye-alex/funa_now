@@ -3,10 +3,10 @@
 import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/address_model.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AddressController extends GetxController {
@@ -99,36 +99,49 @@ class AddressController extends GetxController {
   }
 
   Future<void> fetchUserAddresses(BuildContext context) async {
-    debugPrint('Address function');
+    debugPrint('🔄 Fetching user addresses...');
     final dbquery = await authService.getAuthData();
+
     if (dbquery != null && dbquery['userId'] != null) {
       userId.value = dbquery['userId'];
-      debugPrint('${userId.value}');
+      isLoading.value = true;
+
       try {
         final response = await http.get(
           Uri.parse('http://10.39.3.14:3000/address/${userId.value}'),
         );
-        if (response.statusCode == 201 || response.statusCode == 200) {
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
           final result = jsonDecode(response.body);
-          debugPrint('$result');
-          final Map<String, dynamic> addressData = result;
-          final List<dynamic> jsonList = addressData['data'];
+          final List<dynamic> jsonList = result['data'];
+
           final List<AddressModel> userAddress = jsonList
               .map((e) => AddressModel.fromMap(e))
               .toList();
 
-          if (userAddress.isNotEmpty) {
-            address.assignAll(userAddress);
+          address.assignAll(userAddress);
 
-            // Set first as default selected if not yet set
+          // Auto-select first address
+          if (userAddress.isNotEmpty) {
             final first = userAddress[0];
             selectedAddess.value =
                 '${first.address_line}, ${first.district}, ${first.region}, ${first.country}';
           }
+
+          debugPrint('✅ Address list updated with ${userAddress.length} items');
+        } else {
+          debugPrint('❌ Failed to fetch addresses: ${response.body}');
+          address.clear();
         }
       } catch (e) {
-        debugPrint('Exception occurred with: $e');
+        debugPrint('🛑 Exception occurred: $e');
+        address.clear();
+      } finally {
+        isLoading.value = false;
       }
+    } else {
+      debugPrint('⚠️ No userId found, cannot fetch address');
+      address.clear();
     }
   }
 

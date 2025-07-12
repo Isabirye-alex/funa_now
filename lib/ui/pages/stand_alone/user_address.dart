@@ -7,11 +7,21 @@ class AddressListView extends StatelessWidget {
   const AddressListView({super.key});
 
   @override
+  @override
   Widget build(BuildContext context) {
     final addressController = Get.put(AddressController());
 
+    // Fetch addresses when screen builds (if not yet fetched)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (addressController.address.isEmpty) {
+        addressController.fetchUserAddresses(context);
+      }
+    });
+
     return Scaffold(
+      backgroundColor: Colors.white60,
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Your Addresses'),
         backgroundColor: Colors.teal,
       ),
@@ -55,7 +65,15 @@ class AddressListView extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${item.district}, ${item.region}, ${item.country}',
+                      'Town: ${item.district}',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    ),
+                    Text(
+                      'Region: ${item.region}',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    ),
+                    Text(
+                      'Country: ${item.country}',
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
                     if (item.postal_code.isNotEmpty) ...[

@@ -5,6 +5,7 @@ import 'package:go_shop/features/auth_feature/login.dart';
 import 'package:go_shop/features/route_feature/route_shell.dart';
 import 'package:go_shop/ui/pages/reusables/cart.dart';
 import 'package:go_shop/ui/pages/stand_alone/address.dart';
+import 'package:go_shop/ui/pages/stand_alone/order_list_page.dart';
 import 'package:go_shop/ui/pages/stand_alone/order_page.dart';
 import 'package:go_shop/ui/pages/stand_alone/user_address.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
@@ -49,12 +50,19 @@ class AppRouter {
           GoRoute(path: '/cartpage', builder: (context, state) => Cart()),
           GoRoute(path: '/orderpage', builder: (context, state) => OrderPage()),
           GoRoute(
-            path: '/addresspage',
-            builder: (context, state) => AddAddressPage(),
+            path: '/orderspage',
+            builder: (context, state) => OrdersListPage(),
           ),
+
           GoRoute(
             path: '/addresslistpage',
             builder: (context, state) => AddressListView(),
+            routes: [
+              GoRoute(
+                path: 'addresspage',
+                builder: (context, state) => AddAddressPage(),
+              ),
+            ],
           ),
         ],
       ),

@@ -13,7 +13,7 @@ class OrderModel {
   dynamic deliveredAt;
   DateTime? createdAt;
   DateTime? updatedAt;
-  String userName;
+  String username;
 
   OrderModel({
     this.id,
@@ -27,7 +27,7 @@ class OrderModel {
     this.deliveredAt,
     this.createdAt,
     this.updatedAt,
-    required this.userName,
+    required this.username,
   });
 
   OrderModel copyWith({
@@ -42,7 +42,7 @@ class OrderModel {
     dynamic deliveredAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? userName,
+    String? username,
   }) {
     return OrderModel(
       id: id ?? this.id,
@@ -56,7 +56,7 @@ class OrderModel {
       deliveredAt: deliveredAt ?? this.deliveredAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      userName: userName ?? this.userName,
+      username: username ?? this.username,
     );
   }
 
@@ -73,7 +73,7 @@ class OrderModel {
       'deliveredAt': deliveredAt,
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
-      'userName': userName,
+      'username': username,
     };
   }
 
@@ -94,7 +94,7 @@ class OrderModel {
       updatedAt: map['updatedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
           : null,
-      userName: map['userName'] as String,
+      username: map['username'] as String,
     );
   }
 

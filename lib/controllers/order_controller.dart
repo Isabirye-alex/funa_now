@@ -51,7 +51,7 @@ class OrderController extends GetxController {
         shipping_address: shippingAddress,
         payment_method: paymentMethod,
         isPaid: 0,
-        userName: username,
+        username: username,
       );
 
       final response = await http.post(
@@ -79,8 +79,14 @@ class OrderController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final result = jsonDecode(response.body);
-        // debugPrint('User orders: $result');
+        final Map<String, dynamic> result = jsonDecode(response.body);
+        final List<dynamic> jsonList = result['data'];
+        final List<OrderModel> res = jsonList
+            .map((e) => OrderModel.fromMap(e))
+            .toList();
+        order.assignAll(res);
+        debugPrint('$res');
+        debugPrint('User orders: $result');
       } else {
         debugPrint('Error response: ${response.body}');
       }
@@ -96,8 +102,10 @@ class OrderController extends GetxController {
         Uri.parse('http://10.39.3.14:3000/orders/orderitems/$orderId'),
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
-        final result = jsonDecode('${response.body}');
-        debugPrint('Order items = $result');
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        final List<dynamic> jsonList = res['data'];
+        final List<>
+
       }
     } catch (e) {
       debugPrint('Error fetching order items : $e');

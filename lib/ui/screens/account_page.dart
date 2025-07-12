@@ -172,7 +172,9 @@ class _AccountPageState extends State<AccountPage> {
                     icon: Icons.shopping_bag,
                     label: "My Orders",
                     color: Colors.blue[700],
-                    onTap: () {},
+                    onTap: () {
+                      context.go('/orderspage');
+                    },
                   ),
                   _accountCard(
                     icon: Iconsax.shopping_bag4,
