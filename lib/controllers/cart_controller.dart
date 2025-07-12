@@ -50,6 +50,7 @@ class CartController extends GetxController {
         }
       } else {
         Flushbar(
+          isDismissible: true,
           shouldIconPulse: false,
           borderRadius: BorderRadius.circular(8),
           margin: EdgeInsets.all(24),

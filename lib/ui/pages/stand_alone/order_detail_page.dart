@@ -14,7 +14,11 @@ class OrderDetailsPage extends StatelessWidget {
     controller.getOrderItems(int.parse(orderId));
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Order Details')),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+        title: const Text('Order Details'),
+      ),
       body: Obx(() {
         final order = controller.order.firstWhereOrNull(
           (o) => o.id == int.tryParse(orderId),
@@ -143,7 +147,7 @@ class OrderDetailsPage extends StatelessWidget {
                           Text('Price: UGX ${item.productPrice}'),
                           Text(
                             'Subtotal: UGX ${subtotal.toStringAsFixed(0)}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),

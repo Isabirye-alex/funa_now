@@ -34,6 +34,21 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<bool> checkUserLoggedIn(BuildContext context) async {
+    await loadUserId();
+    if (userId.value == null) {
+      Flushbar(
+        title: 'Not Logged In',
+        message: 'Please log in to view your orders and start shopping.',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.orange,
+        icon: const Icon(Icons.info, color: Colors.white),
+      ).show(context);
+      return false;
+    }
+    return true;
+  }
+
   Future<void> createOrder(
     BuildContext context,
     String totalAmount,

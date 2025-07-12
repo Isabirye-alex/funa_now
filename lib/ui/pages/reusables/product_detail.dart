@@ -115,9 +115,13 @@ class ProductDetail extends StatelessWidget {
 
                   controller.addToCart(product, context);
                   Flushbar(
+                    duration: Duration(seconds: 1),
+                    isDismissible: true,
+                    dismissDirection: FlushbarDismissDirection.HORIZONTAL,
                     shouldIconPulse: false,
                     borderRadius: BorderRadius.circular(8),
                     margin: EdgeInsets.all(24),
+
                     flushbarPosition: FlushbarPosition.TOP,
                     animationDuration: const Duration(milliseconds: 300),
                     backgroundColor: const Color.fromARGB(255, 29, 204, 40),
@@ -125,7 +129,6 @@ class ProductDetail extends StatelessWidget {
                       'Success',
                       style: const TextStyle(color: Colors.white),
                     ),
-                    duration: const Duration(seconds: 4),
                     icon: Icon(Icons.check_circle, color: Colors.white),
                     titleText: Text(
                       'Item added to cart',
