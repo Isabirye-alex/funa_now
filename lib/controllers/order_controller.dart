@@ -86,11 +86,7 @@ class OrderController extends GetxController {
             .map((e) => OrderModel.fromMap(e))
             .toList();
         order.assignAll(res);
-        debugPrint('$res');
-        debugPrint('User orders: $result');
-      } else {
-        debugPrint('Error response: ${response.body}');
-      }
+      } else {}
     } catch (e) {
       debugPrint('Error fetching user orders: $e');
     }

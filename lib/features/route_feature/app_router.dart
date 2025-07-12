@@ -13,6 +13,7 @@ import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
 import 'package:go_shop/ui/screens/landing_page.dart';
 
+import '../../ui/pages/stand_alone/order_detail_page.dart';
 import '../auth_feature/register.dart';
 
 // AppRouter handles all app navigation using GoRouter
@@ -52,6 +53,13 @@ class AppRouter {
           GoRoute(
             path: '/orderspage',
             builder: (context, state) => OrdersListPage(),
+          ),
+          GoRoute(
+            path: '/orderdetails/:id',
+            builder: (context, state) {
+              final orderId = state.pathParameters['id']!;
+              return OrderDetailsPage(orderId: orderId);
+            },
           ),
 
           GoRoute(

@@ -88,12 +88,14 @@ class OrderModel {
       isPaid: map['isPaid'] != null ? map['isPaid'] as int : null,
       paidAt: map['paidAt'] as dynamic,
       deliveredAt: map['deliveredAt'] as dynamic,
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
+      createdAt: map['created_at'] != null
+          ? DateTime.parse(map['created_at'])
           : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+
+      updatedAt: map['updated_at'] != null
+          ? DateTime.parse(map['updated_at'])
           : null,
+
       username: map['username'] as String,
     );
   }

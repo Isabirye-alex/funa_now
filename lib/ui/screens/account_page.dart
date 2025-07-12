@@ -173,7 +173,7 @@ class _AccountPageState extends State<AccountPage> {
                     label: "My Orders",
                     color: Colors.blue[700],
                     onTap: () {
-                      context.go('/orderspage');
+                      GoRouter.of(context).go('/orderspage');
                     },
                   ),
                   _accountCard(
