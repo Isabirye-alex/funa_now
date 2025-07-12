@@ -193,7 +193,7 @@ class _AccountPageState extends State<AccountPage> {
                     label: "My Addresses",
                     color: Colors.green[600],
                     onTap: () {
-                      context.go('/addresspage');
+                      context.go('/addresslistpage');
                     },
                   ),
                   _accountCard(
