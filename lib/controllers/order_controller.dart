@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
+import 'package:go_shop/models/order_item_model.dart';
 import 'package:go_shop/models/order_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class OrderController extends GetxController {
   final RxList<OrderModel> order = <OrderModel>[].obs;
   final RxnInt userId = RxnInt(); // Reactive user ID
   final authService = AuthStorage();
-
+  final RxList<OrderItemModel> orderItem = <OrderItemModel>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -104,8 +105,10 @@ class OrderController extends GetxController {
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> res = jsonDecode(response.body);
         final List<dynamic> jsonList = res['data'];
-        final List<>
-
+        final List<OrderItemModel> result = jsonList
+            .map((e) => OrderItemModel.fromJson(e))
+            .toList();
+        orderItem.assignAll(result);
       }
     } catch (e) {
       debugPrint('Error fetching order items : $e');
