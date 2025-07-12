@@ -237,7 +237,11 @@ class ATextFormField extends StatelessWidget {
                 )
               : null,
           labelText: labelText,
-          labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
+          labelStyle: const TextStyle(
+            fontSize: 18,
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

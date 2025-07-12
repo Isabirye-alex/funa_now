@@ -257,7 +257,11 @@ class ATextFormField extends StatelessWidget {
         filled: true,
         fillColor: const Color.fromARGB(255, 241, 203, 203),
         labelText: labelText,
-        labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        labelStyle: const TextStyle(
+          fontSize: 18,
+          color: Colors.blue,
+          fontWeight: FontWeight.bold,
+        ),
         prefixIcon: prefixIcon != null
             ? Icon(prefixIcon, color: Colors.blueAccent)
             : null,

@@ -14,7 +14,7 @@ class ProductsController extends GetxController {
   Future<void> fetchProducts(BuildContext context) async {
     try {
       isLoading.value = true;
-      final uri = Uri.parse('http://192.168.100.57:3000/products');
+      final uri = Uri.parse('http://10.39.3.14:3000/products');
       final response = await http.get(uri);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> result = jsonDecode(response.body);

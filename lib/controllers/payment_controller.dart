@@ -23,7 +23,7 @@ class PaymentController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.57:3000/payments/paymentmethods'),
+        Uri.parse('http://10.39.3.14:3000/payments/paymentmethods'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

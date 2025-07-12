@@ -72,7 +72,7 @@ class AddressController extends GetxController {
         debugPrint('📦 Sending: ${jsonEncode(address.toMap())}');
 
         final response = await http.post(
-          Uri.parse('http://192.168.100.57:3000/address/addaddress'),
+          Uri.parse('http://10.39.3.14:3000/address/addaddress'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(address.toMap()),
         );
@@ -106,7 +106,7 @@ class AddressController extends GetxController {
       debugPrint('${userId.value}');
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.100.57:3000/address/${userId.value}'),
+          Uri.parse('http://10.39.3.14:3000/address/${userId.value}'),
         );
         if (response.statusCode == 201 || response.statusCode == 200) {
           final result = jsonDecode(response.body);

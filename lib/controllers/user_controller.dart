@@ -32,7 +32,7 @@ class UserController extends GetxController {
       if (dbquery != null) {
         final userId = dbquery['userId'].toString();
         final uri = Uri.parse(
-          'http://192.168.100.57:3000/users/getuser/$userId',
+          'http://10.39.3.14:3000/users/getuser/$userId',
         );
         final response = await http.get(uri);
         if (response.statusCode == 201 || response.statusCode == 200) {

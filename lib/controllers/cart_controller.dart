@@ -27,7 +27,7 @@ class CartController extends GetxController {
         quantity.value = 1;
         final userId = authData['userId'];
         final response = await http.post(
-          Uri.parse('http://192.168.100.57:3000/cart-items/addtocart'),
+          Uri.parse('http://10.39.3.14:3000/cart-items/addtocart'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'user_id': userId,
@@ -78,9 +78,15 @@ class CartController extends GetxController {
 
   Future<void> fetchCartItems() async {
     try {
+      if (cart_id.value == null) {
+        debugPrint('No valid cart ID found');
+        cartItem.clear();
+        return;
+      }
+
       final response = await http.get(
         Uri.parse(
-          'http://192.168.100.57:3000/cart-items/getcartitems/${cart_id.value}',
+          'http://10.39.3.14:3000/cart-items/getcartitems/${cart_id.value}',
         ),
       );
 
@@ -108,7 +114,7 @@ class CartController extends GetxController {
   Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
       final response = await http.patch(
-        Uri.parse('http://192.168.100.57:3000/cart-items/decrease/$itemId'),
+        Uri.parse('http://10.39.3.14:3000/cart-items/decrease/$itemId'),
       );
 
       final data = jsonDecode(response.body);
@@ -147,16 +153,24 @@ class CartController extends GetxController {
     }
   }
 
+  Future<void> updateCart() async {}
+
   Future<void> loadCartOnAppStart(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.100.57:3000/cart-items/activecart/$userId'),
+        Uri.parse('http://10.39.3.14:3000/cart-items/activecart/$userId'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        cart_id.value = data['cart_id'];
-        await fetchCartItems();
+        final int? cartId = data['data']?['id'];
+
+        if (cartId != null) {
+          cart_id.value = cartId;
+          await fetchCartItems();
+        } else {
+          debugPrint('Cart ID is null in response');
+        }
       } else {
         debugPrint('No active cart found: ${response.body}');
       }
@@ -168,7 +182,7 @@ class CartController extends GetxController {
   Future<void> removeItemFromCart(int itemId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://192.168.100.57:3000/cart-items/deleteitem/$itemId'),
+        Uri.parse('http://10.39.3.14:3000/cart-items/deleteitem/$itemId'),
       );
 
       final data = jsonDecode(response.body);

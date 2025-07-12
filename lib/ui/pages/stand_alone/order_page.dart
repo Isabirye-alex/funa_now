@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_string_interpolations
 
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -342,16 +341,17 @@ class _OrderPageState extends State<OrderPage> {
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
                     onPressed: () async {
+                      final cartId = cartController.cart_id.value;
                       final userId = addressController.userId.value;
                       final address = addressController.selectedAddess.value;
                       final payment = paymentController.selectedMethod.value;
                       final total = totalAmount;
                       final orderController = Get.put(OrderController());
                       orderController.placeOrder(
-                        userId.toString(),
+                        cartId.toString(),
+                        total.toString(),
                         address,
                         payment,
-                        total.toString(),
                         context,
                       );
                     },
