@@ -29,7 +29,7 @@ class SignUpController extends GetxController {
 
   Future<void> register(BuildContext context) async {
     try {
-      final uri = Uri.parse('${UrlConstant}users/register');
+      final uri = Uri.parse('${UrlConstant.url}users/register');
       final user = UserModel(
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
@@ -110,7 +110,7 @@ class SignUpController extends GetxController {
 
   //To be removed
   Future<UserModel?> fetchUserById(int userId) async {
-    final uri = Uri.parse('${UrlConstant}users/getuser/$userId');
+    final uri = Uri.parse('${UrlConstant.url}users/getuser/$userId');
     final response = await http.get(uri);
 
     if (response.statusCode == 200 || response.statusCode == 201) {

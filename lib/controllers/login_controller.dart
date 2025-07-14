@@ -24,7 +24,7 @@ class LoginController extends GetxController {
   Future<void> login(BuildContext context) async {
     isLoading.value = true;
     try {
-      final uri = Uri.parse('${UrlConstant}users/login');
+      final uri = Uri.parse('${UrlConstant.url}users/login');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},

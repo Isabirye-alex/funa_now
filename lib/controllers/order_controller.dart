@@ -72,7 +72,7 @@ class OrderController extends GetxController {
       );
 
       final response = await http.post(
-        Uri.parse('${UrlConstant}order'),
+        Uri.parse('${UrlConstant.url}order'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(orderData.toJson()),
       );
@@ -92,7 +92,7 @@ class OrderController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('${UrlConstant}orders/user/${userId.value}'),
+        Uri.parse('${UrlConstant.url}orders/user/${userId.value}'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -112,7 +112,7 @@ class OrderController extends GetxController {
     debugPrint('Entered Get order items function');
     try {
       final response = await http.get(
-        Uri.parse('${UrlConstant}orders/orderitems/$orderId'),
+        Uri.parse('${UrlConstant.url}orders/orderitems/$orderId'),
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> res = jsonDecode(response.body);
@@ -158,7 +158,7 @@ class OrderController extends GetxController {
       };
 
       final response = await http.post(
-        Uri.parse('${UrlConstant}orders'),
+        Uri.parse('${UrlConstant.url}orders'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );

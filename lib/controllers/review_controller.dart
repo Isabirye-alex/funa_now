@@ -63,7 +63,7 @@ class ReviewController extends GetxController {
       );
 
       final res = await http.post(
-        Uri.parse('${UrlConstant}review/postreview'),
+        Uri.parse('${UrlConstant.url}review/postreview'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(review.toJson()),
       );
@@ -83,7 +83,7 @@ class ReviewController extends GetxController {
   Future<void> getReviews() async {
     try {
       final res = await http.get(
-        Uri.parse('${UrlConstant}review/getreviews/${userId.value}'),
+        Uri.parse('${UrlConstant.url}review/getreviews/${userId.value}'),
       );
       if (res.statusCode == 201 || res.statusCode == 200) {
         // ignore: unnecessary_string_interpolations
@@ -116,7 +116,7 @@ class ReviewController extends GetxController {
       );
 
       final res = await http.patch(
-        Uri.parse('${UrlConstant}review/updatereview/${userId.value}'),
+        Uri.parse('${UrlConstant.url}review/updatereview/${userId.value}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(review.toJson()),
       );

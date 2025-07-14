@@ -36,6 +36,7 @@ class WishlistController extends GetxController {
     await loadUserId();
     if (userId.value == null) {
       Flushbar(
+        shouldIconPulse: false,
         title: 'Not Logged In',
         message: 'Please log in to view your orders and start shopping.',
         duration: const Duration(seconds: 3),
@@ -70,7 +71,7 @@ class WishlistController extends GetxController {
         user_id: userId.toString(),
       );
       final response = await http.post(
-        Uri.parse('${UrlConstant}wishlist/additem'),
+        Uri.parse('${UrlConstant.url}wishlist/additem'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(wishlist.toJson()),
       );
@@ -92,7 +93,7 @@ class WishlistController extends GetxController {
     }
     try {
       final response = await http.get(
-        Uri.parse('${UrlConstant}wishlist/getitems/${userId.value}'),
+        Uri.parse('${UrlConstant.url}wishlist/getitems/${userId.value}'),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> result = jsonDecode(response.body);
@@ -110,7 +111,7 @@ class WishlistController extends GetxController {
   Future<void> removeItemFromWishList(int productId) async {
     try {
       final response = await http.delete(
-        Uri.parse('${UrlConstant}wishlist/removefromwishlist/${userId.value}'),
+        Uri.parse('${UrlConstant.url}wishlist/removefromwishlist/${userId.value}'),
         headers: {'Content-Type': 'application/json'},
         body: {'product_id': productId},
       );
