@@ -5,19 +5,22 @@ import 'package:go_shop/controllers/review_controller.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ProductReview extends StatefulWidget {
-  const ProductReview({super.key});
-  
+  final int productId;
+
+  const ProductReview({super.key, required this.productId});
 
   @override
   State<ProductReview> createState() => _ProductReviewState();
 }
 
 class _ProductReviewState extends State<ProductReview> {
-  final String productId = '';
+  late final int productId;
+
   double rating = 0.0;
   @override
   void initState() {
     super.initState();
+    productId = widget.productId;
   }
 
   @override
@@ -40,7 +43,7 @@ class _ProductReviewState extends State<ProductReview> {
             allowHalfRating: true,
             itemCount: 5,
             itemBuilder: (context, __) {
-              return Icon(Iconsax.star, color: Colors.amber);
+              return Icon(Icons.star, color: Colors.amber);
             },
             onRatingUpdate: (rating) => setState(() {
               controller.rating.value = rating;
@@ -59,7 +62,7 @@ class _ProductReviewState extends State<ProductReview> {
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () async {
-              controller.postReview(productId);
+              controller.postReview(widget.productId);
             },
             icon: Icon(Iconsax.send, color: Colors.blue),
             label: Text('Submit'),

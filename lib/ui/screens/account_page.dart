@@ -19,6 +19,7 @@ class _AccountPageState extends State<AccountPage> {
     super.initState();
     final userController = Get.put(UserController());
     userController.fetchUserId();
+    userController.fetchUser();
   }
 
   @override

@@ -14,6 +14,7 @@ import 'package:go_shop/models/order_model.dart';
 import 'package:http/http.dart' as http;
 
 class OrderController extends GetxController {
+  static OrderController get to => Get.find();
   final cartController = Get.put(CartController());
   final RxList<OrderModel> order = <OrderModel>[].obs;
   final RxnInt userId = RxnInt(); // Reactive user ID

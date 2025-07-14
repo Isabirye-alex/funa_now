@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class PaymentController extends GetxController {
+  static PaymentController get to => Get.find();
   // List of available payment methods
   var paymentMethods = <String>[].obs;
 

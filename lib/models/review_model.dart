@@ -5,10 +5,10 @@ import 'dart:convert';
 
 class ReviewModel {
   int? id;
-  String user_id;
+  int user_id;
   String comment;
   double rating;
-  String product_id;
+  int product_id;
   DateTime? created_at;
 
   ReviewModel({
@@ -22,10 +22,10 @@ class ReviewModel {
 
   ReviewModel copyWith({
     int? id,
-    String? user_id,
+    int? user_id,
     String? comment,
     double? rating,
-    String? product_id,
+    int? product_id,
     DateTime? created_at,
   }) {
     return ReviewModel(
@@ -52,10 +52,12 @@ class ReviewModel {
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
       id: map['id'] != null ? map['id'] as int : null,
-      user_id: map['user_id'] as String,
+      user_id: map['user_id'] as int,
       comment: map['comment'] as String,
-      rating: map['rating'] as double,
-      product_id: map['product_id'] as String,
+      rating: (map['rating'] is int)
+          ? (map['rating'] as int).toDouble()
+          : map['rating'] as double,
+      product_id: map['product_id'] as int,
       created_at: map['created_at'] != null
           ? DateTime.parse(map['created_at'])
           : null,

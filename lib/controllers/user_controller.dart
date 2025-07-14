@@ -10,6 +10,7 @@ import 'package:go_shop/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class UserController extends GetxController {
+  static
   RxList<UserModel> User = <UserModel>[].obs;
   final authService = AuthStorage();
   var firstname = ''.obs;
@@ -32,7 +33,7 @@ class UserController extends GetxController {
       final dbquery = await authService.getAuthData();
       if (dbquery != null) {
         final userId = dbquery['userId'].toString();
-        final uri = Uri.parse('${UrlConstant}users/getuser/$userId');
+        final uri = Uri.parse('${UrlConstant.url}users/getuser/$userId');
         final response = await http.get(uri);
         if (response.statusCode == 201 || response.statusCode == 200) {
           final Map<String, dynamic> user = jsonDecode(response.body);

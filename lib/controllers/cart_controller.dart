@@ -13,6 +13,7 @@ import 'package:go_shop/models/products_model.dart';
 import 'package:http/http.dart' as http;
 
 class CartController extends GetxController {
+  static CartController get to => Get.find();
   RxInt noOfItems = 0.obs;
   RxInt quantity = 0.obs;
   RxDouble totalPrice = 0.0.obs;

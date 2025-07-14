@@ -20,6 +20,7 @@ class _AllProductsState extends State<AllProducts> {
   Widget build(BuildContext context) {
     final controller = Get.put(ProductsController());
     final cartController = Get.put(CartController());
+
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -31,183 +32,208 @@ class _AllProductsState extends State<AllProducts> {
 
       return GridView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.all(12),
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(left: 2, right: 2, top: 8, bottom: 8),
         itemCount: controller.products.length,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 3 / 3,
+          childAspectRatio: 3 / 3.5,
         ),
         itemBuilder: (context, index) {
           final product = controller.products[index];
           final wishlistController = Get.put(WishlistController());
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 2, right: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text('20% OFF'),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      wishlistController.toggleWishList(product.id!);
-                      setState(() {
-                        wishlistController.isWislisted.value !=
-                            wishlistController.isWislisted.value;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(),
-                      child: Icon(
-                        Iconsax.heart,
-                        color: wishlistController.isWislisted.value
-                            ? Colors.white
-                            : Colors.amber,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetail(
-                        productId: product.id!,
-                        description: product.description!,
-                        price: product.formattedPrice,
-                        image: product.imageUrl,
-                        name: product.name,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.blue[600],
-                    image: DecorationImage(
-                      image: NetworkImage(product.imageUrl),
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(20),
-                        BlendMode.darken,
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                shadows: [
-                                  Shadow(blurRadius: 2, color: Colors.black),
-                                ],
+          return Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            color: Colors.white, // Changed background to white
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image Container
+                Expanded(
+                  child: Stack(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetail(
+                                productId: product.id!,
+                                description: product.description!,
+                                price: product.formattedPrice,
+                                image: product.imageUrl,
+                                name: product.name,
                               ),
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "UGX ${product.formattedPrice}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                shadows: [
-                                  Shadow(blurRadius: 2, color: Colors.black),
-                                ],
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(12),
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(product.imageUrl),
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                Colors.black.withAlpha(10),
+                                BlendMode.darken,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Discount and Wishlist buttons
+                      Positioned(
+                        top: 4,
+                        left: 8,
+                        right: 8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                '20% OFF',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                wishlistController.toggleWishList(product.id!);
+                                setState(() {});
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withAlpha(200),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  wishlistController.isWislisted.value
+                                      ? Iconsax.heart5
+                                      : Iconsax.heart,
+                                  color: wishlistController.isWislisted.value
+                                      ? Colors.red
+                                      : Colors.grey,
+                                  size: 20,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "UGX ${product.formattedPrice}",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      shadows: [Shadow(blurRadius: 2, color: Colors.black)],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: Colors.blue),
-                    child: InkWell(
-                      onTap: () {
-                        final products = ProductsModel(
-                          id: product.id!,
-                          name: product.name,
-                          description: product.description!,
-                          price: product.price,
-                          imageUrl: product.imageUrl,
-                        );
+                // Product Info
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 
-                        cartController.addToCart(products, context);
-                        Flushbar(
-                          duration: Duration(seconds: 1),
-                          isDismissible: true,
-                          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-                          shouldIconPulse: false,
-                          borderRadius: BorderRadius.circular(8),
-                          margin: EdgeInsets.all(24),
-
-                          flushbarPosition: FlushbarPosition.TOP,
-                          animationDuration: const Duration(milliseconds: 300),
-                          backgroundColor: const Color.fromARGB(
-                            255,
-                            29,
-                            204,
-                            40,
-                          ),
-                          messageText: Text(
-                            'Success',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          icon: Icon(Icons.check_circle, color: Colors.white),
-                          titleText: Text(
-                            'Item added to cart',
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "UGX ${product.formattedPrice}",
                             style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            maxLines: 2,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              final products = ProductsModel(
+                                id: product.id!,
+                                name: product.name,
+                                description: product.description!,
+                                price: product.price,
+                                imageUrl: product.imageUrl,
+                              );
+
+                              cartController.addToCart(products, context);
+                              Flushbar(
+                                shouldIconPulse: false,
+                                duration: const Duration(milliseconds: 500),
+                                isDismissible: true,
+                                dismissDirection:
+                                    FlushbarDismissDirection.HORIZONTAL,
+                                borderRadius: BorderRadius.circular(8),
+                                margin: const EdgeInsets.all(16),
+                                flushbarPosition: FlushbarPosition.TOP,
+                                animationDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
+                                backgroundColor: Colors.green,
+                                messageText: const Text(
+                                  'Item added to cart',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                ),
+                              ).show(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8),
+                                ),
+                                color: Colors.blue,
+                              ),
+                              child: const Icon(
+                                Iconsax.add,
+                                size: 20,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ).show(context);
-                      },
-                      child: Icon(Iconsax.add),
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           );
         },
       );

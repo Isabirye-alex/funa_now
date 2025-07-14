@@ -11,6 +11,7 @@ import 'package:go_shop/models/address_model.dart';
 import 'package:http/http.dart' as http;
 
 class AddressController extends GetxController {
+  static AddressController get to => Get.find();
   final authService = AuthStorage();
   RxList<AddressModel> address = <AddressModel>[].obs;
   var userId = RxnInt();

@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:go_shop/models/wishlist_model.dart';
 
 class WishlistController extends GetxController {
+  static
   RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/review_controller.dart';
 import 'package:go_shop/models/products_model.dart';
+import 'package:go_shop/ui/pages/stand_alone/product_review.dart';
 
 class ProductDetail extends StatelessWidget {
   const ProductDetail({
@@ -24,8 +26,8 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
-    final double rating = 4.5;
-    final int totalReviews = 32;
+    final reviewController = Get.put(ReviewController());
+    reviewController.getReviews();
 
     return Scaffold(
       appBar: AppBar(
@@ -71,17 +73,33 @@ class ProductDetail extends StatelessWidget {
 
             // Rating bar
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RatingBarIndicator(
-                  rating: rating,
-                  itemBuilder: (context, index) =>
-                      const Icon(Icons.star, color: Colors.amber),
-                  itemCount: 5,
-                  itemSize: 24.0,
-                  direction: Axis.horizontal,
+                Expanded(
+                  child: Obx(() {
+                    if (reviewController.totalRatings.value == 0) {
+                      return const Text('No ratings yet');
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RatingBarIndicator(
+                          rating: reviewController.averageRating,
+                          itemBuilder: (context, index) =>
+                              const Icon(Icons.star, color: Colors.amber),
+                          itemCount: 5,
+                          itemSize: 24.0,
+                          direction: Axis.horizontal,
+                        ),
+                        const SizedBox(height: 10),
+                        Text('(${reviewController.totalRatings} reviews)'),
+                        const SizedBox(height: 10),
+                        buildRatingBars(reviewController),
+                      ],
+                    );
+                  }),
                 ),
-                const SizedBox(width: 10),
-                Text('($totalReviews reviews)'),
               ],
             ),
 
@@ -138,7 +156,6 @@ class ProductDetail extends StatelessWidget {
                       ),
                     ),
                   ).show(context);
-
                 },
 
                 icon: const Icon(Icons.shopping_cart),
@@ -155,37 +172,49 @@ class ProductDetail extends StatelessWidget {
             ),
 
             const SizedBox(height: 30),
-            
-            // Reviews Section
-            // Reviews Section Title
+
             const Text(
               'Reviews',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 12),
-
-            // Example Reviews List
-            ...List.generate(3, (index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.deepPurple,
-                  child: Icon(Icons.person),
-                ),
-                title: Text(
-                  'User ${index + 1}',
-                  style: TextStyle(color: Colors.black),
-                ),
-                subtitle: const Text(
-                  'This product exceeded my expectations! The quality is excellent and it arrived very quickly. I would definitely recommend it to anyone looking for a reliable product. Will buy again for sure.',
-                  style: TextStyle(color: Colors.white),
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-              );
-            }),
+            const SizedBox(height: 10),
+            ProductReview(productId: productId),
           ],
         ),
       ),
     );
   }
+}
+
+Widget buildRatingBars(ReviewController controller) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: List.generate(5, (index) {
+      final star = 5 - index;
+      final count = controller.ratingCounts[star] ?? 0;
+      final percent = controller.totalRatings > 0
+          ? (count / controller.totalRatings.value * 100).toInt()
+          : 0;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          children: [
+            Text('$star ★'),
+            const SizedBox(width: 6),
+            Expanded(
+              child: LinearProgressIndicator(
+                value: percent.toDouble(),
+                color: Colors.amber,
+                backgroundColor: Colors.grey[300],
+                minHeight: 8,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text('$count'),
+          ],
+        ),
+      );
+    }),
+  );
 }

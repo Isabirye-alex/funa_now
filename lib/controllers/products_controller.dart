@@ -9,6 +9,7 @@ import 'package:go_shop/models/products_model.dart';
 import 'package:http/http.dart' as http;
 
 class ProductsController extends GetxController {
+  static ProductsController get to => Get.find();
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
   final RxBool isLoading = true.obs;
 
