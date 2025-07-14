@@ -31,19 +31,17 @@ class AddressController extends GetxController {
   Future<void> addNewAddress(BuildContext context) async {
     final dbquery = await authService.getAuthData();
     if (dbquery != null && dbquery['userId'] != null) {
-      debugPrint('🔵 Entered addNewAddress');
       userId.value = dbquery['userId'];
-      debugPrint('🟢 User ID found: ${dbquery['userId']}');
+
       if (addresslineController.text.isEmpty ||
           regionController.text.isEmpty ||
-          countryController.text.isEmpty ||
           districtController.text.isEmpty) {
         Flushbar(
           shouldIconPulse: false,
           borderRadius: BorderRadius.circular(8),
           margin: EdgeInsets.all(24),
           flushbarPosition: FlushbarPosition.TOP,
-          animationDuration: const Duration(milliseconds: 300),
+          animationDuration: const Duration(seconds: 2),
           backgroundColor: Colors.green,
           messageText: Text(
             'Error',
@@ -71,28 +69,21 @@ class AddressController extends GetxController {
           region: regionController.text.trim(),
           country: countryController.text.trim(),
         );
-        debugPrint('📦 Sending: ${jsonEncode(address.toMap())}');
 
         final response = await http.post(
           Uri.parse('${UrlConstant.url}address/addaddress'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(address.toMap()),
         );
-        debugPrint('✅ Response Status: ${response.statusCode}');
-        debugPrint('✅ Response Body: ${response.body}');
-
         isLoading.value = false;
         if (response.statusCode == 201 || response.statusCode == 200) {
-          final result = jsonDecode(response.body);
           regionController.clear();
           districtController.clear();
           postalcodeController.clear();
           addresslineController.clear();
           countryController.clear();
-          debugPrint('$result');
         }
       } catch (e) {
-        debugPrint('🛑 Exception occurred with: $e');
         debugPrint('Could not add address: $e');
       }
     } else {
@@ -129,10 +120,7 @@ class AddressController extends GetxController {
             selectedAddess.value =
                 '${first.address_line}, ${first.district}, ${first.region}, ${first.country}';
           }
-
-          debugPrint('✅ Address list updated with ${userAddress.length} items');
         } else {
-          debugPrint('❌ Failed to fetch addresses: ${response.body}');
           address.clear();
         }
       } catch (e) {
@@ -142,7 +130,6 @@ class AddressController extends GetxController {
         isLoading.value = false;
       }
     } else {
-      debugPrint('⚠️ No userId found, cannot fetch address');
       address.clear();
     }
   }
