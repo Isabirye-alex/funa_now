@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class UserController extends GetxController {
       final dbquery = await authService.getAuthData();
       if (dbquery != null) {
         final userId = dbquery['userId'].toString();
-        final uri = Uri.parse('http://10.39.3.14:3000/users/getuser/$userId');
+        final uri = Uri.parse('${UrlConstant}users/getuser/$userId');
         final response = await http.get(uri);
         if (response.statusCode == 201 || response.statusCode == 200) {
           final Map<String, dynamic> user = jsonDecode(response.body);

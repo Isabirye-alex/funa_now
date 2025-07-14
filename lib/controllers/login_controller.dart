@@ -5,6 +5,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +24,7 @@ class LoginController extends GetxController {
   Future<void> login(BuildContext context) async {
     isLoading.value = true;
     try {
-      final uri = Uri.parse('http://10.39.3.14:3000/users/login');
+      final uri = Uri.parse('${UrlConstant}users/login');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},

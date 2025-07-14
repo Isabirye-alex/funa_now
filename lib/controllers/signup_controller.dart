@@ -6,6 +6,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +29,7 @@ class SignUpController extends GetxController {
 
   Future<void> register(BuildContext context) async {
     try {
-      final uri = Uri.parse('http://10.39.3.14:3000/users/register');
+      final uri = Uri.parse('${UrlConstant}users/register');
       final user = UserModel(
         firstName: firstNameController.text.trim(),
         lastName: lastNameController.text.trim(),
@@ -109,7 +110,7 @@ class SignUpController extends GetxController {
 
   //To be removed
   Future<UserModel?> fetchUserById(int userId) async {
-    final uri = Uri.parse('http://10.39.3.14:3000/users/getuser/$userId');
+    final uri = Uri.parse('${UrlConstant}users/getuser/$userId');
     final response = await http.get(uri);
 
     if (response.statusCode == 200 || response.statusCode == 201) {

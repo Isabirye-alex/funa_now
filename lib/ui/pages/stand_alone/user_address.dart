@@ -95,7 +95,6 @@ class AddressListView extends StatelessWidget {
           showDialog(
             context: context,
             builder: (_) {
-              final controller = Get.find<AddressController>();
               return AlertDialog(
                 content: AddAddressPage(),
                 shape: RoundedRectangleBorder(

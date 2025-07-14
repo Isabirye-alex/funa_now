@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/address_model.dart';
 import 'package:http/http.dart' as http;
@@ -72,7 +73,7 @@ class AddressController extends GetxController {
         debugPrint('📦 Sending: ${jsonEncode(address.toMap())}');
 
         final response = await http.post(
-          Uri.parse('http://10.39.3.14:3000/address/addaddress'),
+          Uri.parse('${UrlConstant}address/addaddress'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(address.toMap()),
         );
@@ -108,7 +109,7 @@ class AddressController extends GetxController {
 
       try {
         final response = await http.get(
-          Uri.parse('http://10.39.3.14:3000/address/${userId.value}'),
+          Uri.parse('${UrlConstant}address/${userId.value}'),
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {

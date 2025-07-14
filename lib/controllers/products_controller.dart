@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +15,7 @@ class ProductsController extends GetxController {
   Future<void> fetchProducts(BuildContext context) async {
     try {
       isLoading.value = true;
-      final uri = Uri.parse('http://10.39.3.14:3000/products');
+      final uri = Uri.parse('${UrlConstant}products');
       final response = await http.get(uri);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> result = jsonDecode(response.body);

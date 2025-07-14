@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/cart_item_model.dart';
 import 'package:go_shop/models/cart_model.dart';
@@ -27,7 +28,7 @@ class CartController extends GetxController {
         quantity.value = 1;
         final userId = authData['userId'];
         final response = await http.post(
-          Uri.parse('http://10.39.3.14:3000/cart-items/addtocart'),
+          Uri.parse('${UrlConstant}cart-items/addtocart'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'user_id': userId,
@@ -87,7 +88,7 @@ class CartController extends GetxController {
 
       final response = await http.get(
         Uri.parse(
-          'http://10.39.3.14:3000/cart-items/getcartitems/${cart_id.value}',
+          '${UrlConstant}cart-items/getcartitems/${cart_id.value}',
         ),
       );
 
@@ -115,7 +116,7 @@ class CartController extends GetxController {
   Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
       final response = await http.patch(
-        Uri.parse('http://10.39.3.14:3000/cart-items/decrease/$itemId'),
+        Uri.parse('${UrlConstant}cart-items/decrease/$itemId'),
       );
 
       final data = jsonDecode(response.body);
@@ -159,7 +160,7 @@ class CartController extends GetxController {
   Future<void> loadCartOnAppStart(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.39.3.14:3000/cart-items/activecart/$userId'),
+        Uri.parse('${UrlConstant}cart-items/activecart/$userId'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -190,7 +191,7 @@ class CartController extends GetxController {
   Future<void> removeItemFromCart(int itemId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://10.39.3.14:3000/cart-items/deleteitem/$itemId'),
+        Uri.parse('${UrlConstant}cart-items/deleteitem/$itemId'),
       );
 
       final data = jsonDecode(response.body);

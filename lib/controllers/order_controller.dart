@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/order_item_model.dart';
 import 'package:go_shop/models/order_model.dart';
@@ -71,7 +72,7 @@ class OrderController extends GetxController {
       );
 
       final response = await http.post(
-        Uri.parse('http://10.39.3.14:3000/order'),
+        Uri.parse('${UrlConstant}order'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(orderData.toJson()),
       );
@@ -91,7 +92,7 @@ class OrderController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.39.3.14:3000/orders/user/${userId.value}'),
+        Uri.parse('${UrlConstant}orders/user/${userId.value}'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -111,7 +112,7 @@ class OrderController extends GetxController {
     debugPrint('Entered Get order items function');
     try {
       final response = await http.get(
-        Uri.parse('http://10.39.3.14:3000/orders/orderitems/$orderId'),
+        Uri.parse('${UrlConstant}orders/orderitems/$orderId'),
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> res = jsonDecode(response.body);
@@ -157,7 +158,7 @@ class OrderController extends GetxController {
       };
 
       final response = await http.post(
-        Uri.parse('http://10.39.3.14:3000/orders'),
+        Uri.parse('${UrlConstant}orders'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
