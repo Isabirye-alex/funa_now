@@ -14,6 +14,7 @@ class WishlistController extends GetxController {
   RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();
+  var isWislisted = false.obs;
   RxList<WishlistItemsModel> items = <WishlistItemsModel>[].obs;
   @override
   void onInit() {
@@ -46,12 +47,23 @@ class WishlistController extends GetxController {
     return true;
   }
 
+  Future<void> toggleWishList(int productId) async {
+    try {
+      if (isWislisted.value) {
+        await addItemToWishList(productId);
+      } else {
+        await removeItemFromWishList(productId);
+      }
+    } catch (e) {
+      debugPrint('Unexpecetd error occurred');
+    }
+  }
+
   Future<void> addItemToWishList(int productId) async {
     await loadUserId();
     if (userId.value == null) {
       return;
     }
-
     try {
       final wishlist = WishlisModel(
         product_id: productId.toString(),
@@ -95,7 +107,7 @@ class WishlistController extends GetxController {
     }
   }
 
-  Future<void> removeItemFromWishList(String productId) async {
+  Future<void> removeItemFromWishList(int productId) async {
     try {
       final response = await http.delete(
         Uri.parse('${UrlConstant}wishlist/removefromwishlist/${userId.value}'),

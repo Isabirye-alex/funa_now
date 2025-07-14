@@ -139,7 +139,6 @@ class ProductDetail extends StatelessWidget {
                     ),
                   ).show(context);
 
-                  debugPrint('Success');
                 },
 
                 icon: const Icon(Icons.shopping_cart),

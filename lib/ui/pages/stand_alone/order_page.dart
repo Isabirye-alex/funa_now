@@ -342,7 +342,6 @@ class _OrderPageState extends State<OrderPage> {
                   ElevatedButton.icon(
                     onPressed: () async {
                       final cartId = cartController.cart_id.value;
-                      final userId = addressController.userId.value;
                       final address = addressController.selectedAddess.value;
                       final payment = paymentController.selectedMethod.value;
                       final total = totalAmount;
