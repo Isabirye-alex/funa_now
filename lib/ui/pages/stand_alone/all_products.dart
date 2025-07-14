@@ -116,8 +116,9 @@ class _AllProductsState extends State<AllProducts> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 wishlistController.toggleWishList(product.id!);
+                                await wishlistController.getWishListItems();
                               },
                               child: Obx(() {
                                 final isWishlisted = wishlistController

@@ -9,9 +9,11 @@ import 'package:go_shop/models/wishlist_items_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:go_shop/models/wishlist_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WishlistController extends GetxController {
-  static RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
+  static WishlistController get instance => Get.find();
+  RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();
   var isWislisted = false.obs;
@@ -22,6 +24,8 @@ class WishlistController extends GetxController {
   void onInit() {
     super.onInit();
     loadUserId();
+    getWishListItems();
+    loadWishlist();
   }
 
   Future<void> loadUserId() async {
@@ -50,7 +54,7 @@ class WishlistController extends GetxController {
     return true;
   }
 
-  void toggleWishList(int productId) {
+  void toggleWishList(int productId) async {
     if (wishlistedIds.contains(productId)) {
       wishlistedIds.remove(productId);
       removeItemFromWishList(productId);
@@ -58,6 +62,7 @@ class WishlistController extends GetxController {
       wishlistedIds.add(productId);
       addItemToWishList(productId);
     }
+    await saveWishlist();
   }
 
   Future<void> addItemToWishList(int productId) async {
@@ -95,10 +100,10 @@ class WishlistController extends GetxController {
         final Map<String, dynamic> result = jsonDecode(response.body);
         final List<dynamic> jsonList = result['data'];
         final List<WishlistItemsModel> res = jsonList
-            .map((i) => WishlistItemsModel.fromJson(i))
+            .map((i) => WishlistItemsModel.fromMap(i))
             .toList();
         items.assignAll(res);
-      }
+      } else {}
     } catch (e) {
       debugPrint('Unexpected error occurred!Please try again later: $e');
     }
@@ -121,5 +126,21 @@ class WishlistController extends GetxController {
     } catch (e) {
       debugPrint('Error removing item from wishlist: $e');
     }
+  }
+
+  Future<void> saveWishlist() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Convert integers to strings for storage
+    await prefs.setStringList(
+      'wishlist',
+      wishlistedIds.map((id) => id.toString()).toList(),
+    );
+  }
+
+  Future<void> loadWishlist() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedList = prefs.getStringList('wishlist') ?? [];
+    // Convert strings back to integers and add to wishlistedIds
+    wishlistedIds.addAll(savedList.map(int.parse));
   }
 }

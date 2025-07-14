@@ -8,6 +8,7 @@ import 'package:go_shop/ui/pages/stand_alone/address.dart';
 import 'package:go_shop/ui/pages/stand_alone/order_list_page.dart';
 import 'package:go_shop/ui/pages/stand_alone/order_page.dart';
 import 'package:go_shop/ui/pages/stand_alone/user_address.dart';
+import 'package:go_shop/ui/pages/stand_alone/wishlist_items.dart';
 import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
@@ -33,6 +34,10 @@ class AppRouter {
           ),
           // Categories page route
           GoRoute(path: '/category', builder: (context, state) => Categories()),
+          GoRoute(
+            path: '/wishlist',
+            builder: (context, state) => WishlistItems(),
+          ),
           // Hot sales/featured products route
           GoRoute(
             path: '/featuredproducts',

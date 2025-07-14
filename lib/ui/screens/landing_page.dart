@@ -70,7 +70,9 @@ class _LandingPageState extends State<LandingPage> {
             iconText2: 'WishList',
             iconText: 'View Cart',
             items: cartController.cartItem.length,
-            onTap1: () {},
+            onTap1: () {
+              context.go('/wishlist');
+            },
             onTap2: () {
               context.go('/cartpage');
             },
