@@ -15,6 +15,7 @@ class ReviewController extends GetxController {
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();
   final commentController = TextEditingController();
+  var rating = RxnDouble();
 
   @override
   void onInit() {
@@ -47,7 +48,7 @@ class ReviewController extends GetxController {
     return true;
   }
 
-  Future<void> postReview(double rating, String productId) async {
+  Future<void> postReview(String productId) async {
     await loadUserId();
     if (userId.value == null) {
       return;
@@ -57,7 +58,7 @@ class ReviewController extends GetxController {
       final review = ReviewModel(
         user_id: userId.value.toString(),
         comment: commentController.text.trim(),
-        rating: rating,
+        rating: rating.value!.toDouble(),
         product_id: productId,
       );
 
@@ -68,6 +69,7 @@ class ReviewController extends GetxController {
       );
       if (res.statusCode == 200 || res.statusCode == 201) {
         await getReviews();
+        update();
         final response = jsonDecode(res.body);
         debugPrint('$response');
       } else {

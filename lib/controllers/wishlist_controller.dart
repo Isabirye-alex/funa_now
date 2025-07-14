@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
+import 'package:go_shop/models/wishlist_items_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:go_shop/models/wishlist_model.dart';
@@ -13,7 +14,7 @@ class WishlistController extends GetxController {
   RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();
-
+  RxList<WishlistItemsModel> items = <WishlistItemsModel>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -79,15 +80,34 @@ class WishlistController extends GetxController {
     }
     try {
       final response = await http.get(
-        Uri.parse('${UrlConstant}/wishlist/getitems/${userId.value}'),
+        Uri.parse('${UrlConstant}wishlist/getitems/${userId.value}'),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> result = jsonDecode(response.body);
         final List<dynamic> jsonList = result['data'];
-        
+        final List<WishlistItemsModel> res = jsonList
+            .map((i) => WishlistItemsModel.fromJson(i))
+            .toList();
+        items.assignAll(res);
       }
     } catch (e) {
       debugPrint('Unexpected error occurred!Please try again later: $e');
+    }
+  }
+
+  Future<void> removeItemFromWishList(String productId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${UrlConstant}wishlist/removefromwishlist/${userId.value}'),
+        headers: {'Content-Type': 'application/json'},
+        body: {'product_id': productId},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        debugPrint('Item removed from wishlist: $result');
+      }
+    } catch (e) {
+      debugPrint('Error removing item from wishlist: $e');
     }
   }
 }
