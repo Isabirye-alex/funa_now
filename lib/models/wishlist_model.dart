@@ -5,20 +5,12 @@ import 'dart:convert';
 
 class WishlisModel {
   int? id;
-  String user_id;
-  String product_id;
+  int user_id;
+  int product_id;
 
-  WishlisModel({
-    this.id,
-    required this.product_id,
-    required this.user_id
-  });
+  WishlisModel({this.id, required this.product_id, required this.user_id});
 
-  WishlisModel copyWith({
-    int? id,
-    String? user_id,
-    String? product_id,
-  }) {
+  WishlisModel copyWith({int? id, int? user_id, int? product_id}) {
     return WishlisModel(
       id: id ?? this.id,
       user_id: user_id ?? this.user_id,
@@ -37,12 +29,13 @@ class WishlisModel {
   factory WishlisModel.fromMap(Map<String, dynamic> map) {
     return WishlisModel(
       id: map['id'] != null ? map['id'] as int : null,
-      user_id: map['user_id'] as String,
-      product_id: map['product_id'] as String,
+      user_id: map['user_id'] as int,
+      product_id: map['product_id'] as int,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory WishlisModel.fromJson(String source) => WishlisModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory WishlisModel.fromJson(String source) =>
+      WishlisModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

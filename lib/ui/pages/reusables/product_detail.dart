@@ -204,10 +204,11 @@ Widget buildRatingBars(ReviewController controller) {
             const SizedBox(width: 6),
             Expanded(
               child: LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(4),
                 value: percent.toDouble(),
                 color: Colors.amber,
                 backgroundColor: Colors.grey[300],
-                minHeight: 8,
+                minHeight: 15,
               ),
             ),
             const SizedBox(width: 8),

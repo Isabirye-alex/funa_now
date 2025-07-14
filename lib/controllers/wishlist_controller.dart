@@ -11,11 +11,12 @@ import 'package:http/http.dart' as http;
 import 'package:go_shop/models/wishlist_model.dart';
 
 class WishlistController extends GetxController {
-  static
-  RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
+  static RxList<WishlisModel> wishlist = <WishlisModel>[].obs;
   final RxnInt userId = RxnInt();
   final authService = AuthStorage();
   var isWislisted = false.obs;
+  var wishlistedIds = <int>{}.obs;
+  bool isWishlisted(int productId) => wishlistedIds.contains(productId);
   RxList<WishlistItemsModel> items = <WishlistItemsModel>[].obs;
   @override
   void onInit() {
@@ -49,15 +50,13 @@ class WishlistController extends GetxController {
     return true;
   }
 
-  Future<void> toggleWishList(int productId) async {
-    try {
-      if (isWislisted.value) {
-        await addItemToWishList(productId);
-      } else {
-        await removeItemFromWishList(productId);
-      }
-    } catch (e) {
-      debugPrint('Unexpecetd error occurred');
+  void toggleWishList(int productId) {
+    if (wishlistedIds.contains(productId)) {
+      wishlistedIds.remove(productId);
+      removeItemFromWishList(productId);
+    } else {
+      wishlistedIds.add(productId);
+      addItemToWishList(productId);
     }
   }
 
@@ -68,20 +67,16 @@ class WishlistController extends GetxController {
     }
     try {
       final wishlist = WishlisModel(
-        product_id: productId.toString(),
-        user_id: userId.toString(),
+        product_id: productId,
+        user_id: userId.value!,
       );
       final response = await http.post(
-        Uri.parse('${UrlConstant.url}wishlist/additem'),
+        Uri.parse('${UrlConstant.url}wishlist/additem/${userId.value}'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(wishlist.toJson()),
+        body: jsonEncode(wishlist.toMap()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final result = jsonDecode(response.body);
-        debugPrint('$result');
-      } else {
-        debugPrint('Unknown error occurred');
-      }
+      } else {}
     } catch (e) {
       debugPrint('Error adding item to wishlist: $e');
     }
@@ -111,15 +106,18 @@ class WishlistController extends GetxController {
 
   Future<void> removeItemFromWishList(int productId) async {
     try {
-      final response = await http.delete(
-        Uri.parse('${UrlConstant.url}wishlist/removefromwishlist/${userId.value}'),
-        headers: {'Content-Type': 'application/json'},
-        body: {'product_id': productId},
+      final uri = Uri.parse(
+        '${UrlConstant.url}wishlist/removefromwishlist/${userId.value}',
       );
+      final request = http.Request('DELETE', uri)
+        ..headers['Content-Type'] = 'application/json'
+        ..body = jsonEncode({'product_id': productId});
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final result = jsonDecode(response.body);
-        debugPrint('Item removed from wishlist: $result');
-      }
+      } else {}
     } catch (e) {
       debugPrint('Error removing item from wishlist: $e');
     }
