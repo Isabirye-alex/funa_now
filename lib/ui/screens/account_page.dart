@@ -189,7 +189,9 @@ class _AccountPageState extends State<AccountPage> {
                     icon: Icons.favorite,
                     label: "Wishlist",
                     color: Colors.pink,
-                    onTap: () {},
+                    onTap: () {
+                      context.go('/wishlist');
+                    },
                   ),
                   _accountCard(
                     icon: Icons.location_on,

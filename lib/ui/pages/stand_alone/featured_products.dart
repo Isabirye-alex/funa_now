@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/ui/pages/reusables/product_detail.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FeaturedProduct extends StatelessWidget {
   const FeaturedProduct({super.key});
@@ -60,11 +61,28 @@ class FeaturedProduct extends StatelessWidget {
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(16),
                       ),
-                      child: Image.network(
-                        product.imageUrl,
-                        height: 90,
+                      child: CachedNetworkImage(
+                        imageUrl: product.imageUrl,
+                        height: 110,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          height: 110,
+                          width: double.infinity,
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 110,
+                          width: double.infinity,
+                          color: Colors.grey,
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),

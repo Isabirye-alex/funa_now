@@ -7,6 +7,7 @@ import 'package:go_shop/controllers/wishlist_controller.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AllProducts extends StatefulWidget {
   const AllProducts({super.key});
@@ -22,13 +23,13 @@ class _AllProductsState extends State<AllProducts> {
     final cartController = Get.put(CartController());
 
     return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
+      // if (controller.isLoading.value) {
+      //   return const Center(child: CircularProgressIndicator());
+      // }
 
-      if (controller.products.isEmpty) {
-        return const Center(child: Text('No products found'));
-      }
+      // if (controller.products.isEmpty) {
+      //   return const Center(child: Text('No products found'));
+      // }
 
       return GridView.builder(
         shrinkWrap: true,
@@ -73,19 +74,93 @@ class _AllProductsState extends State<AllProducts> {
                             ),
                           );
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(12),
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(product.imageUrl),
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                Colors.black.withAlpha(10),
-                                BlendMode.darken,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          child: Stack(
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: product.imageUrl,
+                                height: 130,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                colorBlendMode: BlendMode.darken,
+                                placeholder: (context, url) => Container(
+                                  height: 130,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 130,
+                                  width: double.infinity,
+                                  color: Colors.grey,
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    color: Colors.red,
+                                  ),
+                                ),
                               ),
-                            ),
+                              // Overlay buttons like discount and wishlist
+                              Positioned(
+                                top: 4,
+                                left: 8,
+                                right: 8,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepOrange,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Text(
+                                        '20% OFF',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () => wishlistController
+                                          .toggleWishList(product.id!),
+                                      child: Obx(() {
+                                        final isWishlisted = wishlistController
+                                            .isWishlisted(product.id!);
+                                        return Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.withAlpha(200),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            isWishlisted
+                                                ? Iconsax.heart5
+                                                : Iconsax.heart,
+                                            color: isWishlisted
+                                                ? Colors.amber
+                                                : Colors.white,
+                                            size: 20,
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

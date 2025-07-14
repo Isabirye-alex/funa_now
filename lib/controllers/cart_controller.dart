@@ -40,16 +40,12 @@ class CartController extends GetxController {
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = jsonDecode(response.body);
-          debugPrint('Item added: $data');
           cart_id.value = data['data']['cart_id'];
-          debugPrint('Cart id = ${cart_id.value}');
 
           await fetchCartItems();
           noOfItems++;
           update();
-        } else {
-          debugPrint('Failed to add item: ${response.body}');
-        }
+        } else {}
       } else {
         Flushbar(
           isDismissible: true,
@@ -88,9 +84,7 @@ class CartController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse(
-          '${UrlConstant.url}cart-items/getcartitems/${cart_id.value}',
-        ),
+        Uri.parse('${UrlConstant.url}cart-items/getcartitems/${cart_id.value}'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -99,14 +93,12 @@ class CartController extends GetxController {
         if (data['success'] == true) {
           final items = data['data'] as List;
           cartItem.value = items.map((e) => CartItemModel.fromMap(e)).toList();
-          debugPrint('Cart items fetched: ${cartItem.length}');
+
           update();
         } else {
-          debugPrint('Backend error: ${data['message']}');
           cartItem.clear();
         }
       } else {
-        debugPrint('Failed to fetch cart items: ${response.body}');
         cartItem.clear();
       }
     } catch (e) {
@@ -146,11 +138,9 @@ class CartController extends GetxController {
         ).show(context);
         noOfItems--;
         update();
-        debugPrint('Quantity decreased');
+
         await fetchCartItems();
-      } else {
-        debugPrint('Failed to decrease quantity: ${response.body}');
-      }
+      } else {}
     } catch (e) {
       debugPrint('Error decreasing quantity: $e');
     }
@@ -173,12 +163,10 @@ class CartController extends GetxController {
           cart_id.value = cartId;
           await fetchCartItems();
         } else {
-          debugPrint('No valid cart ID in response: $body');
           cart_id.value = null;
           cartItem.clear();
         }
       } else {
-        debugPrint('Failed response: ${response.body}');
         cart_id.value = null;
         cartItem.clear();
       }
@@ -199,11 +187,8 @@ class CartController extends GetxController {
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 && data['success']) {
-        debugPrint('Item removed successfully');
         await fetchCartItems();
-      } else {
-        debugPrint('Failed to remove item: ${response.body}');
-      }
+      } else {}
     } catch (e) {
       debugPrint('Error removing item: $e');
     }
