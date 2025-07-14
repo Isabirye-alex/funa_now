@@ -5,6 +5,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_shop/controllers/order_controller.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:http/http.dart' as http;
@@ -64,6 +65,9 @@ class LoginController extends GetxController {
         ).show(context);
         usernameController.clear();
         passwordController.clear();
+        final orderController = Get.put(OrderController());
+        await orderController.loadUserId();
+        await orderController.fetchUserOrders();
 
         // Small delay before navigating:
         Future.delayed(Duration(milliseconds: 300), () {
@@ -105,7 +109,15 @@ class LoginController extends GetxController {
 
   Future<void> logout(BuildContext context) async {
     await authService.clearAuthData();
+
+    // Clear order and user data
+    final orderController = Get.find<OrderController>();
+    orderController.order.clear();
+    orderController.orderItem.clear();
+    orderController.userId.value = null;
+
     GoRouter.of(context).go('/landingpage');
+
     await Flushbar(
       shouldIconPulse: false,
       borderRadius: BorderRadius.circular(8),
@@ -128,34 +140,5 @@ class LoginController extends GetxController {
 }
 
 
-
-// import 'auth_storage.dart';
-
-// Future<void> login(BuildContext context) async {
-//   ...
-//   if (response.statusCode == 200 || response.statusCode == 201) {
-//     final result = jsonDecode(response.body);
-//     final token = result['token'];
-//     final userId = result['user']['id']; // depends on your API response
-
-//     await AuthStorage().saveAuthData(token, userId);
-//     print('Token and user ID saved.');
-
-//     Get.toNamed('/home');
-//   }
-//   ...
-// }
-
-
-// Future<void> checkAuth() async {
-//   final data = await AuthStorage().getAuthData();
-//   if (data != null) {
-//     String token = data['token'];
-//     int userId = data['userId'];
-//     print('Logged in as $userId with token: $token');
-//   } else {
-//     print('Not logged in');
-//   }
-// }
 
 
