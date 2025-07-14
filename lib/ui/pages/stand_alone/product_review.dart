@@ -34,7 +34,7 @@ class _ProductReviewState extends State<ProductReview> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Rat this product',
+            'Rate this product',
             style: TextStyle(color: Colors.black, fontSize: 18),
           ),
           RatingBar.builder(

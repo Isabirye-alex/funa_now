@@ -27,7 +27,7 @@ class ProductDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     final reviewController = Get.put(ReviewController());
-    reviewController.getReviews();
+    reviewController.getReviews(productId);
 
     return Scaffold(
       appBar: AppBar(

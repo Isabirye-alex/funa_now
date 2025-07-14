@@ -91,8 +91,10 @@ class ReviewController extends GetxController {
         body: jsonEncode(review.toMap()),
       );
       if (res.statusCode == 200 || res.statusCode == 201) {
-        await getReviews();
+        await getReviews(productId);
         update();
+        commentController.clear();
+        rating.value = null;
         final response = jsonDecode(res.body);
         debugPrint('$response');
       } else {
@@ -104,28 +106,48 @@ class ReviewController extends GetxController {
     }
   }
 
-  Future<void> getReviews() async {
+  Future<void> getReviews(int productId) async {
     try {
       final res = await http.get(
-        Uri.parse('${UrlConstant.url}review/getreviews/${userId.value}'),
+        Uri.parse(
+          '${UrlConstant.url}review/getreviews/${userId.value}/$productId',
+        ),
       );
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         final Map<String, dynamic> response = jsonDecode(res.body);
         final data = response['data'];
 
-        // Extract counts
-        final Map<String, dynamic> counts = data['ratingCounts'];
-        ratingCounts = counts.map(
-          (key, value) => MapEntry(int.parse(key), value),
-        );
-        totalRatings.value = data['totalRatings'];
+        ratingCounts.clear();
 
+        // Count userReview if exists (count once)
+        if (data['hasUserReview'] == true && data['userReview'] != null) {
+          final userRating = data['userReview']['rating'] as num;
+          ratingCounts[userRating.toInt()] =
+              (ratingCounts[userRating.toInt()] ?? 0) + 1;
+        }
+
+        // Count others reviews (excluding user review)
+        for (var r in data['otherReviews']) {
+          final star = (r['rating'] as num).toInt();
+          ratingCounts[star] = (ratingCounts[star] ?? 0) + 1;
+        }
+
+        // Calculate totalRatings based on counts
+        totalRatings.value = ratingCounts.values.fold(
+          0,
+          (sum, count) => sum + count,
+        );
+
+        // Parse reviews list for display
         final List<dynamic> otherReviews = data['otherReviews'];
         final List<ReviewModel> finalResult = otherReviews
             .map((r) => ReviewModel.fromMap(r))
             .toList();
+
         reviews.assignAll(finalResult);
+
+        update();
       } else {
         debugPrint('Failed to fetch reviews');
       }
@@ -154,7 +176,7 @@ class ReviewController extends GetxController {
       );
       if (res.statusCode == 201 || res.statusCode == 200) {
         final response = jsonDecode(res.body);
-        await getReviews();
+        await getReviews(productId);
         debugPrint('$response');
       }
     } catch (e) {

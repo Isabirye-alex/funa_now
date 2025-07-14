@@ -32,7 +32,6 @@ class ProductsController extends GetxController {
             .toList();
 
         products.assignAll(loadedProducts);
-        debugPrint('Products fetched successfully');
       } else {
         showFlushbar(
           context,
