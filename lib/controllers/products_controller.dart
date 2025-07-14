@@ -8,10 +8,17 @@ import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:http/http.dart' as http;
 
+
 class ProductsController extends GetxController {
   static ProductsController get to => Get.find();
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
+  RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
   final RxBool isLoading = true.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    getFeaturedProducts();
+  }
 
   Future<void> fetchProducts(BuildContext context) async {
     try {
@@ -50,6 +57,24 @@ class ProductsController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> getFeaturedProducts() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${UrlConstant.url}products/featured'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        final List<dynamic> jsonList = res['data'];
+        final List<ProductsModel> result = jsonList
+            .map((f) => ProductsModel.fromMap(f))
+            .toList();
+        featuredProducts.assignAll(result);
+      }
+    } catch (e) {
+      debugPrint('Error fetcing featured products: $e');
     }
   }
 

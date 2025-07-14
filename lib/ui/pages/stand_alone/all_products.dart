@@ -43,7 +43,7 @@ class _AllProductsState extends State<AllProducts> {
         ),
         itemBuilder: (context, index) {
           final product = controller.products[index];
-          final wishlistController = Get.put(WishlistController());
+          final wishlistController = Get.find<WishlistController>();
 
           return Card(
             elevation: 4,
@@ -118,7 +118,6 @@ class _AllProductsState extends State<AllProducts> {
                             InkWell(
                               onTap: () async {
                                 wishlistController.toggleWishList(product.id!);
-                                await wishlistController.getWishListItems();
                               },
                               child: Obx(() {
                                 final isWishlisted = wishlistController

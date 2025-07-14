@@ -57,10 +57,12 @@ class WishlistController extends GetxController {
   void toggleWishList(int productId) async {
     if (wishlistedIds.contains(productId)) {
       wishlistedIds.remove(productId);
-      removeItemFromWishList(productId);
+      items.removeWhere((item) => item.product_id == productId);
+      await removeItemFromWishList(productId);
     } else {
       wishlistedIds.add(productId);
-      addItemToWishList(productId);
+      await addItemToWishList(productId);
+      await getWishListItems();
     }
     await saveWishlist();
   }

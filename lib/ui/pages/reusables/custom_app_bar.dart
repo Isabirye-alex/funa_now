@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_shop/controllers/wishlist_controller.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
@@ -25,6 +27,8 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controlerr = Get.find<WishlistController>();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -40,7 +44,21 @@ class CustomAppBar extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(icon2, color: color),
+                      Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Obx(
+                              () => Text(
+                                '${controlerr.items.length}',
+                                style: TextStyle(color: Colors.amber.shade300),
+                              ),
+                            ),
+                          ),
+                          Icon(icon2, color: color),
+                        ],
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Text(

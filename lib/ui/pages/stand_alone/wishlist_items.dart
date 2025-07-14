@@ -8,21 +8,32 @@ import 'package:go_shop/models/wishlist_items_model.dart';
 import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:iconsax/iconsax.dart';
 
-class WishlistItems extends StatelessWidget {
+class WishlistItems extends StatefulWidget {
   const WishlistItems({super.key});
 
   @override
+  State<WishlistItems> createState() => _WishlistItemsState();
+}
+
+class _WishlistItemsState extends State<WishlistItems> {
+  final wishlistController = Get.find<WishlistController>();
+  @override
+  void initState() {
+    super.initState();
+    wishlistController.getWishListItems();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final wishlistController = Get.put(WishlistController());
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Wishlist"),
         backgroundColor: Colors.deepPurple,
       ),
       body: Obx(() {
-        final items = wishlistController.items;
+        final wishlistItems = wishlistController.items;
 
-        if (items.isEmpty) {
+        if (wishlistItems.isEmpty) {
           return const Center(
             child: Text(
               'Your wishlist is empty.',
@@ -34,7 +45,7 @@ class WishlistItems extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(12.0),
           child: GridView.builder(
-            itemCount: items.length,
+            itemCount: wishlistItems.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 250,
               mainAxisSpacing: 16,
@@ -42,7 +53,7 @@ class WishlistItems extends StatelessWidget {
               childAspectRatio: 0.75,
             ),
             itemBuilder: (context, index) {
-              final item = items[index];
+              final item = wishlistItems[index];
               return WishlistCard(item: item);
             },
           ),
@@ -129,7 +140,7 @@ class WishlistCard extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           wishlistController.toggleWishList(item.product_id);
                         },
                         child: Obx(() {
