@@ -7,11 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/user_controller.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
+import 'package:go_shop/models/order_email_model.dart';
 import 'package:go_shop/models/order_item_model.dart';
 import 'package:go_shop/models/order_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class OrderController extends GetxController {
   static OrderController get to => Get.find();
@@ -19,6 +22,7 @@ class OrderController extends GetxController {
   final RxList<OrderModel> order = <OrderModel>[].obs;
   final RxnInt userId = RxnInt(); // Reactive user ID
   final authService = AuthStorage();
+  var orderId = RxnString();
   final RxList<OrderItemModel> orderItem = <OrderItemModel>[].obs;
   @override
   void onInit() {
@@ -139,16 +143,15 @@ class OrderController extends GetxController {
       debugPrint("User ID not available.");
       return;
     }
+    final items = cartController.cartItem.map((item) {
+      return {
+        "product_id": item.productId,
+        "quantity": item.quantity,
+        "price": item.price,
+      };
+    }).toList();
 
     try {
-      final items = cartController.cartItem.map((item) {
-        return {
-          "product_id": item.productId,
-          "quantity": item.quantity,
-          "price": item.price,
-        };
-      }).toList();
-
       final body = {
         "cart_id": cartId,
         "user_id": userId.value,
@@ -189,6 +192,54 @@ class OrderController extends GetxController {
       }
     } catch (e) {
       debugPrint('Exception placing order: $e');
+    }
+    final userController = Get.put(UserController());
+    // final payment = Get.put(PaymentController());
+    // final shipping = Get.put(AddressController());
+    final orderDetails = order.firstWhereOrNull(
+      (o) => o.id == int.tryParse(orderId.value.toString()),
+    );
+    await sendOrderEmail(
+      OrderEmailModel(
+        receiver: userController.email.toString(),
+        receiverName: "${userController.firstname} ${userController.lastname}",
+        orderId: orderId.value.toString(),
+        orderDate: DateFormat.yMMMd().format(orderDetails!.createdAt!),
+        paymentMethod: payment,
+        shippingAddress: address,
+        total: int.parse(total), // ✅ Convert total from String to int
+        orderItems: cartController.cartItem
+            .map(
+              (item) => OrderItem(
+                name: item.title,
+                quantity: item.quantity,
+                price:
+                    double.tryParse(item.price.toString()) ??
+                    0.0, 
+                image: item.imageUrl,
+              ),
+            )
+            .toList(),
+      ),
+    );
+
+  }
+
+  Future<void> sendOrderEmail(OrderEmailModel orderEmail) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${UrlConstant.url}email/order-placement'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(orderEmail),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('Order email sent successfully');
+      } else {
+        debugPrint('Failed to send email: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error sending order placement email: $e');
     }
   }
 

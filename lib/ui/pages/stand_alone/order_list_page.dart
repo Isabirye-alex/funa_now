@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -77,7 +79,7 @@ class _OrdersListPageState extends State<OrdersListPage> {
                       Text('Order AIFH#${order.id}'),
                       Chip(
                         label: Text(order.status),
-                        backgroundColor: color.withOpacity(0.1),
+                        backgroundColor: color.withAlpha(200),
                         labelStyle: TextStyle(
                           color: color,
                           fontWeight: FontWeight.bold,

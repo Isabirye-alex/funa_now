@@ -1,7 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/material.dart';
+
+import '../features/constants/url_constant.dart';
 
 class PaymentController extends GetxController {
   static PaymentController get to => Get.find();
@@ -24,7 +27,7 @@ class PaymentController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('http://10.39.3.14:3000/payments/paymentmethods'),
+        Uri.parse('${UrlConstant.url}payments/paymentmethods'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
