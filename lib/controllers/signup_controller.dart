@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/user_model.dart';
+import 'package:go_shop/models/welcome_email_model.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpController extends GetxController {
@@ -29,6 +28,7 @@ class SignUpController extends GetxController {
 
   Future<void> register(BuildContext context) async {
     try {
+      isLoading.value = true;
       final uri = Uri.parse('${UrlConstant.url}users/register');
       final user = UserModel(
         firstName: firstNameController.text.trim(),
@@ -50,12 +50,7 @@ class SignUpController extends GetxController {
         final result = jsonDecode(response.body);
         userId.value = result['user']['id'].toString();
         await authStorage.saveAuthData('', int.parse(userId.value));
-        //Clear text fields
-        firstNameController.clear();
-        lastNameController.clear();
-        usernameController.clear();
-        passwordController.clear();
-        emailController.clear();
+
         //Navigate to landing page
         GoRouter.of(context).go('/landingpage');
         //Show success message to user
@@ -80,9 +75,14 @@ class SignUpController extends GetxController {
             ),
           ),
         ).show(context);
-        final username = result['user']['username'].toString();
-        debugPrint(userId.value);
-        debugPrint('User registered with username $username');
+        isLoading.value = false;
+        await sendWelcomeEmail();
+        //Clear text fields
+        firstNameController.clear();
+        lastNameController.clear();
+        usernameController.clear();
+        passwordController.clear();
+        emailController.clear();
       } else {
         debugPrint('Could not register new user');
       }
@@ -105,6 +105,26 @@ class SignUpController extends GetxController {
           ),
         ),
       ).show(context);
+    }
+  }
+
+  Future<void> sendWelcomeEmail() async {
+    try {
+      final body = WelcomeEmailModel(
+        receiver: emailController.text.trim(),
+        receiverName:
+            "${firstNameController.text.trim()} ${lastNameController.text.trim()}",
+      );
+      final response = await http.post(
+        Uri.parse('${UrlConstant.url}email/welcome-email'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body.toMap()),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('Success');
+      }
+    } catch (e) {
+      debugPrint('Error Occurred :$e');
     }
   }
 

@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
-import 'package:go_shop/controllers/order_controller.dart';
 import 'package:go_shop/controllers/products_controller.dart';
-import 'package:go_shop/controllers/signup_controller.dart';
-import 'package:go_shop/controllers/user_controller.dart';
-import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
+import 'package:go_shop/ui/pages/stand_alone/loading_shimmer.dart';
 import 'package:go_shop/ui/pages/stand_alone/summer_products.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -23,41 +20,10 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
-    if (!mounted) return;
-    _initializeApp();
-  }
-
-  Future<void> _initializeApp() async {
-    final authStorage = AuthStorage();
-    final authData = await authStorage.getAuthData();
-
-    if (authData != null) {
-      final userId = authData['userId'];
-
-      final userController = Get.put(SignUpController());
-      await userController.fetchUserById(userId);
-
-      final currentUserController = Get.put(UserController());
-
-      await currentUserController.fetchUser();
-
-      final orderController = Get.put(OrderController());
-      await orderController.fetchUserOrders();
-
-      final cartController = Get.put(CartController());
-
-      await cartController.loadCartOnAppStart(userId);
-    }
-    final controller = Get.put(ProductsController());
-    controller.fetchProducts(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CartController());
+    final productController = Get.put(ProductsController());
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
@@ -70,56 +36,59 @@ class _LandingPageState extends State<LandingPage> {
             iconText2: 'WishList',
             iconText: 'View Cart',
             items: cartController.cartItem.length,
-            onTap1: () {
-              context.go('/wishlist');
-            },
-            onTap2: () {
-              context.go('/cartpage');
-            },
+            onTap1: () => context.go('/wishlist'),
+            onTap2: () => context.go('/cartpage'),
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 14),
-            const Text(
-              "Welcome to MyShop",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+      body: Obx(() {
+        if (productController.isLoading.value ||
+            productController.isFLoading.value) {
+          return LandingPageShimmer();
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 14),
+              const Text(
+                "Welcome to MyShop",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            SummerProducts(),
-            const SizedBox(height: 24),
-            const Text(
-              "Featured Products",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+              const SizedBox(height: 16),
+              SummerProducts(),
+              const SizedBox(height: 24),
+              const Text(
+                "Featured Products",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            FeaturedProduct(),
-            const SizedBox(height: 24),
-            const Text(
-              "Products",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+              const SizedBox(height: 12),
+              FeaturedProduct(),
+              const SizedBox(height: 24),
+              const Text(
+                "Products",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            AllProducts(),
-          ],
-        ),
-      ),
+              const SizedBox(height: 12),
+              AllProducts(),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

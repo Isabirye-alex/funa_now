@@ -23,13 +23,13 @@ class _AllProductsState extends State<AllProducts> {
     final cartController = Get.put(CartController());
 
     return Obx(() {
-      // if (controller.isLoading.value) {
-      //   return const Center(child: CircularProgressIndicator());
-      // }
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-      // if (controller.products.isEmpty) {
-      //   return const Center(child: Text('No products found'));
-      // }
+      if (controller.products.isEmpty) {
+        return const Center(child: Text('No products found'));
+      }
 
       return GridView.builder(
         shrinkWrap: true,

@@ -8,12 +8,12 @@ import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:http/http.dart' as http;
 
-
 class ProductsController extends GetxController {
   static ProductsController get to => Get.find();
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
   RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
   final RxBool isLoading = true.obs;
+  final RxBool isFLoading = true.obs;
   @override
   void onInit() {
     super.onInit();
@@ -62,6 +62,7 @@ class ProductsController extends GetxController {
 
   Future<void> getFeaturedProducts() async {
     try {
+      isFLoading.value = true;
       final response = await http.get(
         Uri.parse('${UrlConstant.url}products/featured'),
       );
@@ -72,6 +73,7 @@ class ProductsController extends GetxController {
             .map((f) => ProductsModel.fromMap(f))
             .toList();
         featuredProducts.assignAll(result);
+        isFLoading.value = false;
       }
     } catch (e) {
       debugPrint('Error fetcing featured products: $e');

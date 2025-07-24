@@ -1,4 +1,4 @@
 class UrlConstant {
   UrlConstant._();
-  static const String url = 'http://10.39.3.87:3000/';
+  static const String url = 'https://node-js-my4n.onrender.com/';
 }

@@ -13,7 +13,9 @@ class FeaturedProduct extends StatelessWidget {
 
     return Obx(() {
       final featured = controller.featuredProducts;
-
+      if (controller.isLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
       if (featured.isEmpty) {
         return const Center(child: Text("No featured products"));
       }

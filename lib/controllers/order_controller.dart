@@ -11,6 +11,7 @@ import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/order_email_model.dart';
 import 'package:go_shop/models/order_item_model.dart';
 import 'package:go_shop/models/order_model.dart';
+import 'package:go_shop/ui/pages/stand_alone/order_list_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -137,6 +138,10 @@ class OrderController extends GetxController {
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
         // Reload cart after order is placed
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OrdersListPage()),
+        );
         await fetchUserOrders();
         final orderResponse = jsonDecode(response.body);
         final userController = Get.put(UserController());
@@ -146,7 +151,7 @@ class OrderController extends GetxController {
             receiverName:
                 "${userController.firstname} ${userController.lastname}",
             orderId: orderResponse['data']['order_id'],
-            orderDate: DateTime.now(), // ⏰ Pass current date or correct value
+            orderDate: DateTime.now(),
             paymentMethod: payment,
             shippingAddress: address,
             orderItems: cartController.cartItem
@@ -210,22 +215,13 @@ class OrderController extends GetxController {
         body: jsonEncode(body),
       );
 
-      // debugPrint(
-      //   "🧾 Order items to send: ${model.orderItems.map((e) => e.name).toList()}",
-      // );
-      if (response.statusCode == 200||response.statusCode==201) {
-        // debugPrint("Order email sent successfully from sendOrderEmail()");
-      } else {
-        // debugPrint(
-          // " Failed to send order email from sendOrderEmail(): ${response.body}",
-        // );
-      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+      } else {}
     } catch (e) {
       debugPrint(" Exception in sendOrderEmail(): $e");
     }
   }
 
-  // Optional: useful if you need it somewhere else
   Future<void> fetchUserId() async {
     await loadUserId();
   }
