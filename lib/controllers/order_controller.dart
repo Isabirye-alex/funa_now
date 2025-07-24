@@ -1,11 +1,9 @@
 // ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations
 
 import 'dart:convert';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/user_controller.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
@@ -53,43 +51,6 @@ class OrderController extends GetxController {
       return false;
     }
     return true;
-  }
-
-  Future<void> createOrder(
-    BuildContext context,
-    String totalAmount,
-    String status,
-    String shippingAddress,
-    String paymentMethod,
-    String username,
-  ) async {
-    if (userId.value == null) return;
-
-    try {
-      final orderData = OrderModel(
-        user_id: userId.value!,
-        total_amount: totalAmount,
-        status: status,
-        shipping_address: shippingAddress,
-        payment_method: paymentMethod,
-        isPaid: 0,
-        username: username,
-      );
-
-      final response = await http.post(
-        Uri.parse('${UrlConstant.url}order'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(orderData.toJson()),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final result = jsonDecode(response.body);
-        debugPrint('$result');
-        GoRouter.of(context).go('/orderpage');
-      }
-    } catch (e) {
-      debugPrint('Error creating order: $e');
-    }
   }
 
   Future<void> fetchUserOrders() async {
@@ -168,7 +129,6 @@ class OrderController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint('Order success: ${response.body}');
         Flushbar(
           title: "Order Placed",
           message: "Thank you! Your order has been placed successfully.",
@@ -176,8 +136,32 @@ class OrderController extends GetxController {
           backgroundColor: Colors.green,
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
-
         // Reload cart after order is placed
+        await fetchUserOrders();
+        final orderResponse = jsonDecode(response.body);
+        final userController = Get.put(UserController());
+        await sendOrderEmail(
+          OrderEmailModel(
+            receiver: userController.email.toString(),
+            receiverName:
+                "${userController.firstname} ${userController.lastname}",
+            orderId: orderResponse['data']['order_id'],
+            orderDate: DateTime.now(), // ⏰ Pass current date or correct value
+            paymentMethod: payment,
+            shippingAddress: address,
+            orderItems: cartController.cartItem
+                .map(
+                  (item) => OrderItem(
+                    name: item.title,
+                    quantity: item.quantity,
+                    price: double.tryParse(item.price.toString()) ?? 0.0,
+                    image: item.imageUrl,
+                  ),
+                )
+                .toList(),
+            total: double.tryParse(total.toString())?.toStringAsFixed(0) ?? '0',
+          ),
+        );
         await cartController.loadCartOnAppStart(userId.value!);
       } else {
         debugPrint('Order failed: ${response.body}');
@@ -193,53 +177,51 @@ class OrderController extends GetxController {
     } catch (e) {
       debugPrint('Exception placing order: $e');
     }
-    final userController = Get.put(UserController());
-    // final payment = Get.put(PaymentController());
-    // final shipping = Get.put(AddressController());
-    final orderDetails = order.firstWhereOrNull(
-      (o) => o.id == int.tryParse(orderId.value.toString()),
-    );
-    await sendOrderEmail(
-      OrderEmailModel(
-        receiver: userController.email.toString(),
-        receiverName: "${userController.firstname} ${userController.lastname}",
-        orderId: orderId.value.toString(),
-        orderDate: DateFormat.yMMMd().format(orderDetails!.createdAt!),
-        paymentMethod: payment,
-        shippingAddress: address,
-        total: int.parse(total), // ✅ Convert total from String to int
-        orderItems: cartController.cartItem
-            .map(
-              (item) => OrderItem(
-                name: item.title,
-                quantity: item.quantity,
-                price:
-                    double.tryParse(item.price.toString()) ??
-                    0.0, 
-                image: item.imageUrl,
-              ),
-            )
-            .toList(),
-      ),
-    );
-
   }
 
-  Future<void> sendOrderEmail(OrderEmailModel orderEmail) async {
+  Future<void> sendOrderEmail(OrderEmailModel model) async {
     try {
+      final formattedDate = DateFormat(
+        'MMMM d, y \'at\' h:mm a',
+      ).format(model.orderDate);
+      final body = {
+        "receiver": model.receiver,
+        "receiverName": model.receiverName,
+        "orderId": model.orderId.toString(),
+        "orderDate": formattedDate,
+        "paymentMethod": model.paymentMethod,
+        "shippingAddress": model.shippingAddress,
+        "orderItems": model.orderItems
+            .map(
+              (item) => {
+                "name": item.name,
+                "quantity": item.quantity,
+                "price": item.price,
+                "image": item.image,
+              },
+            )
+            .toList(),
+        "total": model.total.toString(),
+      };
+
       final response = await http.post(
         Uri.parse('${UrlConstant.url}email/order-placement'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(orderEmail),
+        body: jsonEncode(body),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint('Order email sent successfully');
+      // debugPrint(
+      //   "🧾 Order items to send: ${model.orderItems.map((e) => e.name).toList()}",
+      // );
+      if (response.statusCode == 200||response.statusCode==201) {
+        // debugPrint("Order email sent successfully from sendOrderEmail()");
       } else {
-        debugPrint('Failed to send email: ${response.body}');
+        // debugPrint(
+          // " Failed to send order email from sendOrderEmail(): ${response.body}",
+        // );
       }
     } catch (e) {
-      debugPrint('Error sending order placement email: $e');
+      debugPrint(" Exception in sendOrderEmail(): $e");
     }
   }
 

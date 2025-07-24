@@ -92,7 +92,6 @@ class AddressController extends GetxController {
   }
 
   Future<void> fetchUserAddresses(BuildContext context) async {
-    debugPrint('🔄 Fetching user addresses...');
     final dbquery = await authService.getAuthData();
 
     if (dbquery != null && dbquery['userId'] != null) {
@@ -124,7 +123,6 @@ class AddressController extends GetxController {
           address.clear();
         }
       } catch (e) {
-        debugPrint('🛑 Exception occurred: $e');
         address.clear();
       } finally {
         isLoading.value = false;

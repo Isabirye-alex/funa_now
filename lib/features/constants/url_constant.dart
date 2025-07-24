@@ -1,4 +1,4 @@
 class UrlConstant {
   UrlConstant._();
-  static const String url = 'http://192.168.137.1:3000/';
+  static const String url = 'http://10.39.3.87:3000/';
 }
