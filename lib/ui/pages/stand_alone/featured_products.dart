@@ -3,9 +3,73 @@ import 'package:get/get.dart';
 import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FeaturedProduct extends StatelessWidget {
   const FeaturedProduct({super.key});
+
+  // Shimmer widget for loading placeholder
+  Widget _buildShimmerList() {
+    return SizedBox(
+      height: 160,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: 4, // Number of shimmer placeholders
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 140,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 6,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 110,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      width: 80,
+                      height: 13,
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    width: 60,
+                    height: 13,
+                    color: Colors.grey[300],
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +77,8 @@ class FeaturedProduct extends StatelessWidget {
 
     return Obx(() {
       final featured = controller.featuredProducts;
-      if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
+      if (controller.isFLoading.value && featured.isEmpty) {
+        return _buildShimmerList(); // Show shimmer while loading and no featured products
       }
       if (featured.isEmpty) {
         return const Center(child: Text("No featured products"));
@@ -35,7 +99,7 @@ class FeaturedProduct extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ProductDetail(
                       description: product.description!,
-                      price: product.price,
+                      price: product.formattedPrice,
                       image: product.imageUrl,
                       name: product.name,
                       productId: product.id!,
