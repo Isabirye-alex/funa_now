@@ -59,7 +59,9 @@ class Categories extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final category = controller.categories[index];
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                      
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[100],

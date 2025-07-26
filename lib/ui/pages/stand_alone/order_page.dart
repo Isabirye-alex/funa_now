@@ -252,6 +252,7 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                   const SizedBox(height: 8),
                   Obx(() {
+                    
                     if (paymentController.isLoading.value) {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -354,8 +355,9 @@ class _OrderPageState extends State<OrderPage> {
                         context,
                       );
                     },
-                    icon: const Icon(Icons.payment),
-                    label: const Text('Confirm Order'),
+                    
+                    icon:  Icon(Icons.payment),
+                    label: Text('Confirm Order'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
                       padding: const EdgeInsets.symmetric(vertical: 16),

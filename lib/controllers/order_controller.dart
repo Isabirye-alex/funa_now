@@ -22,6 +22,7 @@ class OrderController extends GetxController {
   final RxnInt userId = RxnInt(); // Reactive user ID
   final authService = AuthStorage();
   var orderId = RxnString();
+  var isLoading = true.obs;
   final RxList<OrderItemModel> orderItem = <OrderItemModel>[].obs;
   @override
   void onInit() {
@@ -114,6 +115,7 @@ class OrderController extends GetxController {
     }).toList();
 
     try {
+      isLoading.value = true;
       final body = {
         "cart_id": cartId,
         "user_id": userId.value,
@@ -168,6 +170,7 @@ class OrderController extends GetxController {
           ),
         );
         await cartController.loadCartOnAppStart(userId.value!);
+        isLoading.value= false;
       } else {
         debugPrint('Order failed: ${response.body}');
         Flushbar(

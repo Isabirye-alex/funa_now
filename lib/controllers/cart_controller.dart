@@ -21,6 +21,7 @@ class CartController extends GetxController {
   RxList<CartModel> cart = <CartModel>[].obs;
   var cart_id = RxnInt();
   final authStorage = AuthStorage();
+  var isLoading = true.obs;
 
   void addToCart(ProductsModel product, BuildContext context) async {
     try {
@@ -77,6 +78,7 @@ class CartController extends GetxController {
 
   Future<void> fetchCartItems() async {
     try {
+      isLoading.value = true;
       if (cart_id.value == null) {
         debugPrint('No valid cart ID found');
         cartItem.clear();
@@ -93,8 +95,8 @@ class CartController extends GetxController {
         if (data['success'] == true) {
           final items = data['data'] as List;
           cartItem.value = items.map((e) => CartItemModel.fromMap(e)).toList();
-
           update();
+          isLoading.value = false;
         } else {
           cartItem.clear();
         }
@@ -108,6 +110,7 @@ class CartController extends GetxController {
 
   Future<void> decreaseItemQuantity(int itemId, BuildContext context) async {
     try {
+      isLoading.value = true;
       final response = await http.patch(
         Uri.parse('${UrlConstant.url}cart-items/decrease/$itemId'),
       );
@@ -138,8 +141,8 @@ class CartController extends GetxController {
         ).show(context);
         noOfItems--;
         update();
-
         await fetchCartItems();
+        isLoading.value = false;
       } else {}
     } catch (e) {
       debugPrint('Error decreasing quantity: $e');
@@ -150,6 +153,7 @@ class CartController extends GetxController {
 
   Future<void> loadCartOnAppStart(int userId) async {
     try {
+      isLoading.value = true;
       final response = await http.get(
         Uri.parse('${UrlConstant.url}cart-items/activecart/$userId'),
       );
@@ -162,6 +166,7 @@ class CartController extends GetxController {
           final int cartId = data['id'];
           cart_id.value = cartId;
           await fetchCartItems();
+          isLoading.value = false;
         } else {
           cart_id.value = null;
           cartItem.clear();
@@ -179,6 +184,7 @@ class CartController extends GetxController {
 
   Future<void> removeItemFromCart(int itemId) async {
     try {
+      isLoading.value = true;
       final response = await http.delete(
         Uri.parse('${UrlConstant.url}cart-items/deleteitem/$itemId'),
       );
@@ -188,6 +194,7 @@ class CartController extends GetxController {
       if (response.statusCode == 200 ||
           response.statusCode == 201 && data['success']) {
         await fetchCartItems();
+        isLoading.value = false;
       } else {}
     } catch (e) {
       debugPrint('Error removing item: $e');
