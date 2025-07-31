@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/wishlist_controller.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -28,7 +29,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controlerr = Get.find<WishlistController>();
-
+    final cartController = Get.put(CartController());
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -116,13 +117,23 @@ class CustomAppBar extends StatelessWidget {
                             right: 0,
                             top: 0,
                             child: Center(
-                              child: Text(
-                                '$items',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                              child: Obx(
+                                () => cartController.isLoading.value
+                                    ? const SizedBox(
+                                        height: 15,
+                                        width: 15,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        '$items',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

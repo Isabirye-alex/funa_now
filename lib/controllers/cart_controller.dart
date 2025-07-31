@@ -21,7 +21,7 @@ class CartController extends GetxController {
   RxList<CartModel> cart = <CartModel>[].obs;
   var cart_id = RxnInt();
   final authStorage = AuthStorage();
-  var isLoading = true.obs;
+  var isLoading = false.obs;
 
   void addToCart(ProductsModel product, BuildContext context) async {
     try {
@@ -80,8 +80,8 @@ class CartController extends GetxController {
     try {
       isLoading.value = true;
       if (cart_id.value == null) {
-        debugPrint('No valid cart ID found');
         cartItem.clear();
+        isLoading.value = false;
         return;
       }
 
@@ -105,6 +105,8 @@ class CartController extends GetxController {
       }
     } catch (e) {
       debugPrint('Error fetching cart items: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

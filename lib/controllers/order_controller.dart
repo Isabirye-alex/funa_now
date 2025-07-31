@@ -23,6 +23,7 @@ class OrderController extends GetxController {
   final authService = AuthStorage();
   var orderId = RxnString();
   var isLoading = true.obs;
+  var isPlacingOrder = false.obs;
   final RxList<OrderItemModel> orderItem = <OrderItemModel>[].obs;
   @override
   void onInit() {
@@ -103,9 +104,9 @@ class OrderController extends GetxController {
     BuildContext context,
   ) async {
     if (userId.value == null) {
-      debugPrint("User ID not available.");
       return;
     }
+
     final items = cartController.cartItem.map((item) {
       return {
         "product_id": item.productId,
@@ -114,8 +115,9 @@ class OrderController extends GetxController {
       };
     }).toList();
 
+    isPlacingOrder.value = true; 
+
     try {
-      isLoading.value = true;
       final body = {
         "cart_id": cartId,
         "user_id": userId.value,
@@ -139,12 +141,14 @@ class OrderController extends GetxController {
           backgroundColor: Colors.green,
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
-        // Reload cart after order is placed
+
+        // Navigate and update data
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OrdersListPage()),
         );
         await fetchUserOrders();
+
         final orderResponse = jsonDecode(response.body);
         final userController = Get.put(UserController());
         await sendOrderEmail(
@@ -169,8 +173,8 @@ class OrderController extends GetxController {
             total: double.tryParse(total.toString())?.toStringAsFixed(0) ?? '0',
           ),
         );
+
         await cartController.loadCartOnAppStart(userId.value!);
-        isLoading.value= false;
       } else {
         debugPrint('Order failed: ${response.body}');
         Flushbar(
@@ -184,6 +188,15 @@ class OrderController extends GetxController {
       }
     } catch (e) {
       debugPrint('Exception placing order: $e');
+      Flushbar(
+        title: "Error",
+        message: "An unexpected error occurred. Please try again.",
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        icon: const Icon(Icons.error, color: Colors.white),
+      ).show(context);
+    } finally {
+      isPlacingOrder.value = false; // ✅ always reset the loading state
     }
   }
 

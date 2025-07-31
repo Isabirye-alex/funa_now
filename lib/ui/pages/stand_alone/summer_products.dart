@@ -33,7 +33,7 @@ class _SummerProductsState extends State<SummerProducts> {
             color: Colors.blue[700],
             image: DecorationImage(
               image: NetworkImage(
-                "https://res.cloudinary.com/doxivkfxr/image/upload/v1751547241/products/aelysxt8osxxbsxamhts.jpg",
+                "https://res.cloudinary.com/doxivkfxr/image/upload/v1752586576/products/zsgd13f8kw7tbqylsgbr.jpg",
               ),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(

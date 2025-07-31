@@ -57,7 +57,7 @@ class HotSales extends StatelessWidget {
                     crossAxisCount: 2,
                     mainAxisSpacing: 18,
                     crossAxisSpacing: 18,
-                    childAspectRatio: 0.75,
+                    childAspectRatio: 0.8,
                   ),
                   itemBuilder: (context, index) {
                     final product = featured[index];

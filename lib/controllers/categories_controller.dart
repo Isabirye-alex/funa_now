@@ -24,7 +24,8 @@ class CategoriesController extends GetxController {
             .map((c) => CategoriesModel.fromMap(c))
             .toList();
         categories.assignAll(res);
-        debugPrint('${categories}');
+
+        debugPrint('Yes');
       } else {}
       isLoading.value = false;
     } catch (e) {

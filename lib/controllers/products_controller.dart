@@ -11,7 +11,7 @@ class ProductsController extends GetxController {
 
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
   final RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
-
+  final ScrollController scrollController = ScrollController();
   final RxBool isLoading = false.obs;
   final RxBool isFLoading = false.obs;
   final RxBool hasMore = true.obs;

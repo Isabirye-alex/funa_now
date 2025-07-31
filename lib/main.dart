@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/categories_controller.dart';
 import 'package:go_shop/controllers/order_controller.dart';
 import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/controllers/signup_controller.dart';
@@ -24,8 +25,7 @@ class FunaNow extends StatefulWidget {
 }
 
 class _FunaNowState extends State<FunaNow> {
-
-    @override
+  @override
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +44,9 @@ class _FunaNowState extends State<FunaNow> {
       await userController.fetchUserById(userId);
 
       final currentUserController = Get.put(UserController());
+
+      final categoryController = Get.put(CategoriesController());
+      await categoryController.fetchCategories();
 
       await currentUserController.fetchUser();
 

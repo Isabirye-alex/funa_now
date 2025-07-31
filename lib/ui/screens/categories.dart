@@ -3,16 +3,30 @@ import 'package:get/get.dart';
 import 'package:go_shop/controllers/categories_controller.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 
-class Categories extends StatelessWidget {
+class Categories extends StatefulWidget {
   const Categories({super.key});
 
   @override
+  State<Categories> createState() => _CategoriesState();
+}
+
+class _CategoriesState extends State<Categories> {
+  final CategoriesController controller = Get.put(
+    CategoriesController(),
+    permanent: true,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    // Only fetch once if the list is empty
+    if (controller.categories.isEmpty) {
+      controller.fetchCategories();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CategoriesController());
-
-    // Trigger fetching on widget build
-    controller.fetchCategories();
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
@@ -76,8 +90,8 @@ class Categories extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
                                 category.imageUrl,
-                                height: 70,
-                                width: 70,
+                                height: 100,
+                                width: double.infinity,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const Icon(Icons.broken_image, size: 50),
