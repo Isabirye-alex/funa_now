@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/categories_controller.dart';
-import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
+import 'package:go_shop/ui/pages/stand_alone/category_search_bar.dart';
+import 'package:iconsax/iconsax.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key});
@@ -27,15 +30,18 @@ class _CategoriesState extends State<Categories> {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CartController());
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
-        title: const CustomAppBar(
-          icon: Icons.shopping_bag,
+        title: CategorySearchBar(
+          icon: Iconsax.shopping_bag4,
           hint: 'Search Category...',
           icon2: Icons.notifications,
           iconText2: 'Notifications',
           iconText: 'Cart',
+          items: cartController.cartItem.length,
+          onTap2: () => context.go('/cartpage'),
         ),
       ),
       body: Padding(

@@ -13,6 +13,7 @@ import 'package:go_shop/ui/screens/account_page.dart';
 import 'package:go_shop/ui/screens/categories.dart';
 import 'package:go_shop/ui/screens/hot_sales.dart';
 import 'package:go_shop/ui/screens/landing_page.dart';
+import 'package:go_shop/ui/widgets/search_page.dart';
 
 import '../../ui/pages/stand_alone/order_detail_page.dart';
 import '../auth_feature/register.dart';
@@ -42,6 +43,11 @@ class AppRouter {
           GoRoute(
             path: '/featuredproducts',
             builder: (context, state) => HotSales(),
+          ),
+          //Search page
+                    GoRoute(
+            path: '/search-page',
+            builder: (context, state) => SearchPage(),
           ),
           // Account page route
           GoRoute(

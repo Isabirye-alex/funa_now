@@ -78,8 +78,11 @@ class CartController extends GetxController {
 
   Future<void> fetchCartItems() async {
     try {
+      debugPrint("🟡 Start fetching cart items");
       isLoading.value = true;
+
       if (cart_id.value == null) {
+        debugPrint("⚠️ cart_id is null");
         cartItem.clear();
         isLoading.value = false;
         return;
@@ -89,23 +92,27 @@ class CartController extends GetxController {
         Uri.parse('${UrlConstant.url}cart-items/getcartitems/${cart_id.value}'),
       );
 
+      debugPrint("📩 Status code: ${response.statusCode}");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
 
         if (data['success'] == true) {
           final items = data['data'] as List;
           cartItem.value = items.map((e) => CartItemModel.fromMap(e)).toList();
-          update();
-          isLoading.value = false;
+          debugPrint("✅ Cart fetched with ${cartItem.length} items");
         } else {
+          debugPrint("❌ Response success is false");
           cartItem.clear();
         }
       } else {
+        debugPrint("❌ Non-200 response");
         cartItem.clear();
       }
     } catch (e) {
-      debugPrint('Error fetching cart items: $e');
+      debugPrint('🛑 Exception fetching cart items: $e');
     } finally {
+      debugPrint("🟢 Done fetching, setting isLoading to false");
       isLoading.value = false;
     }
   }

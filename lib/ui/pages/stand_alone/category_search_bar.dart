@@ -3,8 +3,8 @@ import 'package:go_shop/ui/pages/stand_alone/cart_icon_button.dart';
 import 'package:go_shop/ui/pages/stand_alone/search_bar.dart';
 import 'package:go_shop/ui/pages/stand_alone/wishlist_icon.dart';
 
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
+class CategorySearchBar extends StatelessWidget {
+  const CategorySearchBar({
     super.key,
     this.hint,
     required this.icon,

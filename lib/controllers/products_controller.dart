@@ -21,50 +21,56 @@ class ProductsController extends GetxController {
   int currentPage = 1;
   final int limit = 20;
 
-  @override
+@override
   void onInit() {
     super.onInit();
-    getFeaturedProducts();
-    fetchProducts();
+    if (featuredProducts.isEmpty) getFeaturedProducts();
+    if (products.isEmpty) fetchProducts();
   }
+
 
   Future<void> fetchProducts([BuildContext? context]) async {
     if (isLoading.value || !hasMore.value) {
-      debugPrint('Fetch aborted: isLoading=${isLoading.value}, hasMore=${hasMore.value}');
+      debugPrint(
+        'Fetch aborted: isLoading=${isLoading.value}, hasMore=${hasMore.value}',
+      );
       return;
     }
 
     try {
       isLoading.value = true;
-      debugPrint('Fetching products for page $currentPage');
 
-      final uri = Uri.parse('${UrlConstant.url}products?page=$currentPage&limit=$limit');
+      final uri = Uri.parse(
+        '${UrlConstant.url}products?page=$currentPage&limit=$limit',
+      );
       final response = await http.get(uri);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final result = jsonDecode(response.body);
         final List<dynamic> jsonList = result['data'];
-        final List<ProductsModel> loadedProducts = jsonList.map((e) => ProductsModel.fromMap(e)).toList();
+        final List<ProductsModel> loadedProducts = jsonList
+            .map((e) => ProductsModel.fromMap(e))
+            .toList();
 
         // Check for duplicates by product ID
         final existingIds = products.map((p) => p.id).toSet();
-        final newProducts = loadedProducts.where((p) => !existingIds.contains(p.id)).toList();
+        final newProducts = loadedProducts
+            .where((p) => !existingIds.contains(p.id))
+            .toList();
 
         if (newProducts.isEmpty) {
-          debugPrint('No new products fetched for page $currentPage');
           hasMore.value = false; // No new data
         } else {
           products.addAll(newProducts);
-          debugPrint('Added ${newProducts.length} products, total: ${products.length}');
+       
           if (newProducts.length < limit) {
             hasMore.value = false; // Less than limit, no more data
           } else {
             currentPage++;
-            debugPrint('Incremented to page $currentPage');
           }
         }
       } else {
-        debugPrint('Failed to load products: ${response.statusCode}');
+        // debugPrint('Failed to load products: ${response.statusCode}');
         if (context != null) {
           showFlushbar(
             context,
@@ -101,11 +107,15 @@ class ProductsController extends GetxController {
     try {
       isFLoading.value = true;
       debugPrint('Fetching featured products');
-      final response = await http.get(Uri.parse('${UrlConstant.url}products/featured'));
+      final response = await http.get(
+        Uri.parse('${UrlConstant.url}products/featured'),
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> res = jsonDecode(response.body);
         final List<dynamic> jsonList = res['data'];
-        final List<ProductsModel> result = jsonList.map((f) => ProductsModel.fromMap(f)).toList();
+        final List<ProductsModel> result = jsonList
+            .map((f) => ProductsModel.fromMap(f))
+            .toList();
         featuredProducts.assignAll(result);
         debugPrint('Fetched ${result.length} featured products');
       } else {
@@ -163,7 +173,6 @@ class ProductsController extends GetxController {
     }
   }
 
-
   void showFlushbar(
     BuildContext context,
     String title,
@@ -185,5 +194,4 @@ class ProductsController extends GetxController {
       ),
     ).show(context);
   }
-
 }

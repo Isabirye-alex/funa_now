@@ -17,10 +17,10 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.put(CartController());
-
+    final cartController = Get.find<CartController>();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,

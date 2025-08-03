@@ -194,6 +194,14 @@ class _AccountPageState extends State<AccountPage> {
                     },
                   ),
                   _accountCard(
+                    icon: Icons.shop,
+                    label: "Follow Vendor",
+                    color: Colors.pink,
+                    onTap: () {
+                      // context.go('/wishlist');
+                    },
+                  ),
+                  _accountCard(
                     icon: Icons.location_on,
                     label: "My Addresses",
                     color: Colors.green[600],

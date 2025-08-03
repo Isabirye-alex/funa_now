@@ -11,11 +11,19 @@ import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/features/helper_function/internet_helper.dart';
 
 void main() {
-  Get.put(CartController());
-  Get.put(WishlistController());
-  Get.put(OrderController());
+  WidgetsFlutterBinding.ensureInitialized();  
+
+  Get.put(CartController(), permanent: true); 
+  Get.put(WishlistController(), permanent: true); 
+  Get.put(OrderController(), permanent: true); 
+  Get.put(SignUpController(), permanent: true); 
+  Get.put(UserController(), permanent: true); 
+  Get.put(CategoriesController(), permanent: true); 
+  Get.put(ProductsController(), permanent: true); 
+
   runApp(const FunaNow());
 }
+
 
 class FunaNow extends StatefulWidget {
   const FunaNow({super.key});
@@ -28,37 +36,35 @@ class _FunaNowState extends State<FunaNow> {
   @override
   void initState() {
     super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
     if (!mounted) return;
     _initializeApp();
   }
 
-  Future<void> _initializeApp() async {
+Future<void> _initializeApp() async {
     final authStorage = AuthStorage();
     final authData = await authStorage.getAuthData();
 
     if (authData != null) {
       final userId = authData['userId'];
 
-      final userController = Get.put(SignUpController());
+      final userController = Get.find<SignUpController>();
       await userController.fetchUserById(userId);
 
-      final currentUserController = Get.put(UserController());
-
-      final categoryController = Get.put(CategoriesController());
-      await categoryController.fetchCategories();
-
+      final currentUserController = Get.find<UserController>();
       await currentUserController.fetchUser();
 
-      final orderController = Get.put(OrderController());
+      final categoryController = Get.find<CategoriesController>();
+      await categoryController.fetchCategories();
+
+      final orderController = Get.find<OrderController>();
       await orderController.fetchUserOrders();
 
-      final cartController = Get.put(CartController());
-
+      final cartController = Get.find<CartController>();
       await cartController.loadCartOnAppStart(userId);
     }
-    final controller = Get.put(ProductsController());
-    controller.fetchProducts(context);
+
+    final productController = Get.find<ProductsController>();
+    productController.fetchProducts(context);
   }
 
   @override

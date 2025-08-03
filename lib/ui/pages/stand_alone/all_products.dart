@@ -5,7 +5,7 @@ import 'package:go_shop/ui/pages/reusables/shimmer_grid.dart';
 import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/wishlist_controller.dart';
-import 'dart:async';
+// import 'dart:async';
 
 class AllProducts extends StatefulWidget {
   const AllProducts({super.key});
@@ -16,24 +16,24 @@ class AllProducts extends StatefulWidget {
 
 class _AllProductsState extends State<AllProducts> {
   final controller = Get.put(ProductsController());
-  Timer? _debounce;
+  // Timer? _debounce;
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    final productController = Get.put(ProductsController());
+  //   final productController = Get.put(ProductsController());
 
-    controller.scrollController.addListener(() {
-      if (controller.scrollController.position.pixels >=
-          controller.scrollController.position.maxScrollExtent - 200) {
-        if (_debounce?.isActive ?? false) return; // Prevent multiple calls
-        _debounce = Timer(const Duration(milliseconds: 500), () {
-          productController.fetchProducts(context);
-        });
-      }
-    });
-  }
+  //   controller.scrollController.addListener(() {
+  //     if (controller.scrollController.position.pixels >=
+  //         controller.scrollController.position.maxScrollExtent - 200) {
+  //       if (_debounce?.isActive ?? false) return; // Prevent multiple calls
+  //       _debounce = Timer(const Duration(milliseconds: 500), () {
+  //         productController.fetchProducts(context);
+  //       });
+  //     }
+  //   });
+  // }
 
   // @override
   // void dispose() {
