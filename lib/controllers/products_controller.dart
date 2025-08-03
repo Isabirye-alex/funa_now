@@ -12,9 +12,11 @@ class ProductsController extends GetxController {
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
   final RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
   final ScrollController scrollController = ScrollController();
+  final RxList<ProductsModel> searchResults = <ProductsModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isFLoading = false.obs;
   final RxBool hasMore = true.obs;
+  final RxBool isSearching = false.obs;
 
   int currentPage = 1;
   final int limit = 20;
@@ -117,6 +119,51 @@ class ProductsController extends GetxController {
     }
   }
 
+  //Search function
+  Future<void> searchProducts(String query, [BuildContext? context]) async {
+    if (query.trim().isEmpty) {
+      searchResults.clear();
+      return;
+    }
+
+    try {
+      isSearching.value = true;
+      debugPrint('Searching products with query: $query');
+
+      final uri = Uri.parse(
+        '${UrlConstant.url}products/search?query=${Uri.encodeQueryComponent(query)}',
+      );
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        final List<dynamic> jsonList = result['data'];
+        final List<ProductsModel> results = jsonList
+            .map((e) => ProductsModel.fromMap(e))
+            .toList();
+        searchResults.assignAll(results);
+      } else {
+        debugPrint('Search failed with status code: ${response.statusCode}');
+        if (context != null) {
+          showFlushbar(
+            context,
+            'Search Failed',
+            'Something went wrong',
+            Icons.error,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Search error: $e');
+      if (context != null) {
+        showFlushbar(context, 'Error', 'Search failed: $e', Icons.error);
+      }
+    } finally {
+      isSearching.value = false;
+    }
+  }
+
+
   void showFlushbar(
     BuildContext context,
     String title,
@@ -138,4 +185,5 @@ class ProductsController extends GetxController {
       ),
     ).show(context);
   }
+
 }

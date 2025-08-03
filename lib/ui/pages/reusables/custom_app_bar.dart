@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
+import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/controllers/wishlist_controller.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -83,8 +84,14 @@ class CustomAppBar extends StatelessWidget {
                     ),
                   ),
                   leading: Icon(Icons.search, color: Colors.black),
-                  onChanged: (value) {},
-                  onSubmitted: (value) {},
+                  onChanged: (value) {
+                    final controller = Get.put(ProductsController());
+                    controller.searchProducts(value, context);
+                  },
+                  onSubmitted: (value) {
+                    final controller = Get.put(ProductsController());
+                    controller.searchProducts(value, context);
+                  },
                   onTap: () {},
                   onTapOutside: (event) {},
                   hintText: hint,
