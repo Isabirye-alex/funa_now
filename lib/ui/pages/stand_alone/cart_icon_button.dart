@@ -26,14 +26,13 @@ class CartIconButton extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Icon(icon, color: Colors.purpleAccent),
+                  Icon(icon, color: Colors.orange, weight: 30.0, grade: 4),
                   Positioned(
                     right: 0,
                     top: 0,
                     child: Center(
                       child: Obx(
-                        () =>
-                            cartController.isLoading.value
+                        () => cartController.isLoading.value
                             ? SizedBox(
                                 height: 15,
                                 width: 15,

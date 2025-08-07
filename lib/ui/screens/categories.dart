@@ -79,13 +79,16 @@ class _CategoriesState extends State<Categories> {
                   ),
                   itemBuilder: (context, index) {
                     final category = controller.categories[index];
+                    final categoryId = category.id;
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                ProductsByCategory2(category: category),
+                            builder: (_) => ProductsByCategory2(
+                              category: category,
+                              categoryId: categoryId!,
+                            ),
                           ),
                         );
                       },

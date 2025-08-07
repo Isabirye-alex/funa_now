@@ -13,11 +13,11 @@ class ProductsController extends GetxController {
   final RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
   final ScrollController scrollController = ScrollController();
   final RxList<ProductsModel> searchResults = <ProductsModel>[].obs;
+  final RxList<ProductsModel> pro = <ProductsModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isFLoading = false.obs;
   final RxBool hasMore = true.obs;
   final RxBool isSearching = false.obs;
-
   int currentPage = 1;
   final int limit = 20;
 
@@ -167,6 +167,29 @@ class ProductsController extends GetxController {
       }
     } finally {
       isSearching.value = false;
+    }
+  }
+
+  Future<void> fetchProductsByCategoryId(int id) async {
+    try {
+      isLoading.value = true;
+      final response = await http.get(
+        Uri.parse('${UrlConstant.url}products/category/$id'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        final List<dynamic> jsonList = res['data'];
+        final List<ProductsModel> result = jsonList
+            .map((e) => ProductsModel.fromMap(e))
+            .toList();
+        pro.assignAll(result);
+      } else {
+        debugPrint('Response from server = ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('Error fetching products by category: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 

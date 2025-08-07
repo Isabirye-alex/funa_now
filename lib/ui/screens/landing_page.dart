@@ -12,7 +12,7 @@ import 'package:go_shop/ui/pages/stand_alone/summer_products.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LandingPage extends StatefulWidget {
-  LandingPage({super.key});
+  const LandingPage({super.key});
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
@@ -26,7 +26,7 @@ class _LandingPageState extends State<LandingPage> {
         toolbarHeight: 75,
         title: Obx(
           () => CustomAppBar(
-            icon: Iconsax.shopping_bag4,
+            icon: Iconsax.shopping_bag5,
             color: Colors.purpleAccent,
             hint: 'Search Product...',
             icon2: Iconsax.lovely,
