@@ -26,7 +26,7 @@ class CartIconButton extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Icon(icon, color: Colors.orange, weight: 30.0, grade: 4),
+                  Icon(icon, color: Colors.blue, weight: 30.0, grade: 4),
                   Positioned(
                     right: 0,
                     top: 0,

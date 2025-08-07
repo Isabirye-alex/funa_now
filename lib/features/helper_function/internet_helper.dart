@@ -56,7 +56,7 @@ class _ConnectionCheckerState extends State<ConnectionChecker> {
                   scaffoldBackgroundColor: Color(0xFFFFFFFF),
                   cardColor: const Color(0xFF2A2D3E),
                   appBarTheme: const AppBarTheme(
-                    backgroundColor: Color(0xFF007BFF),
+                    backgroundColor: Color(0xFFFF6B00),
                     elevation: 10,
                   ),
                   iconTheme: const IconThemeData(color: Colors.white),
