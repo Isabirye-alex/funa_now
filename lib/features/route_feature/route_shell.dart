@@ -42,27 +42,44 @@ class RouteShell extends StatelessWidget {
             topRight: Radius.circular(40),
           ),
         ),
-        child: BottomNavigationBar(
-          elevation: 10,
-          currentIndex: selectedIndex < 0 ? 0 : selectedIndex,
-          onTap: (index) {
-            final route = destinations[index]['route'] as String;
-            if (GoRouterState.of(context).uri.toString() != route) {
-              context.go(route);
-            }
-          },
-          items: [
-            for (var item in destinations)
-              BottomNavigationBarItem(
-                icon: Icon(item['icon'] as IconData),
-                label: item['label'] as String,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // same as your background
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(100),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: Offset(0, -3), // shadow above the nav bar
               ),
-          ],
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
-          backgroundColor: Colors.blue,
-          type: BottomNavigationBarType.fixed,
-          landscapeLayout: BottomNavigationBarLandscapeLayout.linear,
+            ],
+          ),
+          child: BottomNavigationBar(
+            elevation: 0, // Remove default shadow
+            currentIndex: selectedIndex < 0 ? 0 : selectedIndex,
+            onTap: (index) {
+              final route = destinations[index]['route'] as String;
+              if (GoRouterState.of(context).uri.toString() != route) {
+                context.go(route);
+              }
+            },
+            items: [
+              for (var item in destinations)
+                BottomNavigationBarItem(
+                  icon: Icon(item['icon'] as IconData),
+                  label: item['label'] as String,
+                ),
+            ],
+            selectedItemColor: Colors.orange,
+            unselectedItemColor: Colors.black,
+            backgroundColor: Colors.transparent, // Handled by container
+            type: BottomNavigationBarType.fixed,
+            landscapeLayout: BottomNavigationBarLandscapeLayout.linear,
+          ),
         ),
       ),
     );

@@ -38,7 +38,7 @@ class ProductDetailsSection extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.blue,
+                  color: Colors.white,
                 ),
               ),
               AddToCartButton(product: product, cartController: cartController),

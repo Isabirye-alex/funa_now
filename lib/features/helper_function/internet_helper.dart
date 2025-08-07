@@ -53,10 +53,10 @@ class _ConnectionCheckerState extends State<ConnectionChecker> {
                 debugShowCheckedModeBanner: false,
                 title: 'X-Store',
                 theme: ThemeData.dark().copyWith(
-                  scaffoldBackgroundColor: const Color(0xFF1976D2),
+                  scaffoldBackgroundColor: Color(0xFFFFFFFF),
                   cardColor: const Color(0xFF2A2D3E),
                   appBarTheme: const AppBarTheme(
-                    backgroundColor: Color(0xFF1C1C2D),
+                    backgroundColor: Color(0xFF007BFF),
                     elevation: 10,
                   ),
                   iconTheme: const IconThemeData(color: Colors.white),

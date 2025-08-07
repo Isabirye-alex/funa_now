@@ -41,7 +41,6 @@ class SearchPage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: ProductsBuilder(
-              scrollController: scrollController,
               productController: productsController,
               wishlistController: wishlistController,
               cartController: cartController,

@@ -17,7 +17,6 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  
   @override
   Widget build(BuildContext context) {
     final cartController = Get.find<CartController>();
@@ -44,7 +43,7 @@ class _LandingPageState extends State<LandingPage> {
         child: Padding(
           padding: EdgeInsets.zero,
           child: ListView(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            padding: EdgeInsets.zero,
             children: [
               const SizedBox(height: 14),
               const Text(
@@ -52,32 +51,35 @@ class _LandingPageState extends State<LandingPage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 16),
               SummerProducts(),
               const SizedBox(height: 24),
-              const Text(
-                "Featured Products",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Featured Products",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               FeaturedProduct(),
-              const SizedBox(height: 24),
-              const Text(
-                "Products",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 12),
+
+              // const Text(
+              //   "Products",
+              //   style: TextStyle(
+              //     fontSize: 18,
+              //     fontWeight: FontWeight.w600,
+              //     color: Colors.black,
+              //   ),
+              // ),
+              // const SizedBox(height: 12),
               Container(padding: EdgeInsets.zero, child: AllProducts()),
             ],
           ),

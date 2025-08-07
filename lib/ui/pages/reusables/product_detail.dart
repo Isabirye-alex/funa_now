@@ -54,7 +54,11 @@ class ProductDetail extends StatelessWidget {
             // Product Name
             Text(
               name,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -65,7 +69,7 @@ class ProductDetail extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.amber,
+                color: Colors.blue,
               ),
             ),
 
@@ -78,7 +82,10 @@ class ProductDetail extends StatelessWidget {
                 Expanded(
                   child: Obx(() {
                     if (reviewController.totalRatings.value == 0) {
-                      return const Text('No ratings yet');
+                      return Text(
+                        'No ratings yet',
+                        style: TextStyle(color: Colors.black),
+                      );
                     }
 
                     return Column(
@@ -93,7 +100,10 @@ class ProductDetail extends StatelessWidget {
                           direction: Axis.horizontal,
                         ),
                         const SizedBox(height: 10),
-                        Text('(${reviewController.totalRatings} reviews)'),
+                        Text(
+                          '(${reviewController.totalRatings} reviews)',
+                          style: TextStyle(color: Colors.black),
+                        ),
                         const SizedBox(height: 10),
                         buildRatingBars(reviewController),
                       ],
@@ -108,12 +118,16 @@ class ProductDetail extends StatelessWidget {
             // Description
             const Text(
               'Description',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               description,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
 
             const SizedBox(height: 30),
@@ -175,7 +189,11 @@ class ProductDetail extends StatelessWidget {
 
             const Text(
               'Reviews',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
             const SizedBox(height: 10),
             ProductReview(productId: productId),

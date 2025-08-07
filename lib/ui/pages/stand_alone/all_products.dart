@@ -7,15 +7,8 @@ import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/wishlist_controller.dart';
 // import 'dart:async';
 
-class AllProducts extends StatefulWidget {
+class AllProducts extends StatelessWidget {
   const AllProducts({super.key});
-
-  @override
-  State<AllProducts> createState() => _AllProductsState();
-}
-
-class _AllProductsState extends State<AllProducts> {
-  final controller = Get.put(ProductsController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +19,14 @@ class _AllProductsState extends State<AllProducts> {
     return Obx(() {
       if (productController.products.isEmpty &&
           productController.isLoading.value) {
-        return ShimmerGrid();
+        return const ShimmerGrid();
       }
 
-      if (productController.products.isEmpty){
-         productController.fetchProducts(context);
+      if (productController.products.isEmpty) {
+        productController.fetchProducts(context);
       }
 
       return ProductsBuilder(
-        scrollController: controller.scrollController,
         productController: productController,
         wishlistController: wishlistController,
         cartController: cartController,

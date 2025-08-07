@@ -35,6 +35,22 @@ class CartController extends GetxController {
       if (authData != null) {
         quantity.value = 1;
         final userId = authData['userId'];
+        Flushbar(
+          shouldIconPulse: false,
+          duration: const Duration(milliseconds: 500),
+          isDismissible: true,
+          dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+          borderRadius: BorderRadius.circular(8),
+          margin: const EdgeInsets.all(16),
+          flushbarPosition: FlushbarPosition.TOP,
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: Colors.green,
+          messageText: const Text(
+            'Item added to cart',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+        ).show(context);
         final response = await http.post(
           Uri.parse('${UrlConstant.url}cart-items/addtocart'),
           headers: {'Content-Type': 'application/json'},
@@ -118,7 +134,6 @@ class CartController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-       
         final data = jsonDecode(response.body);
 
         if (data['success'] == true) {
@@ -195,17 +210,16 @@ class CartController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final body = jsonDecode(response.body);
-        debugPrint('Cart response body: ${response.body}');
-
         final data = body['data'];
 
-        if (body['success'] == true && data != null && data['id'] != null) {
+        // Handle case when 'data' is a Map with 'id'
+        if (body['success'] == true && data is Map && data['id'] != null) {
           final int cartId = int.parse(data['id'].toString());
           cart_id.value = cartId;
 
           await fetchCartItems();
-          isCartLoading.value = false;
         } else {
+          // No active cart found or data is empty list
           cart_id.value = null;
           cartItem.clear();
         }
@@ -217,6 +231,8 @@ class CartController extends GetxController {
       debugPrint('Error loading cart: $e');
       cart_id.value = null;
       cartItem.clear();
+    } finally {
+      isCartLoading.value = false;
     }
   }
 

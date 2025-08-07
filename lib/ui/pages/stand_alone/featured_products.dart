@@ -54,11 +54,7 @@ class FeaturedProduct extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Container(
-                    width: 60,
-                    height: 13,
-                    color: Colors.grey[300],
-                  ),
+                  Container(width: 60, height: 13, color: Colors.grey[300]),
                   const SizedBox(height: 6),
                 ],
               ),
@@ -87,103 +83,106 @@ class FeaturedProduct extends StatelessWidget {
         );
       }
 
-      return SizedBox(
-        height: 180, // Increased height to prevent overflow
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: featured.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 12),
-          itemBuilder: (context, index) {
-            final product = featured[index];
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetail(
-                      description: product.description!,
-                      price: product.formattedPrice,
-                      image: product.imageUrl,
-                      name: product.name,
-                      productId: product.id!,
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+        child: SizedBox(
+          height: 180, // Increased height to prevent overflow
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: featured.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final product = featured[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetail(
+                        description: product.description!,
+                        price: product.formattedPrice,
+                        image: product.imageUrl,
+                        name: product.name,
+                        productId: product.id!,
+                      ),
                     ),
+                  );
+                },
+                child: Container(
+                  width: 140,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 6,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Container(
-                width: 140,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade200,
-                      blurRadius: 6,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: product.imageUrl,
-                        height: 110,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          height: 110,
-                          width: double.infinity,
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
                         ),
-                        errorWidget: (context, url, error) => Container(
+                        child: CachedNetworkImage(
+                          imageUrl: product.imageUrl,
                           height: 110,
                           width: double.infinity,
-                          color: Colors.grey,
-                          child: const Icon(
-                            Icons.broken_image,
-                            color: Colors.red,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            height: 110,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            height: 110,
+                            width: double.infinity,
+                            color: Colors.grey,
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        product.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          product.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "UGX ${product.formattedPrice}",
+                        style: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "UGX ${product.formattedPrice}",
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                  ],
+                      const SizedBox(height: 6),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     });

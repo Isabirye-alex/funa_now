@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:iconsax/iconsax.dart';
 
-
 class AddToCartButton extends StatelessWidget {
   const AddToCartButton({
     super.key,
@@ -22,7 +21,7 @@ class AddToCartButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: const BoxDecoration(
-          color: Colors.blue,
+          color: Colors.orange,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(8),
             bottomRight: Radius.circular(8),
