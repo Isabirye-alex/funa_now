@@ -34,7 +34,7 @@ class CartIconButton extends StatelessWidget {
                       child: Obx(
                         () =>
                             cartController.isLoading.value
-                            ? const SizedBox(
+                            ? SizedBox(
                                 height: 15,
                                 width: 15,
                                 child: CircularProgressIndicator(
@@ -43,7 +43,7 @@ class CartIconButton extends StatelessWidget {
                               )
                             : Text(
                                 '${cartController.cartItem.length}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w900,

@@ -1,10 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:go_shop/features/constants/url_constant.dart';
 import 'package:go_shop/features/helper_function/db_helper.dart';
 import 'package:go_shop/models/cart_item_model.dart';
@@ -22,6 +22,12 @@ class CartController extends GetxController {
   var cart_id = RxnInt();
   final authStorage = AuthStorage();
   var isLoading = false.obs;
+  var isCartLoading = false.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    fetchCartItems();
+  }
 
   void addToCart(ProductsModel product, BuildContext context) async {
     try {
@@ -49,6 +55,9 @@ class CartController extends GetxController {
         } else {}
       } else {
         Flushbar(
+          onTap: (value) {
+            GoRouter.of(context).go('/loginpage');
+          },
           isDismissible: true,
           shouldIconPulse: false,
           borderRadius: BorderRadius.circular(8),
@@ -63,7 +72,7 @@ class CartController extends GetxController {
           duration: const Duration(seconds: 4),
           icon: Icon(Icons.check_circle, color: Colors.white),
           titleText: Text(
-            'Create account to start shopping',
+            'Click here to log in and start shopping',
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -78,11 +87,9 @@ class CartController extends GetxController {
 
   Future<void> fetchCartItems() async {
     try {
-      debugPrint("🟡 Start fetching cart items");
       isLoading.value = true;
 
       if (cart_id.value == null) {
-        debugPrint("⚠️ cart_id is null");
         cartItem.clear();
         isLoading.value = false;
         return;
@@ -92,27 +99,27 @@ class CartController extends GetxController {
         Uri.parse('${UrlConstant.url}cart-items/getcartitems/${cart_id.value}'),
       );
 
-      debugPrint("📩 Status code: ${response.statusCode}");
-
       if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('Cart items response: ${response.body}');
         final data = jsonDecode(response.body);
 
         if (data['success'] == true) {
-          final items = data['data'] as List;
-          cartItem.value = items.map((e) => CartItemModel.fromMap(e)).toList();
-          debugPrint("✅ Cart fetched with ${cartItem.length} items");
+          final itemsRaw = data['data'];
+
+          if (itemsRaw != null && itemsRaw is List) {
+            cartItem.value = itemsRaw
+                .map((e) => CartItemModel.fromMap(e))
+                .toList();
+          } else {
+            cartItem.clear(); // Empty or missing cart items
+          }
         } else {
-          debugPrint("❌ Response success is false");
           cartItem.clear();
         }
-      } else {
-        debugPrint("❌ Non-200 response");
-        cartItem.clear();
       }
     } catch (e) {
-      debugPrint('🛑 Exception fetching cart items: $e');
+      debugPrint('Exception fetching cart items: $e');
     } finally {
-      debugPrint("🟢 Done fetching, setting isLoading to false");
       isLoading.value = false;
     }
   }
@@ -162,7 +169,7 @@ class CartController extends GetxController {
 
   Future<void> loadCartOnAppStart(int userId) async {
     try {
-      isLoading.value = true;
+      isCartLoading.value = true;
       final response = await http.get(
         Uri.parse('${UrlConstant.url}cart-items/activecart/$userId'),
       );
@@ -175,7 +182,7 @@ class CartController extends GetxController {
           final int cartId = data['id'];
           cart_id.value = cartId;
           await fetchCartItems();
-          isLoading.value = false;
+          isCartLoading.value = false;
         } else {
           cart_id.value = null;
           cartItem.clear();

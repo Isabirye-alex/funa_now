@@ -48,7 +48,7 @@ class _LandingPageState extends State<LandingPage> {
             children: [
               const SizedBox(height: 14),
               const Text(
-                "Welcome to MyShop",
+                "Welcome OnBoard",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

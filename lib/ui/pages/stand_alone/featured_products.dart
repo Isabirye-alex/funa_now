@@ -8,13 +8,12 @@ import 'package:shimmer/shimmer.dart';
 class FeaturedProduct extends StatelessWidget {
   const FeaturedProduct({super.key});
 
-  // Shimmer widget for loading placeholder
   Widget _buildShimmerList() {
     return SizedBox(
-      height: 160,
+      height: 180, // slightly increased
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: 4, // Number of shimmer placeholders
+        itemCount: 4,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
@@ -34,7 +33,6 @@ class FeaturedProduct extends StatelessWidget {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     height: 110,
@@ -78,14 +76,19 @@ class FeaturedProduct extends StatelessWidget {
     return Obx(() {
       final featured = controller.featuredProducts;
       if (controller.isFLoading.value && featured.isEmpty) {
-        return _buildShimmerList(); // Show shimmer while loading and no featured products
+        return _buildShimmerList();
       }
       if (featured.isEmpty) {
-        return const Center(child: Text("No featured products"));
+        return const Center(
+          child: Text(
+            "Your journey to something better starts here!\nWe request you to be patient",
+            textAlign: TextAlign.center,
+          ),
+        );
       }
 
       return SizedBox(
-        height: 160,
+        height: 180, // Increased height to prevent overflow
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: featured.length,
@@ -121,6 +124,7 @@ class FeaturedProduct extends StatelessWidget {
                   ],
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ClipRRect(

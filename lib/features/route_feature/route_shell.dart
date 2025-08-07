@@ -7,7 +7,7 @@ class RouteShell extends StatelessWidget {
 
   static const destinations = [
     {'label': 'Shop', 'icon': Icons.home, 'route': '/landingpage'},
-    {'label': 'Shop', 'icon': Icons.search, 'route': '/search-page'},
+    {'label': 'Search', 'icon': Icons.search, 'route': '/search-page'},
     {'label': 'Category', 'icon': Icons.category, 'route': '/category'},
     {
       'label': 'Hot Sales',

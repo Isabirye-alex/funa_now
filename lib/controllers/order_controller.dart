@@ -142,11 +142,15 @@ class OrderController extends GetxController {
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
 
+        // Clear the cart to reset BottomPanel and order page UI
+        cartController.clearCart();
+
         // Navigate and update data
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OrdersListPage()),
         );
+
         await fetchUserOrders();
 
         final orderResponse = jsonDecode(response.body);
@@ -174,7 +178,7 @@ class OrderController extends GetxController {
           ),
         );
 
-        await cartController.loadCartOnAppStart(userId.value!);
+          await cartController.loadCartOnAppStart(userId.value!);
       } else {
         debugPrint('Order failed: ${response.body}');
         Flushbar(

@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:go_shop/controllers/address_controller.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/payment_controller.dart';
+import 'package:go_shop/ui/pages/stand_alone/address.dart';
 import 'package:go_shop/ui/widgets/bottom-panel.dart';
 import 'package:go_shop/ui/widgets/cart-items-builder.dart';
+// import your AddAddressPage here
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -43,7 +45,7 @@ class _OrderPageState extends State<OrderPage> {
         }
 
         return ListView(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           children: [
             // Cart Items
             ...cartController.cartItem.map((item) {
@@ -89,26 +91,55 @@ class _OrderPageState extends State<OrderPage> {
 
             const SizedBox(height: 20),
 
-            // Shipping Address Dropdown
+            // Shipping Address: conditionally show dropdown or Add button
             const Text(
               "Shipping Address",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              value: addressController.selectedAddess.value.isNotEmpty
-                  ? addressController.selectedAddess.value
-                  : null,
-              items: addressController.address.map((addr) {
-                final display =
-                    '${addr.address_line}, ${addr.district}, ${addr.region}, ${addr.country}';
-                return DropdownMenuItem(value: display, child: Text(display));
-              }).toList(),
-              onChanged: (value) {
-                addressController.selectedAddess.value = value!;
-              },
-              decoration: const InputDecoration(border: OutlineInputBorder()),
-            ),
+
+            Obx(() {
+              final addresses = addressController.address;
+              final selected = addressController.selectedAddess.value;
+
+              if (addresses.isEmpty) {
+                return ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        content: AddAddressPage(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.add_location_alt),
+                  label: const Text("Add New Address"),
+                );
+              } else {
+                return DropdownButtonFormField<String>(
+                  value: selected.isNotEmpty ? selected : null,
+                  items: addresses.map((addr) {
+                    final display =
+                        '${addr.address_line}, ${addr.district}, ${addr.region}, ${addr.country}';
+                    return DropdownMenuItem(
+                      value: display,
+                      child: Text(display),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      addressController.selectedAddess.value = value;
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                );
+              }
+            }),
           ],
         );
       }),

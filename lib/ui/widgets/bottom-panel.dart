@@ -52,9 +52,6 @@ class BottomPanel extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Obx(() {
-              print(
-                'Obx rebuilding: isPlacingOrder = ${orderController.isPlacingOrder.value}',
-              );
               return ElevatedButton(
                 onPressed: orderController.isPlacingOrder.value
                     ? null

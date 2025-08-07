@@ -28,7 +28,8 @@ class AddressController extends GetxController {
   var region = ''.obs;
   var country = ''.obs;
 
-  Future<void> addNewAddress(BuildContext context) async {
+
+Future<void> addNewAddress(BuildContext context) async {
     final dbquery = await authService.getAuthData();
     if (dbquery != null && dbquery['userId'] != null) {
       userId.value = dbquery['userId'];
@@ -36,27 +37,7 @@ class AddressController extends GetxController {
       if (addresslineController.text.isEmpty ||
           regionController.text.isEmpty ||
           districtController.text.isEmpty) {
-        Flushbar(
-          shouldIconPulse: false,
-          borderRadius: BorderRadius.circular(8),
-          margin: EdgeInsets.all(24),
-          flushbarPosition: FlushbarPosition.TOP,
-          animationDuration: const Duration(seconds: 2),
-          backgroundColor: Colors.green,
-          messageText: Text(
-            'Error',
-            style: const TextStyle(color: Colors.white),
-          ),
-          duration: const Duration(seconds: 4),
-          icon: Icon(Icons.check_circle, color: Colors.white),
-          titleText: Text(
-            'Required fields are missing',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ).show(context);
+        // Show error flushbar ...
         return;
       }
       try {
@@ -76,15 +57,30 @@ class AddressController extends GetxController {
           body: jsonEncode(address.toMap()),
         );
         isLoading.value = false;
+
         if (response.statusCode == 201 || response.statusCode == 200) {
+          // Clear input controllers
           regionController.clear();
           districtController.clear();
           postalcodeController.clear();
           addresslineController.clear();
           countryController.clear();
+
+          // REFRESH the addresses after adding a new one
+          await fetchUserAddresses(context);
+
+          // Optionally show a success message here
+          Flushbar(
+            title: "Success",
+            message: "Address added successfully",
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.green,
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+          ).show(context);
         }
       } catch (e) {
         debugPrint('Could not add address: $e');
+        isLoading.value = false;
       }
     } else {
       userId.value = null;

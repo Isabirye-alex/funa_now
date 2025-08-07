@@ -21,13 +21,12 @@ class ProductsController extends GetxController {
   int currentPage = 1;
   final int limit = 20;
 
-@override
+  @override
   void onInit() {
     super.onInit();
     if (featuredProducts.isEmpty) getFeaturedProducts();
     if (products.isEmpty) fetchProducts();
   }
-
 
   Future<void> fetchProducts([BuildContext? context]) async {
     if (isLoading.value || !hasMore.value) {
@@ -62,7 +61,7 @@ class ProductsController extends GetxController {
           hasMore.value = false; // No new data
         } else {
           products.addAll(newProducts);
-       
+
           if (newProducts.length < limit) {
             hasMore.value = false; // Less than limit, no more data
           } else {
@@ -138,8 +137,6 @@ class ProductsController extends GetxController {
 
     try {
       isSearching.value = true;
-      debugPrint('Searching products with query: $query');
-
       final uri = Uri.parse(
         '${UrlConstant.url}products/search?query=${Uri.encodeQueryComponent(query)}',
       );

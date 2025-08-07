@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "125997358966",
+    "project_id": "xshoppers-3d89e",
+    "storage_bucket": "xshoppers-3d89e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125997358966:android:ce9cdbead76f446051a457",
+        "android_client_info": {
+          "package_name": "com.example.go_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAImg9RQjen2YAaW9bWZS5r3fuWmrTeQMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

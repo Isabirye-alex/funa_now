@@ -16,31 +16,6 @@ class AllProducts extends StatefulWidget {
 
 class _AllProductsState extends State<AllProducts> {
   final controller = Get.put(ProductsController());
-  // Timer? _debounce;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   final productController = Get.put(ProductsController());
-
-  //   controller.scrollController.addListener(() {
-  //     if (controller.scrollController.position.pixels >=
-  //         controller.scrollController.position.maxScrollExtent - 200) {
-  //       if (_debounce?.isActive ?? false) return; // Prevent multiple calls
-  //       _debounce = Timer(const Duration(milliseconds: 500), () {
-  //         productController.fetchProducts(context);
-  //       });
-  //     }
-  //   });
-  // }
-
-  // @override
-  // void dispose() {
-  //   _debounce?.cancel();
-  //   controller.scrollController.dispose();
-  //   // super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +29,8 @@ class _AllProductsState extends State<AllProducts> {
         return ShimmerGrid();
       }
 
-      if (productController.products.isEmpty) {
-        return const Center(child: Text('No products found'));
+      if (productController.products.isEmpty){
+         productController.fetchProducts(context);
       }
 
       return ProductsBuilder(

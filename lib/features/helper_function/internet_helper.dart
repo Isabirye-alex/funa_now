@@ -51,7 +51,7 @@ class _ConnectionCheckerState extends State<ConnectionChecker> {
         return _isConnected
             ? MaterialApp.router(
                 debugShowCheckedModeBanner: false,
-                title: 'Admin Dashboard',
+                title: 'X-Store',
                 theme: ThemeData.dark().copyWith(
                   scaffoldBackgroundColor: const Color(0xFF1976D2),
                   cardColor: const Color(0xFF2A2D3E),

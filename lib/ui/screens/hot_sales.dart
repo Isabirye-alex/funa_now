@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_shop/controllers/products_controller.dart';
-import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
 import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:iconsax/iconsax.dart';
 
 class HotSales extends StatelessWidget {
   const HotSales({super.key});
@@ -15,17 +13,22 @@ class HotSales extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 75,
-        title: CustomAppBar(
-          icon: Iconsax.trend_up,
-          hint: 'Browse Hot deals....',
-          iconText: 'Hot Sales',
-          icon2: Iconsax.flash_1,
-          iconText2: 'New Stock',
+        toolbarHeight: 50,
+        centerTitle: true,
+        title: const Text(
+          '🔥Today\'s Hot Sales',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.white,
+          ),
         ),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.redAccent,
+        elevation: 2,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 6, 16.0, 16.0),
         child: Obx(() {
           final featured = controller.featuredProducts;
           final isLoading = controller.isFLoading.value;
@@ -41,15 +44,15 @@ class HotSales extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "🔥 Today's Hot Sales",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red[700],
-                ),
-              ),
-              const SizedBox(height: 18),
+              // const Text(
+              //   "🔥 Today's Hot Sales",
+              //   style: TextStyle(
+              //     fontSize: 22,
+              //     fontWeight: FontWeight.bold,
+              //     color: Colors.redAccent,
+              //   ),
+              // ),
+              // const SizedBox(height: 18),
               Expanded(
                 child: GridView.builder(
                   itemCount: featured.length,
@@ -80,7 +83,7 @@ class HotSales extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           color: Colors.white,
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black12,
                               blurRadius: 8,
@@ -135,10 +138,10 @@ class HotSales extends StatelessWidget {
                                       const SizedBox(height: 8),
                                       Text(
                                         "UGX ${product.formattedPrice}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
-                                          color: Colors.red[700],
+                                          color: Colors.redAccent,
                                         ),
                                       ),
                                     ],
@@ -146,7 +149,6 @@ class HotSales extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            // Optional: Fake discount badge
                             Positioned(
                               top: 12,
                               left: 12,
@@ -156,7 +158,7 @@ class HotSales extends StatelessWidget {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.red[700],
+                                  color: Colors.redAccent,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Text(
@@ -166,33 +168,6 @@ class HotSales extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),
-                                ),
-                              ),
-                            ),
-                            // Favorite icon
-                            Positioned(
-                              top: 12,
-                              right: 12,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {},
-                                  iconSize: 22,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
                                 ),
                               ),
                             ),
