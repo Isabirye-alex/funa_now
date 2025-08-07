@@ -79,11 +79,11 @@ class LoginController extends GetxController {
         final token = result['token'];
         debugPrint('Token: $token');
       } else {
-        _showError(context, 'Login failed: ${response.body}');
+        _showError(context, 'Login failed: Invalid user name or password');
       }
     } catch (e) {
       isLoading.value = false;
-      _showError(context, 'An error occurred: $e');
+      _showError(context, 'Something Went Wrong. Please try again later');
     }
   }
 

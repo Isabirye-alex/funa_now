@@ -67,16 +67,21 @@ Future<void> addNewAddress(BuildContext context) async {
           countryController.clear();
 
           // REFRESH the addresses after adding a new one
-          await fetchUserAddresses(context);
+            await fetchUserAddresses(context);
 
-          // Optionally show a success message here
-          Flushbar(
+          // Show success message
+          await Flushbar(
             title: "Success",
             message: "Address added successfully",
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 2),
             backgroundColor: Colors.green,
             icon: const Icon(Icons.check_circle, color: Colors.white),
           ).show(context);
+
+          // Then safely pop dialog
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
         }
       } catch (e) {
         debugPrint('Could not add address: $e');

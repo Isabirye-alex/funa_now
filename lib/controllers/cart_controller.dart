@@ -48,7 +48,25 @@ class CartController extends GetxController {
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = jsonDecode(response.body);
           cart_id.value = data['data']['cart_id'];
-
+          Flushbar(
+            shouldIconPulse: false,
+            duration: const Duration(milliseconds: 500),
+            isDismissible: true,
+            dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+            borderRadius: BorderRadius.circular(8),
+            margin: const EdgeInsets.all(16),
+            flushbarPosition: FlushbarPosition.TOP,
+            animationDuration: const Duration(milliseconds: 300),
+            backgroundColor: Colors.green,
+            messageText: const Text(
+              'Item added to cart',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+          ).show(context);
           await fetchCartItems();
           noOfItems++;
           update();
@@ -100,7 +118,7 @@ class CartController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint('Cart items response: ${response.body}');
+       
         final data = jsonDecode(response.body);
 
         if (data['success'] == true) {
@@ -170,17 +188,21 @@ class CartController extends GetxController {
   Future<void> loadCartOnAppStart(int userId) async {
     try {
       isCartLoading.value = true;
+
       final response = await http.get(
         Uri.parse('${UrlConstant.url}cart-items/activecart/$userId'),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final body = jsonDecode(response.body);
+        debugPrint('Cart response body: ${response.body}');
 
         final data = body['data'];
+
         if (body['success'] == true && data != null && data['id'] != null) {
-          final int cartId = data['id'];
+          final int cartId = int.parse(data['id'].toString());
           cart_id.value = cartId;
+
           await fetchCartItems();
           isCartLoading.value = false;
         } else {

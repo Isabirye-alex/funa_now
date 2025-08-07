@@ -15,14 +15,6 @@ class BottomPanel extends StatelessWidget {
     final orderController = Get.find<OrderController>();
     final addressController = Get.find<AddressController>();
     final paymentController = Get.find<PaymentController>();
-    final totalItems = cartController.cartItem.fold<int>(
-      0,
-      (sum, item) => sum + item.quantity,
-    );
-    final totalAmount = cartController.cartItem.fold<double>(
-      0.0,
-      (sum, item) => sum + (item.price * item.quantity),
-    );
 
     return SafeArea(
       child: Container(
@@ -37,80 +29,94 @@ class BottomPanel extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Total Items: $totalItems",
-              style: const TextStyle(fontSize: 16, color: Colors.amber),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "Total: UGX ${NumberFormatter.formatPrice(totalAmount)}",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 16),
             Obx(() {
-              return ElevatedButton(
-                onPressed: orderController.isPlacingOrder.value
-                    ? null
-                    : () async {
-                        final cartId = cartController.cart_id.value;
-                        final address = addressController.selectedAddess.value;
-                        final payment = paymentController.selectedMethod.value;
-                        final total = totalAmount;
+              final totalItems = cartController.cartItem.fold<int>(
+                0,
+                (sum, item) => sum + item.quantity,
+              );
+              final totalAmount = cartController.cartItem.fold<double>(
+                0.0,
+                (sum, item) => sum + (item.price * item.quantity),
+              );
 
-                        if (address.isEmpty || payment.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Please select address and payment method',
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-
-                        await orderController.placeOrder(
-                          cartId.toString(),
-                          total.toString(),
-                          address,
-                          payment,
-                          context,
-                        );
-                      },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor:
-                      Colors.white, // Changed to white for contrast
-                  backgroundColor: Colors.deepOrange,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  textStyle: const TextStyle(fontSize: 16),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Total Items: $totalItems",
+                    style: const TextStyle(fontSize: 16, color: Colors.amber),
                   ),
-                ),
-                child: orderController.isPlacingOrder.value
-                    ?SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.blue,
-                          ),
-                          strokeWidth: 2,
+                  const SizedBox(height: 8),
+                  Text(
+                    "Total: UGX ${NumberFormatter.formatPrice(totalAmount)}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Obx(() {
+                    final address = addressController.selectedAddess.value;
+                    final payment = paymentController.selectedMethod.value;
+                    final total = totalAmount;
+
+                    return ElevatedButton(
+                      onPressed: orderController.isPlacingOrder.value
+                          ? null
+                          : () async {
+                              if (address.isEmpty || payment.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Please select address and payment method',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              await orderController.placeOrder(
+                                cartController.cart_id.value.toString(),
+                                total.toString(),
+                                address,
+                                payment,
+                                context,
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.deepOrange,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 16),
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      )
-                    :Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.payment, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text('Confirm Order'),
-                        ],
                       ),
+                      child: orderController.isPlacingOrder.value
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blue,
+                                ),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.payment, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text('Confirm Order'),
+                              ],
+                            ),
+                    );
+                  }),
+                ],
               );
             }),
           ],

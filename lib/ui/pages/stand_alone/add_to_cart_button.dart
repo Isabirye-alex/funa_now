@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:iconsax/iconsax.dart';
 
+
 class AddToCartButton extends StatelessWidget {
   const AddToCartButton({
     super.key,

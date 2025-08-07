@@ -30,8 +30,6 @@ class AddAddressPage extends StatelessWidget {
                   ? null
                   : () async {
                       await controller.addNewAddress(context);
-                      Navigator.pop(context); // close dialog
-                      controller.fetchUserAddresses(context); // refresh
                     },
               child: controller.isLoading.value
                   ? const CircularProgressIndicator(color: Colors.white)
