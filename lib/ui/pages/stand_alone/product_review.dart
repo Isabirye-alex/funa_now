@@ -38,6 +38,7 @@ class _ProductReviewState extends State<ProductReview> {
             style: TextStyle(color: Colors.black, fontSize: 18),
           ),
           RatingBar.builder(
+            unratedColor: Colors.grey,
             initialRating: 0,
             minRating: 1,
             allowHalfRating: true,
