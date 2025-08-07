@@ -5,13 +5,14 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/ui/pages/reusables/custom_app_bar.dart';
+import 'package:go_shop/ui/pages/stand_alone/all_featured_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/all_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/featured_products.dart';
 import 'package:go_shop/ui/pages/stand_alone/summer_products.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LandingPage extends StatefulWidget {
-  const LandingPage({super.key});
+  LandingPage({super.key});
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
@@ -45,33 +46,58 @@ class _LandingPageState extends State<LandingPage> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const SizedBox(height: 14),
-              const Text(
-                "Welcome OnBoard",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 16),
-              SummerProducts(),
-              const SizedBox(height: 24),
+              SizedBox(height: 14),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
                 child: Text(
-                  "Featured Products",
+                  "Welcome OnBoard",
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 16),
+              SummerProducts(),
+              SizedBox(height: 24),
+
+              Container(
+                padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                decoration: BoxDecoration(color: Colors.orange),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Featured Products",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllFeaturedProducts(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'View More >>',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 12),
               FeaturedProduct(),
 
-              // const Text(
+              //  Text(
               //   "Products",
               //   style: TextStyle(
               //     fontSize: 18,
@@ -79,7 +105,7 @@ class _LandingPageState extends State<LandingPage> {
               //     color: Colors.black,
               //   ),
               // ),
-              // const SizedBox(height: 12),
+              //  SizedBox(height: 12),
               Container(padding: EdgeInsets.zero, child: AllProducts()),
             ],
           ),

@@ -28,13 +28,23 @@ class SearchPage extends StatelessWidget {
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(60.0),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 2),
                 child: SearchBar(
-                  leading: const Icon(Icons.search),
+                  backgroundColor: WidgetStateColor.resolveWith(
+                    (states) => Colors.white,
+                  ),
+                  leading: const Icon(Icons.search, color: Colors.black),
                   onChanged: (value) {
                     productsController.searchProducts(value, context);
                   },
+
                   hintText: 'Search products...',
+                  hintStyle: WidgetStateTextStyle.resolveWith(
+                    (states) => const TextStyle(
+                      color: Colors.black,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
               ),
             ),

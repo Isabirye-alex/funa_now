@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:go_shop/controllers/cart_controller.dart';
 import 'package:go_shop/controllers/categories_controller.dart';
 import 'package:go_shop/ui/pages/stand_alone/category_search_bar.dart';
+import 'package:go_shop/ui/pages/stand_alone/products_by_category2.dart';
 import 'package:iconsax/iconsax.dart';
 
 class Categories extends StatefulWidget {
@@ -79,7 +80,16 @@ class _CategoriesState extends State<Categories> {
                   itemBuilder: (context, index) {
                     final category = controller.categories[index];
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                ProductsByCategory2(category: category),
+                          ),
+                        );
+                      },
+
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[100],

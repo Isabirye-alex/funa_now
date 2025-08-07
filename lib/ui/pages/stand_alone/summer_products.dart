@@ -18,41 +18,44 @@ class _SummerProductsState extends State<SummerProducts> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 170,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        separatorBuilder: (context, index) => SizedBox(width: 10),
-        itemBuilder: (context, index) => Container(
-          width: MediaQuery.of(context).size.width * 0.70,
-          height: 160,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            color: Colors.blue[700],
-            image: DecorationImage(
-              image: NetworkImage(
-                "https://res.cloudinary.com/doxivkfxr/image/upload/v1752586576/products/zsgd13f8kw7tbqylsgbr.jpg",
-              ),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withAlpha(20),
-                BlendMode.darken,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+      child: SizedBox(
+        height: 170,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 10,
+          separatorBuilder: (context, index) => SizedBox(width: 10),
+          itemBuilder: (context, index) => Container(
+            width: MediaQuery.of(context).size.width * 0.70,
+            height: 160,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: Colors.blue[700],
+              image: DecorationImage(
+                image: NetworkImage(
+                  "https://res.cloudinary.com/doxivkfxr/image/upload/v1752586576/products/zsgd13f8kw7tbqylsgbr.jpg",
+                ),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withAlpha(20),
+                  BlendMode.darken,
+                ),
               ),
             ),
-          ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "Big Summer Sale!\nUp to 50% OFF",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Big Summer Sale!\nUp to 50% OFF",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
 
-                  shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
+                    shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
+                  ),
                 ),
               ),
             ),

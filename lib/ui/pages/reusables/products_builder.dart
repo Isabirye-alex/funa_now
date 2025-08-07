@@ -5,6 +5,7 @@ import 'package:go_shop/controllers/products_controller.dart';
 import 'package:go_shop/controllers/wishlist_controller.dart';
 import 'package:go_shop/models/products_model.dart';
 import 'package:go_shop/ui/pages/stand_alone/product_card.dart';
+import 'package:go_shop/ui/pages/stand_alone/products_by_category.dart';
 
 class ProductsBuilder extends StatelessWidget {
   final ProductsController productController;
@@ -65,7 +66,19 @@ class ProductsBuilder extends StatelessWidget {
                       ),
                       if (showViewMore)
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProductsByCategory(
+                                  category: category,
+                                  products: allProducts,
+                                  wishlistController: wishlistController,
+                                  cartController: cartController,
+                                ),
+                              ),
+                            );
+                          },
                           child: const Text(
                             "View More >>",
                             style: TextStyle(color: Colors.blue, fontSize: 16),

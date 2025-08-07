@@ -5,8 +5,8 @@ import 'package:go_shop/ui/pages/reusables/product_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
-class FeaturedProduct extends StatelessWidget {
-  const FeaturedProduct({super.key});
+class AllFeaturedProducts extends StatelessWidget {
+  const AllFeaturedProducts({super.key});
 
   Widget _buildShimmerList() {
     return SizedBox(
@@ -69,29 +69,33 @@ class FeaturedProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ProductsController());
 
-    return Obx(() {
-      final featured = controller.featuredProducts.take(10).toList();
+    return Scaffold(
+      appBar: AppBar(title: Text('Featured Products'), centerTitle: true),
+      body: Obx(() {
+        final featured = controller.featuredProducts;
 
-      if (controller.isFLoading.value && featured.isEmpty) {
-        return _buildShimmerList();
-      }
-      if (featured.isEmpty) {
-        return const Center(
-          child: Text(
-            "Your journey to something better starts here!\nWe request you to be patient",
-            textAlign: TextAlign.center,
-          ),
-        );
-      }
+        if (controller.isFLoading.value && featured.isEmpty) {
+          return _buildShimmerList();
+        }
+        if (featured.isEmpty) {
+          return const Center(
+            child: Text(
+              "Your journey to something better starts here!\nWe request you to be patient",
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
 
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-        child: SizedBox(
-          height: 180, // Increased height to prevent overflow
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: GridView.builder(
             itemCount: featured.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200, // Max width per item
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.95, // Adjust for height/width ratio
+            ),
             itemBuilder: (context, index) {
               final product = featured[index];
               return InkWell(
@@ -110,7 +114,6 @@ class FeaturedProduct extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  width: 140,
                   decoration: BoxDecoration(
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(16),
@@ -123,7 +126,6 @@ class FeaturedProduct extends StatelessWidget {
                     ],
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ClipRRect(
@@ -137,7 +139,6 @@ class FeaturedProduct extends StatelessWidget {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             height: 110,
-                            width: double.infinity,
                             color: Colors.grey[300],
                             child: const Center(
                               child: CircularProgressIndicator(strokeWidth: 2),
@@ -145,7 +146,6 @@ class FeaturedProduct extends StatelessWidget {
                           ),
                           errorWidget: (context, url, error) => Container(
                             height: 110,
-                            width: double.infinity,
                             color: Colors.grey,
                             child: const Icon(
                               Icons.broken_image,
@@ -171,21 +171,20 @@ class FeaturedProduct extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         "UGX ${product.formattedPrice}",
-                        style: TextStyle(
-                          color: Color(0xFFFFFFFF),
+                        style: const TextStyle(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       ),
-                      const SizedBox(height: 6),
                     ],
                   ),
                 ),
               );
             },
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }
