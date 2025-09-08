@@ -1,10 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:intl/intl.dart';
-
 class ProductsModel {
-  int? id;
+  int? id;hn
   String name;
   String? description;
   String price;
@@ -14,39 +12,33 @@ class ProductsModel {
   String? brand;
   int? categoryId;
   String? categoryName;
-  int? subcategoryId;
-  String? subcategoryName;
-  // int get priceInt => double.tryParse(price)?.toInt() ?? 0;
-  
+  double? percentage_discount;
+
   String get formattedPrice {
     final double? parsed = double.tryParse(price);
     if (parsed == null) return '0';
     final int rounded = parsed.toInt(); // remove decimal part
     return NumberFormat('#,###').format(rounded); // format with commas
   }
+
   ProductsModel({
-   this.id,
+    this.id,
     required this.name,
-   this.description,
+    this.description,
     required this.price,
-     this.stock,
+    this.stock,
     required this.imageUrl,
-     this.isFeatured,
-     this.brand,
-     this.categoryId,
-     this.categoryName,
-     this.subcategoryId,
-     this.subcategoryName,
+    this.isFeatured,
+    this.brand,
+    this.categoryId,
+    this.categoryName,
+    this.percentage_discount,
   });
 
   factory ProductsModel.fromRawJson(String str) =>
       ProductsModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
-
-
-
-
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -60,31 +52,36 @@ class ProductsModel {
       'brand': brand,
       'categoryId': categoryId,
       'categoryName': categoryName,
-      'subcategoryId': subcategoryId,
-      'subcategoryName': subcategoryName,
+      'percentage_discount': percentage_discount,
     };
   }
 
   factory ProductsModel.fromMap(Map<String, dynamic> map) {
     return ProductsModel(
-      id: map['id'] != null ? map['id'] as int : null,
+      id: map['id'] != null ? int.tryParse(map['id'].toString()) : null,
       name: map['name'] as String,
-      description: map['description'] != null ? map['description'] as String : null,
-      price: map['price'] as String,
-      stock: map['stock'] != null ? map['stock'] as int : null,
+      description: map['description']?.toString(),
+      price: map['price'].toString(),
+      stock: map['stock'] != null ? int.tryParse(map['stock'].toString()) : null,
       imageUrl: map['imageUrl'] as String,
-      isFeatured: map['isFeatured'] != null ? map['isFeatured'] as int : null,
-      brand: map['brand'] != null ? map['brand'] as String : null,
-      categoryId: map['categoryId'] != null ? map['categoryId'] as int : null,
-      categoryName: map['categoryName'] != null ? map['categoryName'] as String : null,
-      subcategoryId: map['subcategoryId'] != null ? map['subcategoryId'] as int : null,
-      subcategoryName: map['subcategoryName'] != null ? map['subcategoryName'] as String : null,
+      isFeatured: map['isFeatured'] != null
+          ? int.tryParse(map['isFeatured'].toString())
+          : null,
+      brand: map['brand']?.toString(),
+      categoryId: map['categoryId'] != null
+          ? int.tryParse(map['categoryId'].toString())
+          : null,
+      categoryName: map['categoryName']?.toString(),
+      percentage_discount: map['percentage_discount'] != null
+          ? double.tryParse(map['percentage_discount'].toString())
+          : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory ProductsModel.fromJson(String source) => ProductsModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ProductsModel.fromJson(String source) =>
+      ProductsModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   ProductsModel copyWith({
     int? id,
@@ -97,8 +94,7 @@ class ProductsModel {
     String? brand,
     int? categoryId,
     String? categoryName,
-    int? subcategoryId,
-    String? subcategoryName,
+    double? percentage_discount,
   }) {
     return ProductsModel(
       id: id ?? this.id,
@@ -111,8 +107,7 @@ class ProductsModel {
       brand: brand ?? this.brand,
       categoryId: categoryId ?? this.categoryId,
       categoryName: categoryName ?? this.categoryName,
-      subcategoryId: subcategoryId ?? this.subcategoryId,
-      subcategoryName: subcategoryName ?? this.subcategoryName,
+      percentage_discount: percentage_discount ?? this.percentage_discount,
     );
   }
 }

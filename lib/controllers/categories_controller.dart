@@ -25,7 +25,7 @@ class CategoriesController extends GetxController {
             .toList();
         categories.assignAll(res);
 
-        debugPrint('Yes');
+
       } else {}
       isLoading.value = false;
     } catch (e) {

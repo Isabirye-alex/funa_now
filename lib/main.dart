@@ -66,8 +66,12 @@ Future<void> _initializeApp() async {
       await cartController.loadCartOnAppStart(userId);
     }
     final productController = Get.find<ProductsController>();
-    productController.fetchProducts(context);
+    productController.getSummerProducts();
+    productController.getHotSaleProducts();
     productController.getFeaturedProducts();
+    productController.fetchProducts(context);
+
+
   }
   @override
   Widget build(BuildContext context) {

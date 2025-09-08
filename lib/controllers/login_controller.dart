@@ -77,7 +77,7 @@ class LoginController extends GetxController {
 
         GoRouter.of(context).go('/landingpage');
         final token = result['token'];
-        debugPrint('Token: $token');
+
       } else {
         _showError(context, 'Login failed: Invalid user name or password');
       }

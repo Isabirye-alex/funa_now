@@ -10,12 +10,16 @@ class ProductsController extends GetxController {
   static ProductsController get to => Get.find();
 
   final RxList<ProductsModel> products = <ProductsModel>[].obs;
+  final RxList<ProductsModel> summerProducts = <ProductsModel>[].obs;
+  final RxList<ProductsModel> hotSaleProducts = <ProductsModel>[].obs;
   final RxList<ProductsModel> featuredProducts = <ProductsModel>[].obs;
   final ScrollController scrollController = ScrollController();
   final RxList<ProductsModel> searchResults = <ProductsModel>[].obs;
   final RxList<ProductsModel> pro = <ProductsModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isFLoading = false.obs;
+  final RxBool isHLoading = false.obs;
+  final RxBool isSLoading = false.obs;
   final RxBool hasMore = true.obs;
   final RxBool isSearching = false.obs;
   int currentPage = 1;
@@ -25,14 +29,14 @@ class ProductsController extends GetxController {
   void onInit() {
     super.onInit();
     if (featuredProducts.isEmpty) getFeaturedProducts();
+    if (summerProducts.isEmpty) getSummerProducts();
     if (products.isEmpty) fetchProducts();
+    if (hotSaleProducts.isEmpty) getHotSaleProducts();
   }
 
   Future<void> fetchProducts([BuildContext? context]) async {
     if (isLoading.value || !hasMore.value) {
-      debugPrint(
-        'Fetch aborted: isLoading=${isLoading.value}, hasMore=${hasMore.value}',
-      );
+
       return;
     }
 
@@ -80,7 +84,7 @@ class ProductsController extends GetxController {
         }
       }
     } catch (e) {
-      debugPrint('Fetch error: $e');
+      debugPrint('Error Fetching products: $e');
       if (context != null) {
         showFlushbar(
           context,
@@ -91,12 +95,11 @@ class ProductsController extends GetxController {
       }
     } finally {
       isLoading.value = false;
-      debugPrint('Fetch completed, isLoading=false');
+
     }
   }
 
   void resetPagination() {
-    debugPrint('Resetting pagination');
     products.clear();
     currentPage = 1;
     hasMore.value = true;
@@ -105,7 +108,7 @@ class ProductsController extends GetxController {
   Future<void> getFeaturedProducts() async {
     try {
       isFLoading.value = true;
-      debugPrint('Fetching featured products');
+
       final response = await http.get(
         Uri.parse('${UrlConstant.url}products/featured'),
       );
@@ -116,17 +119,67 @@ class ProductsController extends GetxController {
             .map((f) => ProductsModel.fromMap(f))
             .toList();
         featuredProducts.assignAll(result);
-        debugPrint('Fetched ${result.length} featured products');
+
       } else {
-        debugPrint('Failed to load featured products: ${response.statusCode}');
+
       }
     } catch (e) {
       debugPrint('Error fetching featured products: $e');
     } finally {
       isFLoading.value = false;
-      debugPrint('Featured products fetch completed, isFLoading=false');
+
     }
   }
+
+  Future<void> getSummerProducts() async {
+    try {
+      isSLoading.value = true;
+      final response = await http.get(
+        Uri.parse('${UrlConstant.url}products/summer-sale'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        final List<dynamic> jsonList = res['data'];
+        final List<ProductsModel> result = jsonList
+            .map((f) => ProductsModel.fromMap(f))
+            .toList();
+        summerProducts.assignAll(result);
+        isSLoading.value=false;
+      } else {
+
+      }
+    } catch (e) {
+      debugPrint('Error fetching summer products products: $e');
+    } finally {
+      isSLoading.value = false;
+    }
+  }
+
+  Future<void> getHotSaleProducts() async {
+    try {
+      isHLoading.value = true;
+      final response = await http.get(
+        Uri.parse('${UrlConstant.url}products/hot-sale'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final Map<String, dynamic> res = jsonDecode(response.body);
+        final List<dynamic> jsonList = res['data'];
+        final List<ProductsModel> result = jsonList
+            .map((f) => ProductsModel.fromMap(f))
+            .toList();
+        hotSaleProducts.assignAll(result);
+        isHLoading.value = false;
+      } else {
+
+      }
+    } catch (e) {
+      debugPrint('Error fetching featured products: $e');
+    } finally {
+      isHLoading.value = false;
+
+    }
+  }
+
 
   //Search function
   Future<void> searchProducts(String query, [BuildContext? context]) async {
@@ -184,7 +237,7 @@ class ProductsController extends GetxController {
             .toList();
         pro.assignAll(result);
       } else {
-        debugPrint('Response from server = ${response.body}');
+
       }
     } catch (e) {
       debugPrint('Error fetching products by category: $e');
@@ -200,6 +253,7 @@ class ProductsController extends GetxController {
     IconData icon,
   ) {
     Flushbar(
+      shouldIconPulse: false,
       animationDuration: const Duration(milliseconds: 300),
       backgroundColor: const Color(0xFF323232),
       messageText: Text(message, style: const TextStyle(color: Colors.white)),

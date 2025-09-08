@@ -41,7 +41,6 @@ class ProductsBuilder extends StatelessWidget {
           final displayed = showViewMore
               ? allProducts.take(4).toList()
               : allProducts;
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

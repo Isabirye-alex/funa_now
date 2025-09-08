@@ -32,9 +32,9 @@ class WishlistController extends GetxController {
     final dbquery = await authService.getAuthData();
     if (dbquery != null && dbquery['userId'] != null) {
       userId.value = dbquery['userId'];
-      debugPrint('User ID loaded: ${userId.value}');
+
     } else {
-      debugPrint("User ID not found");
+
     }
   }
 

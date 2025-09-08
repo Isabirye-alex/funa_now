@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:go_shop/models/products_model.dart'; // your product model
 
 class DiscountBadge extends StatelessWidget {
-  const DiscountBadge({super.key});
+  final ProductsModel product;
+
+  const DiscountBadge({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final discount = product.percentage_discount ?? 0;
+    if (discount <= 0) {
+      // return Text('0% OFF');
+      return const SizedBox.shrink();
+    }
+
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.deepOrange,
+        color: Colors.orange,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: const Text(
-        '20% OFF',
+      child: Text(
+        '${discount.toInt()}% OFF',  // <-- fixed here
         style: TextStyle(
           color: Colors.white,
           fontSize: 10,

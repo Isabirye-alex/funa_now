@@ -43,9 +43,6 @@ class SignUpController extends GetxController {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(user.toMap()),
       );
-
-      debugPrint('Response status: ${response.statusCode}');
-      debugPrint('Response body: ${response.body}');
       if (response.statusCode == 201 || response.statusCode == 200) {
         final result = jsonDecode(response.body);
         userId.value = result['user']['id'].toString();
@@ -84,7 +81,7 @@ class SignUpController extends GetxController {
         passwordController.clear();
         emailController.clear();
       } else {
-        debugPrint('Could not register new user');
+
       }
     } catch (e) {
       Flushbar(
@@ -121,7 +118,7 @@ class SignUpController extends GetxController {
         body: jsonEncode(body.toMap()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
-        debugPrint('Success');
+
       }
     } catch (e) {
       debugPrint('Error Occurred :$e');

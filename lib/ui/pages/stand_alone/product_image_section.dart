@@ -27,7 +27,7 @@ class ProductImageSection extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const DiscountBadge(),
+                DiscountBadge(product: product),
                 WishlistButton(
                   productId: product.id!,
                   wishlistController: wishlistController,

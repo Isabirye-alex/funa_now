@@ -35,9 +35,9 @@ class OrderController extends GetxController {
     final dbquery = await authService.getAuthData();
     if (dbquery != null && dbquery['userId'] != null) {
       userId.value = dbquery['userId'];
-      debugPrint('User ID loaded: ${userId.value}');
+
     } else {
-      debugPrint("User ID not found");
+
     }
   }
 
@@ -142,8 +142,7 @@ class OrderController extends GetxController {
           icon: const Icon(Icons.check_circle, color: Colors.white),
         ).show(context);
 
-        // Clear the cart to reset BottomPanel and order page UI
-        cartController.clearCart();
+        // Clear the cart to reset BottomPanel and order page
 
         // Navigate and update data
         Navigator.push(
@@ -175,9 +174,11 @@ class OrderController extends GetxController {
                 )
                 .toList(),
             total: double.tryParse(total.toString())?.toStringAsFixed(0) ?? '0',
+
           ),
         );
-
+        debugPrint('$total');
+        cartController.clearCart();
           await cartController.loadCartOnAppStart(userId.value!);
       } else {
         debugPrint('Order failed: ${response.body}');
@@ -216,24 +217,23 @@ class OrderController extends GetxController {
         "orderDate": formattedDate,
         "paymentMethod": model.paymentMethod,
         "shippingAddress": model.shippingAddress,
-        "orderItems": model.orderItems
-            .map(
-              (item) => {
-                "name": item.name,
-                "quantity": item.quantity,
-                "price": item.price,
-                "image": item.image,
-              },
-            )
-            .toList(),
-        "total": model.total.toString(),
+        "orderItems": model.orderItems.map((item) =>
+        {
+          "name": item.name ?? '',
+          "quantity": item.quantity ?? 0,
+          "price": (item.price != null) ? item.price.toString() : '0',
+          "image": item.image ?? '',
+        }).toList(),
+        "total_amount": model.total,
       };
+      debugPrint('Sending email with total: ${model.total}');
 
       final response = await http.post(
         Uri.parse('${UrlConstant.url}email/order-placement'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );
+
 
       if (response.statusCode == 200 || response.statusCode == 201) {
       } else {}
